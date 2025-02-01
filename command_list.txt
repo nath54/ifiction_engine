@@ -1,0 +1,343 @@
+# List of commands
+
+## Displacement
+
+- `(go/move/mv/displace/d) North/N`: Go North
+- `(go/move/mv/displace/d) South/S`: Go South
+- `(go/move/mv/displace/d) East/E`: Go East
+- `(go/move/mv/displace/d) West/W`: Go West
+- `(go/move/mv/displace/d) Up/Above/A`: Go Up
+- `(go/move/mv/displace/d) Down/Below/B`: Go Down
+
+## Interact with objects
+
+- `take`
+- `put`
+- `push`
+- `pull`
+- 
+
+
+"[direction]" - going
+"[number]" - number questioning
+"[number]" - menu questioning
+"[real number]" - real number questioning
+"[decision]" - yes/no questioning
+"[gender]" - gender questioning
+"[text]" - text questioning
+
+"a [any known thing]" - implicit-quizzing
+"a [text]" - implicit-asking
+"adjust", same as "set"
+"answer hello/hi" - hailing
+"answer [number]" - number questioning
+"answer [number]" - menu questioning
+"answer [real number]" - real number questioning
+"answer [decision]" - yes/no questioning
+"answer [gender]" - gender questioning
+"answer hello/hi to [something]" - saying hello to
+"answer bye/goodbye/farewell/cheerio to [someone]" - saying goodbye to
+"answer [text] to [someone]" - answering it that (nouns reversed)
+"answer [text]" - text questioning
+"ask about [any known thing]" - implicit-quizzing
+"ask for [any known thing]" - implicit-requesting
+"ask [someone] for [any known thing]" - requesting it for
+"ask [someone] about [any known thing]" - quizzing it about
+"ask [someone] about [text]" - asking it about
+"ask [someone] for [text]" - imploring it for
+"ask about [text]" - implicit-asking
+"ask for [text]" - implicit-imploring
+"attach", same as "tie"
+"attack [something]" - attacking
+"awake", same as "wake"
+"awaken", same as "wake"
+
+"break", same as "attack"
+"brief" - preferring sometimes abbreviated room descriptions
+"burn [something]" - burning
+"buy [something]" - buying
+"bye" - leavetaking
+
+"call for/-- a/-- waiter/waitress" - calling a waiter
+"carry", same as "take"
+"check", same as "examine"
+"cheerio" - leavetaking
+"chop", same as "cut"
+"clean", same as "rub"
+"clear", same as "push"
+"climb [something]" - climbing
+"climb up/over [something]" - climbing
+"close [something]" - closing
+"close up [something]" - closing
+"close off [something]" - switching off
+"consult [something] on/about [text]" - consulting it about
+"cover", same as "close"
+"crack", same as "attack"
+"cross", same as "enter"
+"cut [something]" - cutting
+
+"dance" - dancing
+"describe", same as "examine"
+"destroy", same as "attack"
+"discard", same as "drop"
+"display", same as "show"
+"disrobe", same as "shed"
+"doff", same as "shed"
+"don", same as "wear"
+"drag", same as "pull"
+"dress [something] with [something]" - spreading it on (nouns reversed)
+"drink [something]" - drinking
+"drink from [fluid container]" - drinking
+"drop [things preferably held]" - dropping
+"drop [something preferably held] at/against [something]" - throwing it at
+"drop [other things] in/into/down [something]" - inserting it into
+"drop [other things] on/onto [something]" - putting it on
+"dust", same as "rub"
+
+"eat [something preferably held]" - eating
+"embrace", same as "kiss"
+"enter" - entering
+"enter [something]" - entering
+"epistat [any thing]" - requesting epistemic status of
+"examine [something]" - examining
+"exit" - exiting
+
+"farewell" - leavetaking
+"fasten", same as "tie"
+"feed", same as "give"
+"feel", same as "touch"
+"fight", same as "attack"
+"fill [something] with/from [something]" - pouring it into (nouns reversed)
+
+"get out/off/down/up" - exiting
+"get in/on" - entering
+"get [things]" - taking
+"get in/into/on/onto [something]" - entering
+"get off/down [something]" - getting off
+"get [things inside] from [something]" - removing it from
+"give [someone] [something preferably held]" - giving it to (nouns reversed)
+"give [something preferably held] to [someone]" - giving it to
+"go" - going
+"go [direction]" - going
+"go [something]" - entering
+"go into/in/inside/through [something]" - entering
+"goodbye" - leavetaking
+"greet [something]" - saying hello to
+
+"hear [something]" - listening to
+"hello" - hailing
+"hi" - hailing
+"hit", same as "attack"
+"hold", same as "take"
+"hop", same as "jump"
+"hug", same as "kiss"
+
+"i", same as "inventory"
+"insert [other things] in/into [something]" - inserting it into
+"inv", same as "inventory"
+"inventory" - taking inventory
+
+"jump" - jumping
+
+"kill", same as "attack"
+"kiss [someone]" - kissing
+
+"l", same as "look"
+"leave", same as "exit"
+"light", same as "burn"
+"listen" - listening to
+"listen to [something]" - listening to
+"lock [an unlocked lockable thing]" - locking keylessly
+"lock [a lockable thing]" - locking keylessly
+"lock [something]" - locking keylessly
+"lock [an unlocked lockable thing] with [something]" - locking it with
+"lock [a lockable thing] with [something]" - locking it with
+"lock [something] with [something]" - locking it with
+"long" - preferring unabbreviated room descriptions
+"look" - looking
+"look [something]" - examining
+"look at [something]" - examining
+"look inside/in/into/through [something]" - searching
+"look under [something]" - looking under
+"look up [text] in [something]" - consulting it about (nouns reversed)
+
+"move", same as "push"
+"murder", same as "attack"
+
+"nap", same as "sleep"
+"no" - saying no
+"normal" - preferring sometimes abbreviated room descriptions
+"notify" - switching score notification on
+"notify on" - switching score notification on
+"notify off" - switching score notification off
+"nouns" - requesting the pronoun meanings
+
+"offer", same as "give"
+"open [something]" - opening
+"open [a locked lockable thing] with [something]" - unlocking it with
+"open [a lockable thing] with [something]" - unlocking it with
+"open [something] with [something]" - unlocking it with
+"out", same as "exit"
+
+"pay", same as "give"
+"pick up [things]" - taking
+"pick [things] up" - taking
+"polish", same as "rub"
+"pour [something] in/into/on/onto [something]" - pouring it into
+"present", same as "show"
+"press", same as "push"
+"pronouns" - requesting the pronoun meanings
+"prune", same as "cut"
+"pull [something]" - pulling
+"punch", same as "attack"
+"purchase", same as "buy"
+"push [something]" - pushing
+"push [something] [direction]" - pushing it to
+"push [something] to [direction]" - pushing it to
+"put on [something preferably held]" - wearing
+"put [something preferably held] on" - wearing
+"put down [things preferably held]" - dropping
+"put [things preferably held] down" - dropping
+"put [passkey] on [keychain]" - putting it on
+"put [other things] in/inside/into [something]" - inserting it into
+"put [other things] on/onto [something]" - putting it on
+
+"q" - quitting the game
+"quit" - quitting the game
+
+"read [something]" - examining
+"read about [text] in [something]" - consulting it about (nouns reversed)
+"read [text] in [something]" - consulting it about (nouns reversed)
+"remove [something preferably held]" - taking off
+"remove [things inside] from [something]" - removing it from
+"restart" - restarting the game
+"restore" - restoring the game
+"rise your/a/the/-- hand" - calling a waiter
+"rotate", same as "turn"
+"rub [something]" - rubbing
+"rub the/-- hands" - washing hands
+"run", same as "go"
+
+"save" - saving the game
+"say", same as "answer"
+"scale", same as "climb"
+"score" - requesting the score
+"screw", same as "turn"
+"script" - switching the story transcript on
+"script on" - switching the story transcript on
+"script off" - switching the story transcript off
+"scrub", same as "rub"
+"search [something]" - searching
+"set [something] to [text]" - setting it to
+"shed [something preferably held]" - taking off
+"shift", same as "push"
+"shine", same as "rub"
+"short" - preferring abbreviated room descriptions
+"shout", same as "answer"
+"show [someone] [something preferably held]" - showing it to (nouns reversed)
+"show [something preferably held] to [someone]" - showing it to
+"shut", same as "close"
+"sing" - singing
+"sip", same as "drink"
+"sit on/in/inside [something]" - entering
+"sit on top of [something]" - entering
+"skip", same as "jump"
+"sleep" - sleeping
+"slice", same as "cut"
+"smash", same as "attack"
+"smell" - smelling
+"smell [something]" - smelling
+"sniff", same as "smell"
+"sorry" - saying sorry
+"speak", same as "answer"
+"spread [something] on/over [something]" - spreading it on
+"squash", same as "squeeze"
+"squeeze [something]" - squeezing
+"stand" - exiting
+"stand up" - exiting
+"stand on [something]" - entering
+"superbrief" - preferring abbreviated room descriptions
+"swallow", same as "drink"
+"sweep", same as "rub"
+"swing [something]" - swinging
+"swing on [something]" - swinging
+"switch [something switched on]" - switching off
+"switch [something]" - switching on
+"switch on [something]" - switching on
+"switch [something] on" - switching on
+"switch [something] off" - switching off
+"switch off [something]" - switching off
+
+"t [any known thing]" - implicit-informing
+"t [text]" - implicit-telling
+"take inventory" - taking inventory
+"take [things]" - taking
+"take off [something]" - taking off
+"take [something] off" - taking off
+"take [things inside] from [something]" - removing it from
+"take [things inside] off [something]" - removing it from
+"talk about [any known thing]" - implicit-informing
+"talk to [something]" - saying hello to
+"taste [something]" - tasting
+"tell [someone] about [any known thing]" - informing it about
+"tell [someone] about [text]" - telling it about
+"tell [someone] that [text]" - answering it that
+"tell [someone] [text]" - answering it that
+"thank" - leavetaking
+"thank waiter/waitress/--" - leavetaking
+"thank [something]" - saying goodbye to
+"think" - thinking
+"throw", same as "drop"
+"thump", same as "attack"
+"tie [something] to [something]" - tying it to
+"torture", same as "attack"
+"touch [something]" - touching
+"transcript" - switching the story transcript on
+"transcript on" - switching the story transcript on
+"transcript off" - switching the story transcript off
+"turn [something]" - turning
+"turn [something] on" - switching on
+"turn on [something]" - switching on
+"turn [something] off" - switching off
+"turn off [something]" - switching off
+"twist", same as "turn"
+
+"uncover [something]" - opening
+"unlock [a locked lockable thing]" - unlocking keylessly
+"unlock [a lockable thing]" - unlocking keylessly
+"unlock [something]" - unlocking keylessly
+"unlock [a locked lockable thing] with [something]" - unlocking it with
+"unlock [a lockable thing] with [something]" - unlocking it with
+"unlock with [something]" - unlocking it with
+"unlockall" - universal unlocking
+"unscrew", same as "turn"
+"unwrap [something]" - opening
+"urinate" - urinating into
+"urinate in/into/to/-- [something]" - urinating into
+"use wc/toilet/bowl" - urinating into
+
+"verbose" - preferring unabbreviated room descriptions
+"verify" - verifying the story file
+"version" - requesting the story file version
+
+"wait" - waiting
+"wake" - waking up
+"wake up" - waking up
+"wake [someone]" - waking
+"wake [someone] up" - waking
+"wake up [someone]" - waking
+"walk", same as "go"
+"wash the/-- hands" - washing hands
+"watch", same as "examine"
+"wave" - waving hands
+"wave [something]" - waving
+"wear [something preferably held]" - wearing
+"wipe", same as "rub"
+"wreck", same as "attack"
+
+"x", same as "examine"
+
+"y", same as "yes"
+"yes" - saying yes
+
+"z", same as "wait"

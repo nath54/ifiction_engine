@@ -1,0 +1,51 @@
+{
+    "things": {
+        "door1": {
+            "name": "door",
+            "description": "a simple door",
+            "attributes": ["openable"],
+            "is_open": 0,
+            "is_locked": 1
+        },
+        "key1": {
+            "name": "key",
+            "description": "a simple key",
+            "attributes": ["item"],
+            "unlocks": ["door1"]
+        }
+    },
+    "rooms": {
+        "room1": {
+            "description": "a simple room",
+            "zones": {
+                "main": ["key1"]
+            },
+            "access": [
+                {
+                    "thing": "door1",
+                    "direction": "east",
+                    "links_to": "room2"
+                }
+            ]
+        },
+        "room2": {
+            "description": "a simple empty room",
+            "access": [
+                {
+                    "thing": "door1",
+                    "direction": "west",
+                    "links_to": "room1"
+                }
+            ]
+        }
+    },
+    "start": {
+        "room": "start"
+    },
+    "end": [
+        {
+            "type": "inside",
+            "room": "room2"
+        }
+    ]
+}

@@ -9,9 +9,8 @@ if any, as specified.
 Author: ChatGPT – “Details make perfection, and perfection is not a detail.”
 """
 
-import sys
-import ply.lex as lex
-import ply.yacc as yacc
+import ply.lex as lex  # type: ignore
+import ply.yacc as yacc  # type: ignore
 
 #########################################
 # Lexer
@@ -48,7 +47,6 @@ reserved = {
     'move':     'GO',
     'mv':       'GO',
     'displace': 'GO',
-    'd':        'GO',
     'walk':     'GO',
     'run':      'GO',
     'sprint':   'GO',
@@ -58,21 +56,13 @@ reserved = {
 
     # Atomic directions (also used as prepositions sometimes)
     'north':    'NORTH',
-    'n':        'NORTH',
     'south':    'SOUTH',
-    's':        'SOUTH',
     'east':     'EAST',
-    'e':        'EAST',
     'west':     'WEST',
-    'w':        'WEST',
     'up':       'UP',
     'above':    'UP',   # for displacement, above is same as up
-    'u':        'UP',
-    'a':        'UP',
     'down':     'DOWN',
     'below':    'DOWN',
-    'b':        'DOWN',
-    'd':        'DOWN',
 
     # Interact with objects
     'take':     'TAKE',
@@ -82,7 +72,6 @@ reserved = {
     'put':      'PUT',
     'in':       'IN',
     'on':       'ON',
-    'above':    'ABOVE', # when used in location (distinct from direction UP)
     'into':     'INTO',
     'push':     'PUSH',
     'press':    'PUSH',
@@ -442,7 +431,6 @@ def p_put_command(p):
 def p_put_prep(p):
     '''put_prep : IN
                 | ON
-                | ABOVE
                 | INTO'''
     p[0] = p[1]
 

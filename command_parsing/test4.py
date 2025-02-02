@@ -655,15 +655,10 @@ def p_feed_command(p):
     p[0] = ("FEED", p[2], p[4])
 
 def p_give_command(p):
-    '''give_command : GIVE item item
-                    | GIVE item TO item'''
-    # Two variants: "give [someone] [something]" or "give [something] to [someone]"
-    if len(p) == 4:
-        print(f"GIVE, \"{p[2]}\", \"{p[3]}\"")
-        p[0] = ("GIVE", p[2], p[3])
-    else:
-        print(f"GIVE, \"{p[2]}\", \"{p[4]}\"")
-        p[0] = ("GIVE", p[2], p[4])
+    '''give_command : GIVE item TO item'''
+    print(f"GIVE, \"{p[2]}\", \"{p[4]}\"")
+    p[0] = ("GIVE", p[2], p[4])
+
 
 #########################################
 # Voice / Discussions / Text commands

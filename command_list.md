@@ -2,103 +2,116 @@
 
 ## Observation
 
-- `(see/look/l)`
-- `recap`
-- `brief [something/someone]`
-- `(watch/describe) [something/someone]`
-- `(examine/inspect/check/x) [something/someone]`
-- `(rummage/search) [something]`: search if there is no objects inside something
-- `(hear/listen) ?{[something/someone]}`
-- `(touch/feel) [something/someone]`
-- `read [something] ?{page [number]}`
-- `taste [something]`
-- `(smell/sniff) [something/someone]`
+- `(see/look around/look)`: Observe the surroundings and get a description of the current area.
+- `recap`: Summarize recent events, clues, or interactions.
+- `brief [something/someone]`: Give a short description of something or someone. (ex: `brief ancient statue`)
+- `(watch/describe) [something/someone]`: Give a detailed description of an object or character. (ex: `describe mysterious painting`)
+- `(examine/inspect/check) [something/someone]`: Closely inspect something or someone to reveal details. (ex: `examine old diary`)
+- `(rummage/search) [something]`: Search a container or place for hidden items. (ex: `rummage drawer`)
+- `(hear/listen) ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
+- `(touch/feel) [something/someone]`: Sense the texture, temperature, or state of an object or person. (ex: `feel statue`)
+- `read [something] ?{page [number]}`: Read a written document, optionally specifying a page. (ex: `read journal page 2`)
+- `taste [something]`: Try tasting an object. (ex: `taste soup`)
+- `(smell/sniff) [something/someone]`: Identify the scent of something or someone. (ex: `sniff flower`)
 
 ## Displacement
 
-- `(go/move/mv/displace/d/walk/run/sprint) [direction]`: Go, displace to the direction
+- `(go/displace/walk/run/sprint) [direction]`: Move in the specified direction. (ex: `go north`)
 
 Atomic-direction:
-    - North / N
-    - South / S
-    - East / E
-    - West / W
-    - Up / Above / U / A
-    - Down / Below / B / D
+    - North
+    - South
+    - East
+    - West
+    - Up
+    - Down
 
-Direction -> [atomic-direction] | [atomic-direction][atomic-direction]
+Directions:
+    - North
+    - South
+    - West
+    - East
+    - Up
+    - Down
+    - North West / North-West / NorthWest
+    - North East / North-East / NorthEast
+    - North Up / North-Up / NorthUp
+    - North Down / North-Down / NorthDown
+    - South West / South-West / SouthWest
+    - South East / South-East / SouthEast
+    - South Up / South-Up / SouthUp
+    - South Down / South-Down / SouthDown
 
 ## Interact with objects
 
-- `(take/carry/hold/pick/pick up) [something]`: Take an object in the inventory (ex: `take golden key`)
-- `(put/move/displace) [something] (in/on/above/into) [somewhere/something]`: Put an object somewhere
-- `(push/press/apply force on) [something]`: (ex: `Press button`, `Push the lever`)
-- `pull [something]`: (ex: `Pull the lever`)
-- `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: (ex: `attach the bandit to the crochet with a chain`)
-- `(break/destroy) [something]`: Needs the object to be destroyable (ex: `break the glass`)
-- `throw [something] on [something]`: (ex: `throw rock to the window`)
-- `(throw/drop/discard/get off) [something]`: Remove the object from your inventory (ex: `throw the bag`)
-- `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Cleaning something, maybe in order to reveal something
-- `use [something] ?{on [something/someone]}`: (ex: `use the door`, `use the ladder`)
-- `climb [something]`
-- `open [something]`
-- `(close/shut) [something]`
-- `lock [something] ?{with [something]}`
-- `unlock [something] ?{with [something]}`
-- `fill [something] (with/from) [something]`: (ex: `Fill the glass from the sink`, `fill the pitcher from the barrel of beer`)
-- `(pour) [something] into [something]`: (ex: `Pour `)
-- `insert [something] into [something]`
-- `remove [something] from [something]`: removing it from
-- `set [something] to [state]`
-- `spread [something] ?{on [something/someone]}`
-- `(squeeze/squash) [something]`
+- `(take/carry/hold/pick/pick up) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
+- `(put/move) [something] (in/on/above/into) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
+- `(push/press/apply force on) [something]`: Apply force to an object. (ex: `press button`)
+- `pull [something]`: Pull an object. (ex: `pull lever`)
+- `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: Attach an object to something. (ex: `attach bandit to chair with rope`)
+- `(break/destroy) [something]`: Destroy a destructible object. (ex: `break glass`)
+- `throw [something] on [something]`: Throw an object at another object. (ex: `throw rock on window`)
+- `(throw/drop/discard/get off) [something]`: Remove an object from inventory. (ex: `drop bag`)
+- `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Clean something. (ex: `wash painting`)
+- `use [something] ?{on [something/someone]}`: Use an object, optionally on something or someone. (ex: `use key on door`)
+- `climb [something]`: Climb an object. (ex: `climb tree`)
+- `open [something]`: Open a door, chest, or other container. (ex: `open chest`)
+- `(close/shut) [something]`: Close an object. (ex: `close window`)
+- `lock [something] ?{with [something]}`: Lock an object. (ex: `lock door with golden key`)
+- `unlock [something] ?{with [something]}`: Unlock an object. (ex: `unlock chest with rusty key`)
+- `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
+- `(pour) [something] into [something]`: Pour a liquid. (ex: `pour coffee into cup`)
+- `insert [something] into [something]`: Insert an item. (ex: `insert coin into vending machine`)
+- `remove [something] from [something]`: Take something out of another object. (ex: `remove book from shelf`)
+- `set [something] to [state]`: Adjust an object’s state. (ex: `set lamp to on`)
+- `spread [something] ?{on [something/someone]}`: Apply something over a surface. (ex: `spread butter on bread`)
+- `(squeeze/squash) [something]`: Press or crush an object. (ex: `squeeze lemon`)
 
-## Interaction with consommable
+## Interaction with consumables
 
-- `(consume/eat) [something]`
-- `(drink/sip/swallow) [something]`
+- `(consume/eat) [something]`: Eat an item. (ex: `eat apple`)
+- `(drink/sip/swallow) [something]`: Drink a liquid. (ex: `drink potion`)
 
 ## Interactions with living things
 
-- `(awake/wake/wake up) [someone]`
-- `(attack/smash/fight/hit/hurt/kill/murder/punch/slice/thump/torture/wreck) [someone] ?{with [something]}`: (ex: `attack the bandit with the sword`)
-- `throw [something] on [someone]`: (ex: `throw a rock to the bandit`)
-- `(buy/purchase) ?{quantity} [something] to [someone]`: (ex: `Buy a bottle of milk to the shop keeper` / `Buy 5 sandwiches to the shop keeper`) -> Automatically use the assignated price that can be known by reading the descriptions, the ticket, ...
-- `(show/display/present) [something/someone] to [someone]`
-- `(embrace/hug/kiss) [someone]`
-- `(feed) [someone] with [something]`
-- `(give/offer) [someone] [something]`
-- `(give/offer) [something] to [someone]`
+- `(awake/wake/wake up) [someone]`: Wake a sleeping person. (ex: `wake up guard`)
+- `(attack/smash/fight/hit/hurt/kill/murder/punch/slice/thump/torture/wreck) [someone] ?{with [something]}`: Attack someone. (ex: `attack bandit with sword`)
+- `throw [something] on [someone]`: Throw an object at someone. (ex: `throw rock on bandit`)
+- `(buy/purchase) ?{quantity} [something] to [someone]`: Buy an item. (ex: `buy 2 potions to merchant`)
+- `(show/display/present) [something/someone] to [someone]`: Show something to someone. (ex: `show passport to guard`)
+- `(embrace/hug/kiss) [someone]`: Perform an affectionate gesture. (ex: `hug friend`)
+- `(feed) [someone] with [something]`: Give food to someone. (ex: `feed dog with bone`)
+- `(give/offer) [something] to [someone]`: Alternative phrasing. (ex: `offer flower to lover`)
 
 ## Voice / Discussions / Text
 
-- `(say / tell / ask / answer / shout ) "..." to [someone / something]`
-- `ask [someone] (about/for/on) [something/someone]`
-- `(write) "..." on [something] ?{with [something]}` : (ex: `Write "Hello" on the old paper with pencil`)
+- `(say/tell/ask/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
+- `ask [someone] (about/for/on) [something/someone]`: Ask someone for information. (ex: `ask merchant about potion`)
+- `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`)
 
 ## Interaction with yourself
 
-- `(wear/dress) [something]`: Wear a clothe, or an equipment
-- `(remove/take off/strip/pull off/shed) [something]`: Take off a clothe, or an equipment
-- `(inventory/inv/i)`: List the objects of your inventory
-- `wait ?{[duration]}`
-- `(sleep/nap)`
-- `sit on [something]`: (ex: `sit on chair`)
-- `(lie/lie down) on [something]`: (ex: `lie down on the bed`)
-- `(stand/stand up)`
+- `(wear/dress) [something]`: Wear clothing or equipment. (ex: `wear helmet`)
+- `(remove/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
+- `(inventory/inv/i)`: List the objects in your inventory. (ex: `inv`)
+- `wait ?{[duration]}`: Pause and let time pass. (ex: `wait 5 minutes`)
+- `(sleep/nap)`: Rest and possibly recover. (ex: `sleep`)
+- `sit on [something]`: Take a seat on an object. (ex: `sit on chair`)
+- `(lie/lie down) on [something]`: Lie down on an object. (ex: `lie down on the bed`)
+- `(stand/stand up)`: Return to a standing position. (ex: `stand up`)
 
 ## Random things
 
-- `dance`
-- `(chant/sing)`
-- `(jump/hop)`
-- `(think)`
+- `dance`: Perform a dance. (ex: `dance`)
+- `(chant/sing)`: Sing or chant something. (ex: `sing`)
+- `(jump/hop)`: Jump up or forward. (ex: `jump`)
+- `(think)`: Reflect or contemplate. (ex: `think`)
 
 ## System commands
 
-- `save ?{filepath of game save}`
-- `(quit/q)`
-- `(load/restore) {filepath of game save}`
-- `restart`
-- `score`
-- `help : show the list of command`
+- `save ?{filepath of game save}`: Save the game. (ex: `save game1.sav`)
+- `(quit/q)`: Quit the game. (ex: `quit`)
+- `(load/restore) {filepath of game save}`: Load a saved game. (ex: `load game1.sav`)
+- `restart`: Restart the game. (ex: `restart`)
+- `score`: Show current progress. (ex: `score`)
+- `help`: Show the list of commands. (ex: `help`)

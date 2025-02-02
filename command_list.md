@@ -7,7 +7,7 @@
 - `brief [something/someone]`
 - `(watch/describe) [something/someone]`
 - `(examine/inspect/check/x) [something/someone]`
-- `(rummage) [something]`: search if there is no objects inside something
+- `(rummage/search) [something]`: search if there is no objects inside something
 - `(hear/listen) ?{[something/someone]}`
 - `(touch/feel) [something/someone]`
 - `read [something] ?{page [number]}`
@@ -101,3 +101,4 @@ Direction -> [atomic-direction] | [atomic-direction][atomic-direction]
 - `(load/restore) {filepath of game save}`
 - `restart`
 - `score`
+- `help : show the list of command`

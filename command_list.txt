@@ -1,5 +1,14 @@
 # List of commands
 
+## Observation
+
+- `see`
+- `recap`
+- `brief [something/someone]`
+- `describe [something/someone]`
+- `(examine/inspect/check) [something/someone]`
+- `(rummage) [something]`: search if there is no objects inside something
+
 ## Displacement
 
 - `(go/move/mv/displace/d) North/N`: Go North
@@ -11,79 +20,47 @@
 
 ## Interact with objects
 
-- `take`
-- `put`
-- `push`
-- `pull`
-- 
+- `(take/carry) [something]`: Take an object in the inventory (ex: `take golden key`)
+- `put [something] (in/on/above) [somewhere/something]`: Put an object somewhere
+- `(push/press/apply force on) [something]`: (ex: `Press button`, `Push the lever`)
+- `pull [something]`: (ex: `Pull the lever`)
+- `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: (ex: `attach the bandit to the crochet with a chain`)
+- `(break/destroy) [something]`: Needs the object to be destroyable (ex: `break the glass`)
+- `throw [something] on [something]`: (ex: `throw rock to the window`)
+- `(throw/drop/discard) [something]`: Remove the object from your inventory (ex: `throw the bag`)
+- `(clean/rub/polish) [something]`: Cleaning something, maybe in order to reveal something
+- `use [something]`: (ex: `use the door`, `use the ladder`, `use the `)
+- `climb [something]`
+- `open [something]`
+- `close [something]`
+
+## Voice / Discussions / Text
+
+- `(say / tell / ask / answer ) "..." to [someone / something]`
+- `ask [someone] (about/for/on) [something/someone]`
+- `(write) "..." on [something] ?{with [something]}` : (ex: `Write "Hello" on the old paper with pencil`)
+
+## Interactions with living things
+
+- `(awake/wake/wake up) [someone]`
+- `(attack/smash) [someone] ?{with [something]}`: (ex: `attack the bandit with the sword`)
+- `throw [something] on [someone]`: (ex: `throw a rock to the bandit`)
+- `buy ?{quantity} [something] to [someone]`: (ex: `Buy a bottle of milk to the shop keeper` / `Buy 5 sandwiches to the shop keeper`) -> Automatically use the assignated price that can be known by reading the descriptions, the ticket, ...
+- `(show/display) [something/someone] to [someone]`
+
+## Interaction with yourself
+
+- `wear [something]`: Wear a clothe, or an equipment
+- ``
+
+## Random things
+
+- `dance`
+- `chant`
+- `jump`
 
 
-"[direction]" - going
-"[number]" - number questioning
-"[number]" - menu questioning
-"[real number]" - real number questioning
-"[decision]" - yes/no questioning
-"[gender]" - gender questioning
-"[text]" - text questioning
 
-"a [any known thing]" - implicit-quizzing
-"a [text]" - implicit-asking
-"adjust", same as "set"
-"answer hello/hi" - hailing
-"answer [number]" - number questioning
-"answer [number]" - menu questioning
-"answer [real number]" - real number questioning
-"answer [decision]" - yes/no questioning
-"answer [gender]" - gender questioning
-"answer hello/hi to [something]" - saying hello to
-"answer bye/goodbye/farewell/cheerio to [someone]" - saying goodbye to
-"answer [text] to [someone]" - answering it that (nouns reversed)
-"answer [text]" - text questioning
-"ask about [any known thing]" - implicit-quizzing
-"ask for [any known thing]" - implicit-requesting
-"ask [someone] for [any known thing]" - requesting it for
-"ask [someone] about [any known thing]" - quizzing it about
-"ask [someone] about [text]" - asking it about
-"ask [someone] for [text]" - imploring it for
-"ask about [text]" - implicit-asking
-"ask for [text]" - implicit-imploring
-"attach", same as "tie"
-"attack [something]" - attacking
-"awake", same as "wake"
-"awaken", same as "wake"
-
-"break", same as "attack"
-"brief" - preferring sometimes abbreviated room descriptions
-"burn [something]" - burning
-"buy [something]" - buying
-"bye" - leavetaking
-
-"call for/-- a/-- waiter/waitress" - calling a waiter
-"carry", same as "take"
-"check", same as "examine"
-"cheerio" - leavetaking
-"chop", same as "cut"
-"clean", same as "rub"
-"clear", same as "push"
-"climb [something]" - climbing
-"climb up/over [something]" - climbing
-"close [something]" - closing
-"close up [something]" - closing
-"close off [something]" - switching off
-"consult [something] on/about [text]" - consulting it about
-"cover", same as "close"
-"crack", same as "attack"
-"cross", same as "enter"
-"cut [something]" - cutting
-
-"dance" - dancing
-"describe", same as "examine"
-"destroy", same as "attack"
-"discard", same as "drop"
-"display", same as "show"
-"disrobe", same as "shed"
-"doff", same as "shed"
-"don", same as "wear"
 "drag", same as "pull"
 "dress [something] with [something]" - spreading it on (nouns reversed)
 "drink [something]" - drinking

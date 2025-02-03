@@ -1,7 +1,9 @@
 #
 from typing import Optional
 #
+import sys
 import re
+import os
 
 #
 commands_keywords: dict[str, list[str]] = {
@@ -249,9 +251,6 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
         \s+({keywords_c_pattern})              # Keyword C (to/at)
         \s+(.+)                                # Capture target (merchant, etc.)
     """
-
-    #
-    print(f"DEBUG | pattern=\"{pattern}\" | command_input = \"{command_input}\"")
 
     # Match using regex with re.VERBOSE for readability
     match = re.match(pattern, command_input, re.VERBOSE)
@@ -784,4 +783,19 @@ def main_user_input_test() -> None:
 #
 if __name__ == "__main__":
     #
-    main_user_input_test()
+    if len(sys.argv) > 1:
+        input_test_file: str = sys.argv[1]
+        #
+        if not os.path.exists(input_test_file):
+            raise FileNotFoundError(f"Error : {input_test_file} not found !")
+        #
+        with open(input_test_file, "r", encoding="utf-8") as f:
+            tests: list[str] = f.read().split("\n")
+        #
+        test: str
+        for test_input in tests:
+            print(f"{parse_command(test_input)}")
+    #
+    else:
+        #
+        main_user_input_test()

@@ -23,10 +23,10 @@ commands_keywords: dict[str, list[str]] = {
     "C_PUT": ["put", "move"],
     "C_PUSH": ["push", "press", "apply force on"],
     "C_PULL": ["pull"],
-    "C_ATTACH": ["attache", "lie"],
+    "C_ATTACH": ["attach", "tie"],
     "C_BREAK": ["break", "destroy"],
     "C_THROW": ["throw"],
-    "C_DROP": ["drop", "discard", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
+    "C_DROP": ["drop", "discard"],
     "C_CLEAN": ["clean", "rub", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
     "C_USE": ["use"],
     "C_CLIMB": ["climb"],
@@ -171,8 +171,8 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: s
     #
     return None
 
-#
-def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
+
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
     #
     if isinstance(keyword_B, str):
         keyword_B = [keyword_B]
@@ -187,13 +187,18 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input
 
     # The ? after the group makes it optional.  We use non-capturing groups
     # for the parts we don't need to extract (the ? and space).
-    pattern = rf"({keywords_a_pattern})\s+(.*?)\s+({keywords_b_pattern})\s+(.*?)(?:\s+\?({keywords_c_pattern})\s+(.*?))?"
+    pattern = rf"({keywords_a_pattern})\s+(.*)\s+({keywords_b_pattern})\s+(.*)(\s+({keywords_c_pattern})\s+(.*))"
+
+    print(pattern)
 
     #
     match = re.match(pattern, command_input)
 
     #
     if match:
+        #
+        print(match.groups())
+        #
         keyword_a, text_a, keyword_b, text_b, keyword_c, text_c = match.groups()
         #
         if return_keywords:
@@ -202,6 +207,21 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input
         return [command_name, text_a, text_b, text_c]
     else:
         return None
+
+#
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
+    #
+    res: Optional[list[str]] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, keyword_C, return_keywords)
+    #
+    if res is not None:
+        return res
+    #
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, return_keywords)
+    #
+    if res is not None:
+        return res + ['']
+    #
+    return None
 
 #
 def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_opt: str | list[str], return_keyword: bool = False) -> Optional[list[str]]:
@@ -428,7 +448,7 @@ def parse_command(command_input: str) -> list[str]:
     # `throw [something] on [something]`: Throw an object at another object. (ex: `throw rock on window`)
     # `throw [something] on [someone]`: Throw an object at someone. (ex: `throw rock on bandit`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_THROW", ["on"])
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_THROW", ["on", "to", "into", "in"])
     if res is not None:
         return res
 
@@ -491,14 +511,14 @@ def parse_command(command_input: str) -> list[str]:
     #### COMMAND FILL
     # `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_UNLOCK", ["with", "from"])
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_FILL", ["with", "from"])
     if res is not None:
         return res
 
     #### COMMAND POUR
     # `(pour) [something] into [something]`: Pour a liquid. (ex: `pour coffee into cup`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_POUR", ["into"])
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_POUR", ["in", "    into"])
     if res is not None:
         return res
 

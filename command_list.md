@@ -8,7 +8,7 @@
 - `(watch/describe) [something/someone]`: Give a detailed description of an object or character. (ex: `describe mysterious painting`)
 - `(examine/inspect/check) [something/someone]`: Closely inspect something or someone to reveal details. (ex: `examine old diary`)
 - `(rummage/search) [something]`: Search a container or place for hidden items. (ex: `rummage drawer`)
-- `(hear/listen) ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
+- `(hear/listen) ?{TO} ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
 - `(touch/feel) [something/someone]`: Sense the texture, temperature, or state of an object or person. (ex: `feel statue`)
 - `read [something] ?{page [number]}`: Read a written document, optionally specifying a page. (ex: `read journal page 2`)
 - `taste [something]`: Try tasting an object. (ex: `taste soup`)
@@ -50,8 +50,8 @@ Directions:
 - `pull [something]`: Pull an object. (ex: `pull lever`)
 - `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: Attach an object to something. (ex: `attach bandit to chair with rope`)
 - `(break/destroy) [something]`: Destroy a destructible object. (ex: `break glass`)
-- `throw [something] on [something]`: Throw an object at another object. (ex: `throw rock on window`)
-- `(throw/drop/discard/get off) [something]`: Remove an object from inventory. (ex: `drop bag`)
+- `throw [something] on [something/someone]`: Throw an object at another object. (ex: `throw rock on window`)
+- `(drop/discard/get off) [something]`: Remove an object from inventory. (ex: `drop bag`)
 - `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Clean something. (ex: `wash painting`)
 - `use [something] ?{on [something/someone]}`: Use an object, optionally on something or someone. (ex: `use key on door`)
 - `climb [something]`: Climb an object. (ex: `climb tree`)
@@ -76,8 +76,7 @@ Directions:
 
 - `(awake/wake/wake up) [someone]`: Wake a sleeping person. (ex: `wake up guard`)
 - `(attack/smash/fight/hit/hurt/kill/murder/punch/slice/thump/torture/wreck) [someone] ?{with [something]}`: Attack someone. (ex: `attack bandit with sword`)
-- `throw [something] on [someone]`: Throw an object at someone. (ex: `throw rock on bandit`)
-- `(buy/purchase) ?{quantity} [something] to [someone]`: Buy an item. (ex: `buy 2 potions to merchant`)
+- `(buy/purchase) ?{[quantity] of} [something] to [someone]`: Buy an item. (ex: `buy 2 potions to merchant`)
 - `(show/display/present) [something/someone] to [someone]`: Show something to someone. (ex: `show passport to guard`)
 - `(embrace/hug/kiss) [someone]`: Perform an affectionate gesture. (ex: `hug friend`)
 - `(feed) [someone] with [something]`: Give food to someone. (ex: `feed dog with bone`)
@@ -85,15 +84,15 @@ Directions:
 
 ## Voice / Discussions / Text
 
-- `(say/tell/ask/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
+- `(say/tell/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
 - `ask [someone] (about/for/on) [something/someone]`: Ask someone for information. (ex: `ask merchant about potion`)
 - `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`)
 
 ## Interaction with yourself
 
 - `(wear/dress) [something]`: Wear clothing or equipment. (ex: `wear helmet`)
-- `(remove/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
-- `(inventory/inv/i)`: List the objects in your inventory. (ex: `inv`)
+- `(undress/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
+- `(inventory, "stock")`: List the objects in your inventory. (ex: `inv`)
 - `wait ?{[duration]}`: Pause and let time pass. (ex: `wait 5 minutes`)
 - `(sleep/nap)`: Rest and possibly recover. (ex: `sleep`)
 - `sit on [something]`: Take a seat on an object. (ex: `sit on chair`)

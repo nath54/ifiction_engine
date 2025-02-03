@@ -1,9 +1,262 @@
+#
+from typing import Optional
+#
+import re
+
+#
+commands_keywords: dict[str, list[str]] = {
+    "C_LOOKAROUND": ["see", "look around", "look"],
+    "C_RECAP": ["recap"],
+    "C_BRIEF": ["brief"],
+    "C_DESCRIBE": ["describe", "watch"],
+    "C_EXAMINE": ["examine", "inspect", "check"],
+    "C_RUMMAGE": ["rummage", "search"],
+    "C_LISTEN": ["hear", "listen"],
+    "C_TOUCH": ["touch", "feel"],
+    "C_READ": ["read"],
+    "C_TASTE": ["taste"],
+    "C_SMELL": ["smell", "sniff"],
+    "C_GO": ["go", "displace", "walk", "run", "sprint"],
+    "C_TAKE": ["take", "carry", "hold", "pick", "pick up"],
+    "C_PUT": ["put", "move"],
+    "C_PUSH": ["push", "press", "apply force on"],
+    "C_PULL": ["pull"],
+    "C_ATTACH": ["attache", "lie"],
+    "C_BREAK": ["break", "destroy"],
+    "C_THROW": ["throw"],
+    "C_DROP": ["drop", "discard", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
+    "C_USE": ["use"],
+    "C_CLIMB": ["climb"],
+    "C_OPEN": ["open"],
+    "C_CLOSE": ["close", "shut"],
+    "C_LOCK": ["lock"],
+    "C_UNLOCK": ["unlock"],
+    "C_FILL": ["fill"],
+    "C_POUR": ["pour"],
+    "C_INSERT": ["insert"],
+    "C_REMOVE": ["remove"],
+    "C_SET": ["set"],
+    "C_SPREAD": ["spread"],
+    "C_SQUEEZE": ["squeeze", "squash"],
+    "C_EAT": ["eat", "consume"],
+    "C_DRINK": ["drink", "swallow", "sip"],
+    "C_AWAKE": ["awake", "wake", "wake up"],
+    "C_ATTACK": ["attack", "smash", "fight", "hit", "hurt", "kill", "murder", "punch", "slice", "thump", "torture", "wreck"],
+    "C_BUY": ["buy", "purchase"],
+    "C_SHOW": ["show", "display", "present"],
+    "C_EMBRACE": ["embrace", "kiss", "hug"],
+    "C_FEED": ["feed"],
+    "C_GIVE": ["give", "offer"],
+    "C_SAY": ["say", "tell", "answer", "shout"],
+    "C_ASK": ["ask"],
+    "C_WRITE": ["write"],
+    "C_WEAR": ["wear", "dress"],
+    "C_UNDRESS": ["undress", "take off", "strip", "pull off", "shed"],
+    "C_INVENTORY": ["inventory", "stock", "what's in my bag"],
+    "C_WAIT": ["wait"],
+    "C_SLEEP": ["sleep", "nap"],
+    "C_SIT_DOWN": ["sit down", "sit on", "sit"],
+    "C_LIE_DOWN": ["lie down", "lie"],
+    "C_STAND_UP": ["stand up", "stand"],
+    "C_DANCE": ["dance"],
+    "C_SING": ["sing", "chant"],
+    "C_JUMP": ["jump", "hop"],
+    "C_THINK": ["think"],
+    "C_SAVE": ["save"],
+    "C_QUIT": ["quit"],
+    "C_LOAD": ["load", "restore"],
+    "C_RESTART": ["restart"],
+    "C_SCORE": ["score"],
+    "C_HELP": ["help"]
+}
+
+#
+def traite_txt(txt: str) -> str:
+    #
+    txt = txt.strip().lower()
+    #
+    txt = txt.replace("-", " ")
+    txt = txt.replace("'", "")
+    #
+    return txt
+
+#
+def test_COMMAND(command: str, command_name: str) -> Optional[list[str]]:
+    #
+    for kw in commands_keywords[command_name]:
+        if traite_txt(kw) == command:
+            return [command_name]
+    #
+    return None
+
+#
+def test_COMMAND_SOMETHING(command: str, command_name: str) -> Optional[list[str]]:
+    #
+    kw: str
+    for kw in commands_keywords[command_name]:
+        #
+        tkw: str = traite_txt(kw)
+        ltkw: int = len(tkw)
+        #
+        if command.startswith(tkw) and len(command) > ltkw:
+            #
+            return [command_name, command[ltkw:].strip()]
+    #
+    return None
+
+#
+def test_COMMAND_OPT_SOMETHING(command: str, command_name: str) -> Optional[list[str]]:
+    #
+    kw: str
+    for kw in commands_keywords[command_name]:
+        #
+        tkw: str = traite_txt(kw)
+        ltkw: int = len(tkw)
+        #
+        if command.startswith(tkw):
+            #
+            return [command_name, command[ltkw:].strip(), command[:ltkw].strip()]
+    #
+    return None
+
+#
+def test_COMMAND_OPT_TO_SOMETHING(command: str, command_name: str) -> Optional[list[str]]:
+    #
+    kw: str
+    for kw in commands_keywords[command_name]:
+        #
+        tkw: str = traite_txt(kw)
+        ltkw: int = len(tkw)
+        #
+        if command.startswith(tkw+" to ") and len(command) > (ltkw + 4):
+            #
+            return [command_name, command[(ltkw+4):].strip()]
+        #
+        if command.startswith(tkw) and len(command) > ltkw:
+            #
+            return [command_name, command[ltkw:].strip()]
+    #
+    return None
+
+#
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command: str, command_name: str, keyword_connection: str | list[str], return_keyword: bool = False) -> Optional[list[str]]:
+    #
+    if isinstance(keyword_connection, str):
+        keyword_connection = [keyword_connection]
+
+    # Create regex patterns for the keywords (using the | operator for "or")
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])  # Escape keywords for safety
+    keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_connection)
+
+    # Construct the main regex pattern
+    pattern = rf"({keywords_a_pattern})\s+(.*?)\s+({keywords_b_pattern})\s+(.*)"  # r"" for raw string, f"" for f-string
+
+    #
+    match = re.match(pattern, command)
+
+    #
+    if match:
+        keyword_a, text_a, keyword_b, text_b = match.groups()
+        #
+        if return_keyword:
+            #
+            return [command_name, text_a.strip(), keyword_b, text_b.strip()]
+        #
+        return [command_name, text_a.strip(), text_b.strip()]
+    else:
+        return None
+    #
+    return None
+
+#
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
+    #
+    if isinstance(keyword_B, str):
+        keyword_B = [keyword_B]
+    #
+    if isinstance(keyword_C, str):
+        keyword_C = [keyword_C]
+
+    #
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_B)
+    keywords_c_pattern = "|".join(re.escape(keyword) for keyword in keyword_C)
+
+    # The ? after the group makes it optional.  We use non-capturing groups
+    # for the parts we don't need to extract (the ? and space).
+    pattern = rf"({keywords_a_pattern})\s+(.*?)\s+({keywords_b_pattern})\s+(.*?)(?:\s+\?({keywords_c_pattern})\s+(.*?))?"
+
+    #
+    match = re.match(pattern, command)
+
+    #
+    if match:
+        keyword_a, text_a, keyword_b, text_b, keyword_c, text_c = match.groups()
+        #
+        if return_keywords:
+            return [command_name, text_a, keyword_b, text_b, keyword_c, text_c]
+        #
+        return [command_name, text_a, text_b, text_c]
+    else:
+        return None
+
+#
+def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command: str, command_name: str, keyword_opt: str | list[str], return_keyword: bool = False) -> Optional[list[str]]:
+    #
+    if isinstance(keyword_opt, str):
+        keyword_opt = [keyword_opt]
+
+    #
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_opt)
+
+    pattern = rf"({keywords_a_pattern})\s+(.*?)(?:\s*\?({keywords_b_pattern})\s+(.*?))?"
+
+    match = re.match(pattern, command)
+
+    if match:
+        keyword_a, text_a, keyword_b, text_b = match.groups()
+        #
+        if return_keyword:
+            return [command_name, text_a, keyword_b, text_b]
+        #
+        return [command_name, text_a, text_b]
+    else:
+        return None
+
+#
+def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
+    #
+    if isinstance(keyword_B, str):
+        keyword_B = [keyword_B]
+    #
+    if isinstance(keyword_C, str):
+        keyword_C = [keyword_C]
+
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords)
+    keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_B)
+    keywords_c_pattern = "|".join(re.escape(keyword) for keyword in keyword_C)
+
+    pattern = rf"({keywords_a_pattern})\s*(?:\s*(.*?)\s*({keywords_b_pattern}))?\s*(.*?)\s*({keywords_c_pattern})\s*(.*)"
+
+    match = re.match(pattern, command)
+
+    if match:
+        keyword_a, text_before_b, keyword_b, text_after_b, keyword_c, text_c = match.groups()
+        #
+        if return_keywords:
+            return [command_name, text_before_b, keyword_b, text_after_b, keyword_c, text_c]
+        #
+        return [command_name, text_before_b, text_after_b, text_c]
+    else:
+        return None
 
 #
 def parse_command(command: str) -> list[str]:
 
     #
-    command = command.strip().lower()
+    command = traite_txt(command)
+    res: Optional[list[str]] = None
 
     ##################################
     ###### OBSERVATION COMMANDS ######
@@ -12,68 +265,79 @@ def parse_command(command: str) -> list[str]:
     #### COMMAND LOOK AROUND
     # `(see/look around/look)`: Observe the surroundings and get a description of the current area.
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_LOOKAROUND")
+    if res is not None:
+        return res
 
     #### COMMAND RECAP
     # `(recap)`: Summarize recent events, clues, or interactions.
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_RECAP")
+    if res is not None:
+        return res
 
     #### COMMAND BRIEF
     #  `brief [something/someone]`: Give a short description of something or someone. (ex: `brief ancient statue`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_BRIEF")
+    if res is not None:
+        return res
 
     #### COMMAND DESCRIBE
     # `(watch/describe) [something/someone]`: Give a detailed description of an object or character. (ex: `describe mysterious painting`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_DESCRIBE")
+    if res is not None:
+        return res
 
     #### COMMAND EXAMINE
     # `(examine/inspect/check) [something/someone]`: Closely inspect something or someone to reveal details. (ex: `examine old diary`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_EXAMINE")
+    if res is not None:
+        return res
 
     #### COMMAND RUMMAGE
     # `(rummage/search) [something]`: Search a container or place for hidden items. (ex: `rummage drawer`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_RUMMAGE")
+    if res is not None:
+        return res
 
     #### COMMAND LISTEN
-    # `(hear/listen) ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
+    # `(hear/listen) ?{TO} ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_TO_SOMETHING(command, "C_RUMMAGE")
+    if res is not None:
+        return res
 
-    #### COMMAND FEEL
+    #### COMMAND TOUCH
     # `(touch/feel) [something/someone]`: Sense the texture, temperature, or state of an object or person. (ex: `feel statue`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_TOUCH")
+    if res is not None:
+        return res
 
     #### COMMAND READ
     # `read [something] ?{page [number]}`: Read a written document, optionally specifying a page. (ex: `read journal page 2`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_READ", ["page"])
+    if res is not None:
+        return res
 
     #### COMMAND TASTE
     # `taste [something]`: Try tasting an object. (ex: `taste soup`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_TASTE")
+    if res is not None:
+        return res
 
     #### COMMAND SMELL
     # `(smell/sniff) [something/someone]`: Identify the scent of something or someone. (ex: `sniff flower`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_SMELL")
+    if res is not None:
+        return res
 
     ###################################
     ###### DISPLACEMENT COMMANDS ######
@@ -82,8 +346,9 @@ def parse_command(command: str) -> list[str]:
     #### COMMAND GO
     # `(go/displace/walk/run/sprint) [direction]`: Move in the specified direction. (ex: `go north`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_GO")
+    if res is not None:
+        return res
 
     ##########################################
     ###### OBJECT INTERACTIONS COMMANDS ######
@@ -92,135 +357,157 @@ def parse_command(command: str) -> list[str]:
     #### COMMAND TAKE
     # `(take/carry/hold/pick/pick up) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_TAKE")
+    if res is not None:
+        return res
 
     #### COMMAND PUT
-    # `(put/move) [something] (in/on/above/into) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
+    # `(put/move) [something] (on/into/in) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_PUT", ["on", "into", "in"], return_keyword=True)
+    if res is not None:
+        return res
 
     #### COMMAND PUSH
     # `(push/press/apply force on) [something]`: Apply force to an object. (ex: `press button`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_PUSH")
+    if res is not None:
+        return res
 
     #### COMMAND PULL
     # `pull [something]`: Pull an object. (ex: `pull lever`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_PULL")
+    if res is not None:
+        return res
 
     #### COMMAND ATTACH
     # `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: Attach an object to something. (ex: `attach bandit to chair with rope`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_ATTACH", ["to"], ["with"])
+    if res is not None:
+        return res
 
     #### COMMAND BREAK
     # `(break/destroy) [something]`: Destroy a destructible object. (ex: `break glass`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_BREAK")
+    if res is not None:
+        return res
 
     #### COMMAND THROW
     # `throw [something] on [something]`: Throw an object at another object. (ex: `throw rock on window`)
     # `throw [something] on [someone]`: Throw an object at someone. (ex: `throw rock on bandit`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_THROW", ["on"])
+    if res is not None:
+        return res
 
     #### COMMAND DROP
     # `(drop/discard/get off) [something]`: Remove an object from inventory. (ex: `drop bag`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_DROP")
+    if res is not None:
+        return res
 
     #### COMMAND CLEAN
     # `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Clean something. (ex: `wash painting`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_CLEAN")
+    if res is not None:
+        return res
 
     #### COMMAND USE
     # `use [something] ?{on [something/someone]}`: Use an object, optionally on something or someone. (ex: `use key on door`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_USE", ["on"])
+    if res is not None:
+        return res
 
     #### COMMAND CLIMB
     # `climb [something]`: Climb an object. (ex: `climb tree`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_CLIMB")
+    if res is not None:
+        return res
 
     #### COMMAND OPEN
     # `open [something]`: Open a door, chest, or other container. (ex: `open chest`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_OPEN")
+    if res is not None:
+        return res
 
     #### COMMAND CLOSE
     # `(close/shut) [something]`: Close an object. (ex: `close window`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_CLOSE")
+    if res is not None:
+        return res
 
     #### COMMAND LOCK
     # `lock [something] ?{with [something]}`: Lock an object. (ex: `lock door with golden key`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_LOCK", ["with"])
+    if res is not None:
+        return res
 
     #### COMMAND UNLOCK
     # `unlock [something] ?{with [something]}`: Unlock an object. (ex: `unlock chest with rusty key`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_UNLOCK", ["with"])
+    if res is not None:
+        return res
 
     #### COMMAND FILL
     # `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_UNLOCK", ["with", "from"])
+    if res is not None:
+        return res
 
     #### COMMAND POUR
     # `(pour) [something] into [something]`: Pour a liquid. (ex: `pour coffee into cup`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_POUR", ["into"])
+    if res is not None:
+        return res
 
     #### COMMAND INSERT
     # `insert [something] into [something]`: Insert an item. (ex: `insert coin into vending machine`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_INSERT", ["into"])
+    if res is not None:
+        return res
 
     #### COMMAND REMOVE
     # `remove [something] from [something]`: Take something out of another object. (ex: `remove book from shelf`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_REMOVE", ["from"])
+    if res is not None:
+        return res
 
     #### COMMAND SET
     # `set [something] to [state]`: Adjust an object’s state. (ex: `set lamp to on`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_SET", ["to"])
+    if res is not None:
+        return res
 
     #### COMMAND SPREAD
     # `spread [something] ?{on [something/someone]}`: Apply something over a surface. (ex: `spread butter on bread`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_SPREAD", ["on"])
+    if res is not None:
+        return res
 
     #### COMMAND SQUEEZE
     # `(squeeze/squash) [something]`: Press or crush an object. (ex: `squeeze lemon`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_SQUEEZE")
+    if res is not None:
+        return res
 
     ##############################################
     ###### CONSUMABLE INTERACTIONS COMMANDS ######
@@ -229,14 +516,16 @@ def parse_command(command: str) -> list[str]:
     #### COMMAND EAT
     # `(consume/eat) [something]`: Eat an item. (ex: `eat apple`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_EAT")
+    if res is not None:
+        return res
 
     #### COMMAND DRINK
     # `(drink/sip/swallow) [something]`: Drink a liquid. (ex: `drink potion`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_DRINK")
+    if res is not None:
+        return res
 
     ##########################################
     ###### LIVING INTERACTIONS COMMANDS ######
@@ -245,66 +534,76 @@ def parse_command(command: str) -> list[str]:
     #### COMMAND AWAKE
     # `(awake/wake/wake up) [someone]`: Wake a sleeping person. (ex: `wake up guard`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_AWAKE")
+    if res is not None:
+        return res
 
     #### COMMAND ATTACK
     # `(attack/smash/fight/hit/hurt/kill/murder/punch/slice/thump/torture/wreck) [someone] ?{with [something]}`: Attack someone. (ex: `attack bandit with sword`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_ATTACK", ["with"])
+    if res is not None:
+        return res
 
     #### COMMAND BUY
-    # `(buy/purchase) ?{quantity} [something] to [someone]`: Buy an item. (ex: `buy 2 potions to merchant`)
+    # `(buy/purchase) ?{[quantity] of} [something] to [someone]`: Buy an item. (ex: `buy 2 potions to merchant`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command, "C_BUY", ["of"], ["to"])
+    if res is not None:
+        return res
 
     #### COMMAND SHOW
     # `(show/display/present) [something/someone] to [someone]`: Show something to someone. (ex: `show passport to guard`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_SHOW", ["to"])
+    if res is not None:
+        return res
 
     #### COMMAND EMBRACE
     # `(embrace/hug/kiss) [someone]`: Perform an affectionate gesture. (ex: `hug friend`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_EMBRACE")
+    if res is not None:
+        return res
 
     #### COMMAND FEED
     # `(feed) [someone] with [something]`: Give food to someone. (ex: `feed dog with bone`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_FEED", ["with"])
+    if res is not None:
+        return res
 
     #### COMMAND GIVE
     # `(give/offer) [something] to [someone]`: Alternative phrasing. (ex: `offer flower to lover`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_GIVE", ["to"])
+    if res is not None:
+        return res
 
     ###################################
     ###### VOICE / TEXT COMMANDS ######
     ###################################
 
     #### COMMAND SAY
-    # `(say/tell/ask/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
+    # `(say/tell/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_SAY", ["to"])
+    if res is not None:
+        return res
 
     #### COMMAND ASK
     # `ask [someone] (about/for/on) [something/someone]`: Ask someone for information. (ex: `ask merchant about potion`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command, "C_ASK", ["about", "on", "for"])
+    if res is not None:
+        return res
 
     #### COMMAND WRITE
     # `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command, "C_WRITE", ["on"], ["with"])
+    if res is not None:
+        return res
 
     #########################################
     ###### PLAYER INTERACTION COMMANDS ######
@@ -313,78 +612,90 @@ def parse_command(command: str) -> list[str]:
     #### COMMAND WEAR
     # `(wear/dress) [something]`: Wear clothing or equipment. (ex: `wear helmet`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_WEAR")
+    if res is not None:
+        return res
 
     #### COMMAND TAKE OFF
-    # `(remove/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
+    # `(undress/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_UNDRESS")
+    if res is not None:
+        return res
 
     #### COMMAND INVENTORY
     # `(inventory)`: List the objects in your inventory. (ex: `inv`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_INVENTORY")
+    if res is not None:
+        return res
 
     #### COMMAND WAIT
     # `wait ?{[duration]}`: Pause and let time pass. (ex: `wait 5 minutes`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING(command, "C_WAIT")
+    if res is not None:
+        return res
 
     #### COMMAND SLEEP
     # `(sleep/nap)`: Rest and possibly recover. (ex: `sleep`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_SLEEP")
+    if res is not None:
+        return res
 
     #### COMMAND SIT
     # `sit on [something]`: Take a seat on an object. (ex: `sit on chair`)
 
-    # TODO
-    pass
+    res = test_COMMAND_SOMETHING(command, "C_SIT_DOWN")
+    if res is not None:
+        return res
 
     #### COMMAND LIE DOWN
-    # `(lie/lie down) on [something]`: Lie down on an object. (ex: `lie down on the bed`)
+    # `(lie on/lie down on) [something]`: Lie down on an object. (ex: `lie down on the bed`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING(command, "C_LIE_DOWN")
+    if res is not None:
+        return res
 
     #### COMMAND STAND UP
     # `(stand/stand up)`: Return to a standing position. (ex: `stand up`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_STAND_UP")
+    if res is not None:
+        return res
 
     #############################
     ###### RANDOM COMMANDS ######
     #############################
 
     #### COMMAND DANCE
-    # `dance`: Perform a dance. (ex: `dance`)
+    # `dance ?{something}`: Perform a dance. (ex: `dance`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING(command, "C_DANCE")
+    if res is not None:
+        return res
 
     #### COMMAND SING
-    # `(chant/sing)`: Sing or chant something. (ex: `sing`)
+    # `(chant/sing) ?{something}`: Sing or chant something. (ex: `sing`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING(command, "C_DANCE")
+    if res is not None:
+        return res
 
     #### COMMAND JUMP
     # `(jump/hop)`: Jump up or forward. (ex: `jump`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_JUMP")
+    if res is not None:
+        return res
 
     #### COMMAND THINK
     # `(think)`: Reflect or contemplate. (ex: `think`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_THINK")
+    if res is not None:
+        return res
 
     #############################
     ###### SYSTEM COMMANDS ######
@@ -393,38 +704,44 @@ def parse_command(command: str) -> list[str]:
     #### COMMAND QUIT
     # `(quit)`: Quit the game. (ex: `quit`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_QUIT")
+    if res is not None:
+        return res
 
     #### COMMAND SAVE
     # `save ?{filepath of game save}`: Save the game. (ex: `save game1.sav`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING(command, "C_SAVE")
+    if res is not None:
+        return res
 
     #### COMMAND LOAD
     # `(load/restore) {filepath of game save}`: Load a saved game. (ex: `load game1.sav`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING(command, "C_LOAD")
+    if res is not None:
+        return res
 
     #### COMMAND RESTART
     # `restart`: Restart the game. (ex: `restart`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_RESTART")
+    if res is not None:
+        return res
 
     #### COMMAND SCORE
     # `score`: Show current progress. (ex: `score`)
 
-    # TODO
-    pass
+    res = test_COMMAND(command, "C_SCORE")
+    if res is not None:
+        return res
 
     #### COMMAND HELP
-    # `help`: Show the list of commands. (ex: `help`)
+    # `help ?{something}`: Show the list of commands. (ex: `help`)
 
-    # TODO
-    pass
+    res = test_COMMAND_OPT_SOMETHING(command, "C_HELP")
+    if res is not None:
+        return res
 
     ##############################
     ###### UNKNOWN COMMANDS ######

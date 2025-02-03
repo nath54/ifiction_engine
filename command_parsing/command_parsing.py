@@ -44,7 +44,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_EAT": ["eat", "consume"],
     "C_DRINK": ["drink", "swallow", "sip"],
     "C_AWAKE": ["awake", "wake up", "wake"],
-    "C_ATTACK": ["attack", "smash", "fight", "hit", "hurt", "kill", "murder", "punch", "slice", "thump", "torture", "wreck"],
+    "C_ATTACK": ["attack", "smash", "fight", "hit", "hurt", "kill", "murder", "punch", "slice"],
     "C_BUY": ["buy", "purchase"],
     "C_SHOW": ["show", "display", "present"],
     "C_EMBRACE": ["embrace", "kiss", "hug"],
@@ -59,7 +59,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_WAIT": ["wait"],
     "C_SLEEP": ["sleep", "nap"],
     "C_SIT_DOWN": ["sit down", "sit on", "sit"],
-    "C_LIE_DOWN": ["lie down", "lie"],
+    "C_LIE_DOWN": ["lie down on", "lie on"],
     "C_STAND_UP": ["stand up", "stand"],
     "C_DANCE": ["dance"],
     "C_SING": ["sing", "chant"],
@@ -118,7 +118,7 @@ def test_COMMAND_OPT_SOMETHING(command_input: str, command_name: str) -> Optiona
         #
         if command_input.startswith(tkw):
             #
-            return [command_name, command_input[ltkw:].strip(), command_input[:ltkw].strip()]
+            return [command_name, command_input[ltkw:].strip()]
     #
     return None
 
@@ -398,13 +398,6 @@ def parse_command(command_input: str) -> list[str]:
     ###### OBJECT INTERACTIONS COMMANDS ######
     ##########################################
 
-    #### COMMAND TAKE
-    # `(take/carry/hold/pick/pick up) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
-
-    res = test_COMMAND_SOMETHING(command_input, "C_TAKE")
-    if res is not None:
-        return res
-
     #### COMMAND PUT
     # `(put/move) [something] (on/into/in) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
 
@@ -631,7 +624,7 @@ def parse_command(command_input: str) -> list[str]:
     #### COMMAND SAY
     # `(say/tell/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_SAY", ["to"])
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_SAY", ["to"])
     if res is not None:
         return res
 
@@ -696,7 +689,7 @@ def parse_command(command_input: str) -> list[str]:
         return res
 
     #### COMMAND LIE DOWN
-    # `(lie on/lie down on) [something]`: Lie down on an object. (ex: `lie down on the bed`)
+    # `(lie on/lie down on) ?{[something]}`: Lie down on an object. (ex: `lie down on the bed`)
 
     res = test_COMMAND_OPT_SOMETHING(command_input, "C_LIE_DOWN")
     if res is not None:
@@ -706,6 +699,17 @@ def parse_command(command_input: str) -> list[str]:
     # `(stand/stand up)`: Return to a standing position. (ex: `stand up`)
 
     res = test_COMMAND(command_input, "C_STAND_UP")
+    if res is not None:
+        return res
+
+    ############################################
+    ###### OBJECT INTERACTIONS COMMANDS 2 ######
+    ############################################
+
+    #### COMMAND TAKE
+    # `(take/carry/hold/pick/pick up) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
+
+    res = test_COMMAND_SOMETHING(command_input, "C_TAKE")
     if res is not None:
         return res
 

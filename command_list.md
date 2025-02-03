@@ -75,7 +75,7 @@ Directions:
 ## Interactions with living things
 
 - `(awake/wake/wake up) [someone]`: Wake a sleeping person. (ex: `wake up guard`)
-- `(attack/smash/fight/hit/hurt/kill/murder/punch/slice/thump/torture/wreck) [someone] ?{with [something]}`: Attack someone. (ex: `attack bandit with sword`)
+- `(attack/smash/fight/hit/hurt/kill/murder/punch/slice) [someone] ?{with [something]}`: Attack someone. (ex: `attack bandit with sword`)
 - `(buy/purchase) ?{[quantity] of} [something] to [someone]`: Buy an item. (ex: `buy 2 potions to merchant`)
 - `(show/display/present) [something/someone] to [someone]`: Show something to someone. (ex: `show passport to guard`)
 - `(embrace/hug/kiss) [someone]`: Perform an affectionate gesture. (ex: `hug friend`)
@@ -84,7 +84,7 @@ Directions:
 
 ## Voice / Discussions / Text
 
-- `(say/tell/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
+- `(say/tell/answer/shout) "..." ?{to [someone/something]}`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
 - `ask [someone] (about/for/on) [something/someone]`: Ask someone for information. (ex: `ask merchant about potion`)
 - `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`)
 

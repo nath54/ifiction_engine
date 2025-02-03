@@ -76,3 +76,26 @@ sip wine
 awake the girl
 wake up the paysant
 wake the men
+attack the bandit with massue
+fight the dragon
+hit the monster with a punch
+slice the vampire with a silver daguer
+buy 5 of flower to the florist
+buy bread to the baker
+show the corpse to the police officer
+hug the girl
+feed the dog with a bone
+give the ring to the girl
+say "I am so happy !" to the man
+shout "the secret code that opens the secret door"
+write "0766382013" on the paper
+write "The murderer is Damian" on the ground with my blood
+wear the blue dress
+take off the blue dress
+inventory
+wait
+wait 5 minutes
+sleep
+sit on the chair
+lie down on the bed
+stand up

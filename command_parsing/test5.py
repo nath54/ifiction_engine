@@ -234,21 +234,37 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
     if isinstance(keyword_C, str):
         keyword_C = [keyword_C]
 
-    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords)
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_B)
     keywords_c_pattern = "|".join(re.escape(keyword) for keyword in keyword_C)
 
-    pattern = rf"({keywords_a_pattern})\s*(?:\s*(.*?)\s*({keywords_b_pattern}))?\s*(.*?)\s*({keywords_c_pattern})\s*(.*)"
+    # Construct the main regex pattern with optional `{}` group
+    pattern = rf"""
+        ({keywords_a_pattern})                # Keyword A (buy/purchase)
+        \s+(?:                                 # Start optional "quantity of" group
+            (\d+)                              # Capture quantity (optional)
+            \s+of\s+                           # Literal 'of' (optional)
+        )?                                     # End optional group
+        (\S.+?)                                # Capture main item
+        \s+({keywords_c_pattern})              # Keyword C (to/at)
+        \s+(.+)                                # Capture target (merchant, etc.)
+    """
 
-    match = re.match(pattern, command_input)
+    #
+    print(f"DEBUG | pattern=\"{pattern}\" | command_input = \"{command_input}\"")
 
+    # Match using regex with re.VERBOSE for readability
+    match = re.match(pattern, command_input, re.VERBOSE)
+
+    #
     if match:
-        keyword_a, text_before_b, keyword_b, text_after_b, keyword_c, text_c = match.groups()
-        #
+        keyword_a, quantity, item, keyword_c, target = match.groups()
+        quantity = quantity if quantity else "1"  # Default to 1 if not specified
+
         if return_keywords:
-            return [command_name, text_before_b, keyword_b, text_after_b, keyword_c, text_c]
-        #
-        return [command_name, text_before_b, text_after_b, text_c]
+            return [command_name, quantity, item.strip(), keyword_c, target.strip()]
+
+        return [command_name, quantity, item.strip(), target.strip()]
     else:
         return None
 

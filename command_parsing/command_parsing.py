@@ -12,7 +12,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_BRIEF": ["brief"],
     "C_DESCRIBE": ["describe", "watch"],
     "C_EXAMINE": ["examine", "inspect", "check"],
-    "C_RUMMAGE": ["rummage", "search"],
+    "C_RUMMAGE": ["rummage", "search", "dig in"],
     "C_LISTEN": ["hear", "listen"],
     "C_TOUCH": ["touch", "feel"],
     "C_READ": ["read"],
@@ -236,16 +236,17 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
     if isinstance(keyword_C, str):
         keyword_C = [keyword_C]
 
+    #
     keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_B)
     keywords_c_pattern = "|".join(re.escape(keyword) for keyword in keyword_C)
 
     # Construct the main regex pattern with optional `{}` group
     pattern = rf"""
-        ({keywords_a_pattern})                # Keyword A (buy/purchase)
+        ({keywords_a_pattern})                 # Keyword A (buy/purchase)
         \s+(?:                                 # Start optional "quantity of" group
             (\d+)                              # Capture quantity (optional)
-            \s+of\s+                           # Literal 'of' (optional)
+            \s+({keywords_b_pattern})\s+       # Literal 'of' (optional)
         )?                                     # End optional group
         (\S.+?)                                # Capture main item
         \s+({keywords_c_pattern})              # Keyword C (to/at)
@@ -257,13 +258,13 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
 
     #
     if match:
-        keyword_a, quantity, item, keyword_c, target = match.groups()
+        keyword_a, quantity, keyword_b, item, keyword_c, target = match.groups()
         quantity = quantity if quantity else "1"  # Default to 1 if not specified
 
         if return_keywords:
-            return [command_name, quantity, item.strip(), keyword_c, target.strip()]
+            return [command_name, quantity.strip(), keyword_b.strip(), item.strip(), keyword_c.strip(), target.strip()]
 
-        return [command_name, quantity, item.strip(), target.strip()]
+        return [command_name, quantity.strip(), item.strip(), target.strip()]
     else:
         return None
 
@@ -323,7 +324,7 @@ def parse_command(command_input: str) -> list[str]:
     #### COMMAND LISTEN
     # `(hear/listen) ?{TO} ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
 
-    res = test_COMMAND_OPT_TO_SOMETHING(command_input, "C_RUMMAGE")
+    res = test_COMMAND_OPT_TO_SOMETHING(command_input, "C_LISTEN")
     if res is not None:
         return res
 

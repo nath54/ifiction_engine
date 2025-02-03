@@ -19,7 +19,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_TASTE": ["taste"],
     "C_SMELL": ["smell", "sniff"],
     "C_GO": ["go", "displace", "walk", "run", "sprint"],
-    "C_TAKE": ["take", "carry", "hold", "pick", "pick up"],
+    "C_TAKE": ["take", "carry", "hold", "pick up", "pick"],
     "C_PUT": ["put", "move"],
     "C_PUSH": ["push", "press", "apply force on"],
     "C_PULL": ["pull"],
@@ -213,21 +213,32 @@ def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_nam
     keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_opt)
 
-    pattern = rf"({keywords_a_pattern})\s+(.*?)(?:\s*\?({keywords_b_pattern})\s+(.*?))?"
+    # Construct the main regex pattern with optional `{}` group
+    pattern = rf"""
+        ({keywords_a_pattern})                # Keyword A
+        \s+(.+?)                              # Capture main text
+        (?:\s*({keywords_b_pattern})\s*(.*)) # Optional Keyword B and text
+    """
 
-    match = re.match(pattern, command_input)
+    # Match using regex with re.VERBOSE for readability
+    match = re.match(pattern, command_input, re.VERBOSE)
 
+    #
     if match:
         keyword_a, text_a, keyword_b, text_b = match.groups()
-        #
         if return_keyword:
-            return [command_name, text_a, keyword_b, text_b]
-        #
-        return [command_name, text_a, text_b]
+            return [command_name, text_a.strip(), keyword_b, text_b.strip() if text_b else '']
+        return [command_name, text_a.strip(), text_b.strip() if text_b else '']
     else:
+        #
+        res: Optional[list[str]] = test_COMMAND_SOMETHING(command_input, command_name)
+        #
+        if res is not None:
+            return res + ['']
+        #
         return None
 
-# TODO: debug this function
+#
 def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
     #
     if isinstance(keyword_B, str):

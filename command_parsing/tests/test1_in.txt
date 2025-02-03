@@ -16,3 +16,52 @@ hear to the door
 listen the paysant
 touch the plant
 feel the strange sphere
+read old book
+read newspaper page 4
+taste the soup
+smell the flower
+sniff the jacket
+go down
+walk south west
+run north
+sprint east
+take golden key
+carry the bowl
+hold the pickaxe
+pick phone
+pick up the great hammer
+put the candy into the box
+move the key on the desk
+put the map in the bag
+push the lever
+press the button
+apply force on the wall pressure plate
+pull the lever
+attach the bandit to the wall with a chain
+tie the diamond to the necklace
+break the cup
+destroy the world
+throw a tomato to the neighboor
+throw a rock to the window
+drop the mic
+discard the potato
+wash my hands
+clean the vegetables
+use the golden key on the door
+use the computer
+use the trap
+climb the ladder
+open the door
+open the drawer
+close the door
+lock the door with the key
+lock the chest
+unlock the door with silver key
+unlock the chest
+fill the glass with bottle of water
+fill the bottle from the sink
+pour the pitcher in your mouth
+pour the barrel in the river
+insert the jewel into the statue
+remove the jewel from the statue
+set the knob to 5

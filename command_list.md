@@ -16,7 +16,7 @@
 
 ## Displacement
 
-- `(go/displace/walk/run/sprint) [direction]`: Move in the specified direction. (ex: `go north`)
+- `(go/walk/run/sprint) [direction]`: Move in the specified direction. (ex: `go north`)
 
 Atomic-direction:
     - North
@@ -44,23 +44,23 @@ Directions:
 
 ## Interact with objects
 
-- `(take/carry/hold/pick/pick up) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
-- `(put/move) [something] (in/on/above/into) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
+- `(take/carry/hold/pick up/pick) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
+- `(put/move) [something] (into/in/on) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
 - `(push/press/apply force on) [something]`: Apply force to an object. (ex: `press button`)
 - `pull [something]`: Pull an object. (ex: `pull lever`)
 - `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: Attach an object to something. (ex: `attach bandit to chair with rope`)
 - `(break/destroy) [something]`: Destroy a destructible object. (ex: `break glass`)
 - `throw [something] on [something/someone]`: Throw an object at another object. (ex: `throw rock on window`)
-- `(drop/discard/get off) [something]`: Remove an object from inventory. (ex: `drop bag`)
+- `(drop/discard) [something]`: Remove an object from inventory. (ex: `drop bag`)
 - `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Clean something. (ex: `wash painting`)
 - `use [something] ?{on [something/someone]}`: Use an object, optionally on something or someone. (ex: `use key on door`)
 - `climb [something]`: Climb an object. (ex: `climb tree`)
 - `open [something]`: Open a door, chest, or other container. (ex: `open chest`)
-- `(close/shut) [something]`: Close an object. (ex: `close window`)
+- `(close) [something]`: Close an object. (ex: `close window`)
 - `lock [something] ?{with [something]}`: Lock an object. (ex: `lock door with golden key`)
 - `unlock [something] ?{with [something]}`: Unlock an object. (ex: `unlock chest with rusty key`)
 - `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
-- `(pour) [something] into [something]`: Pour a liquid. (ex: `pour coffee into cup`)
+- `(pour) [something] (into/in) [something]`: Pour a liquid. (ex: `pour coffee into cup`)
 - `insert [something] into [something]`: Insert an item. (ex: `insert coin into vending machine`)
 - `remove [something] from [something]`: Take something out of another object. (ex: `remove book from shelf`)
 - `set [something] to [state]`: Adjust an object’s state. (ex: `set lamp to on`)

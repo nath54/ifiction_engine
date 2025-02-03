@@ -43,7 +43,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_SQUEEZE": ["squeeze", "squash"],
     "C_EAT": ["eat", "consume"],
     "C_DRINK": ["drink", "swallow", "sip"],
-    "C_AWAKE": ["awake", "wake", "wake up"],
+    "C_AWAKE": ["awake", "wake up", "wake"],
     "C_ATTACK": ["attack", "smash", "fight", "hit", "hurt", "kill", "murder", "punch", "slice", "thump", "torture", "wreck"],
     "C_BUY": ["buy", "purchase"],
     "C_SHOW": ["show", "display", "present"],
@@ -189,17 +189,13 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
     # for the parts we don't need to extract (the ? and space).
     pattern = rf"({keywords_a_pattern})\s+(.*)\s+({keywords_b_pattern})\s+(.*)(\s+({keywords_c_pattern})\s+(.*))"
 
-    print(pattern)
-
     #
     match = re.match(pattern, command_input)
 
     #
     if match:
         #
-        print(match.groups())
-        #
-        keyword_a, text_a, keyword_b, text_b, keyword_c, text_c = match.groups()
+        keyword_a, text_a, keyword_b, text_b, _, keyword_c, text_c = match.groups()
         #
         if return_keywords:
             return [command_name, text_a, keyword_b, text_b, keyword_c, text_c]
@@ -546,7 +542,7 @@ def parse_command(command_input: str) -> list[str]:
     #### COMMAND SPREAD
     # `spread [something] ?{on [something/someone]}`: Apply something over a surface. (ex: `spread butter on bread`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_SPREAD", ["on"])
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_SPREAD", ["into", "on", "in"])
     if res is not None:
         return res
 

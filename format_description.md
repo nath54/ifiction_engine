@@ -14,10 +14,4 @@ This engines will be built for turn by turn actions, so a turn can represents a 
 
 There will also be a system of custom actions and variables, so the game creator can have flexibility to do things that it would have been difficult without.
 
-
-
-
-
-
-
-
+...

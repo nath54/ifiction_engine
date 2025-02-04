@@ -54,13 +54,18 @@
             ]
         }
     },
-    "start": {
-        "room": "start"
-    },
     "end": [
         {
             "type": "inside",
             "room": "room2"
         }
-    ]
+    ],
+    "variables": {},
+    "players": {
+        "player1": {
+            "room": "start",
+            "inventory": {}
+        }
+    },
+    "nb_turns": 0
 }

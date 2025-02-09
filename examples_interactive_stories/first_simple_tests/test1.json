@@ -20,8 +20,9 @@
     },
     "rooms": {
         "room1": {
+            "room_name": "Room 1",
             "description": "a simple empty room",
-            "access": [
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "east",
@@ -30,8 +31,9 @@
             ]
         },
         "room2": {
+            "room_name": "Room 2",
             "description": "a simple empty room",
-            "access": [
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "west",

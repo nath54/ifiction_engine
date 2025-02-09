@@ -5,17 +5,21 @@
     "things": {
         "player1": {
             "type": "entity",
+            "id": "player1",
+            "name": "Player",
             "room": "room1",
             "inventory": {}
         },
         "door1": {
             "type": "object",
+            "id": "door1",
             "name": "door",
             "description": "a simple door",
             "attributes": ["openable", "locked"]
         },
         "key1": {
             "type": "object",
+            "id": "key1",
             "name": "key",
             "description": "a simple key",
             "attributes": ["item"],
@@ -24,11 +28,10 @@
     },
     "rooms": {
         "room1": {
+            "room_name": "Room 1",
             "description": "a simple room",
-            "zones": {
-                "main": ["key1"]
-            },
-            "access": [
+            "things_inside": ["key1"],
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "east",
@@ -37,8 +40,9 @@
             ]
         },
         "room2": {
+            "room_name": "Room 2",
             "description": "a simple empty room",
-            "access": [
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "west",

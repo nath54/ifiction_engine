@@ -25,7 +25,7 @@ def create_default_value(default_value: Any, attr: str, in_dict: dict, type_: st
         #
         return []
     #
-    elif isinstance(default_value, ClassLoadFromDict):
+    elif isinstance(default_value, ClassLoadFromDict) and attr in in_dict:
         #
         return create_class_with_attributes_or_default_values_from_dict(
             class_name=default_value.class_name,
@@ -72,6 +72,10 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
     attr: str
     for attr in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_]:
         #
+        if attr == "id":
+            kwargs["id_"] = in_dict["id"]
+            continue
+        #
         if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], ClassLoadFromDictDependingOnDictValue):
             #
             clfddodv: ClassLoadFromDictDependingOnDictValue = CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr]
@@ -110,7 +114,7 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
             #
             for key in in_dict[attr]:
                 #
-                kwargs[attr][key] = create_classloadfromdictdependingondictvalue(clfddodv=caadv.clfddodv, in_dict=in_dict, attr=attr, type_=type_)
+                kwargs[attr][key] = create_classloadfromdictdependingondictvalue(clfddodv=caadv.clfddodv, in_dict=in_dict[attr], attr=key, type_=type_)
         #
         elif hasattr(caadv, "class_name") and hasattr(caadv, "type_") and (caadv.class_name is not None) and (caadv.type_ is not None):
             #

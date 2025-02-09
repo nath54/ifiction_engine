@@ -5,17 +5,21 @@
     "things": {
         "player1": {
             "type": "entity",
+            "id": "player1",
+            "name": "Player",
             "room": "room1",
             "inventory": {}
         },
         "door1": {
             "type": "object",
+            "id": "door1",
             "name": "door",
             "description": "a simple door with a golden lock",
             "attributes": ["openable", "locked"]
         },
         "silver_key": {
             "type": "object",
+            "id": "silver_key",
             "name": "silver key",
             "description": "a simple silver key",
             "attributes": ["item"],
@@ -23,6 +27,7 @@
         },
         "gold_key": {
             "type": "object",
+            "id": "gold_key",
             "name": "gold key",
             "description": "a simple gold key",
             "attributes": ["item"],
@@ -31,11 +36,10 @@
     },
     "rooms": {
         "room1": {
+            "room_name": "Room 1",
             "description": "a simple room",
-            "zones": {
-                "main": ["silver_key", "gold_key"]
-            },
-            "access": [
+            "things_inside": ["silver_key", "gold_key"],
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "east",
@@ -44,8 +48,9 @@
             ]
         },
         "room2": {
+            "room_name": "Room 2",
             "description": "a simple empty room",
-            "access": [
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "west",

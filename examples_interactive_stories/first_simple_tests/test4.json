@@ -5,17 +5,21 @@
     "things": {
         "player1": {
             "type": "entity",
+            "id": "player1",
+            "name": "Player",
             "room": "room1",
             "inventory": {}
         },
         "door1": {
             "type": "object",
+            "id": "door1",
             "name": "door",
             "description": "a simple door",
             "attributes": ["openable", "locked"]
         },
         "key1": {
             "type": "object",
+            "id": "key1",
             "name": "key",
             "description": "a simple key",
             "attributes": ["item"],
@@ -23,6 +27,7 @@
         },
         "buffet1": {
             "type": "object",
+            "id": "buffer1",
             "name": "buffet",
             "description": "a simple buffet, with a drawer",
             "attributes": [],
@@ -30,6 +35,7 @@
         },
         "drawer1": {
             "type": "object",
+            "id": "drawer1",
             "name": "drawer",
             "description": "a simple drawer",
             "attributes": ["openable", "container"],
@@ -39,11 +45,10 @@
     },
     "rooms": {
         "room1": {
+            "room_name": "Room 1",
             "description": "a simple room",
-            "zones": {
-                "main": ["buffet1"]
-            },
-            "access": [
+            "things_inside": ["buffet1"],
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "east",
@@ -52,8 +57,9 @@
             ]
         },
         "room2": {
+            "room_name": "Room 2",
             "description": "a simple empty room",
-            "access": [
+            "accesses": [
                 {
                     "thing": "door1",
                     "direction": "west",

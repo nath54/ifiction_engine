@@ -1,8 +1,109 @@
 #
-from typing import Any, Optional
+from typing import Any, Optional, Callable
 #
 import os
 import json
+
+
+#
+def verify_keys_in_dict(dictionary: dict, keys: list[str], type_: str) -> None:
+    #
+    k: str
+    for k in keys:
+        if k not in keys:
+            raise KeyError(f"The key `{k}` not in the dictionary for the type {type_} !\n\nDictionary : {dictionary}\n\n")
+
+
+#
+def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict, type_: str) -> None:
+    #
+    attr: str
+    for attr in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_]:
+        #
+        if attr not in in_dict:
+            #
+            if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], NoDefaultValues):
+                #
+                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type {type_} !\n\nDictionary : {in_dict}\n\n")
+            #
+            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyDict):
+                #
+                setattr(obj, attr, {})
+            #
+            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyList):
+                #
+                setattr(obj, attr, [])
+            #
+            else:
+                setattr(obj, attr, CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr])
+        #
+        else:
+            #
+            setattr(obj, attr, in_dict[attr])
+
+
+#
+def create_class_with_attributes_or_default_values_from_dict(class_name: Callable, in_dict: dict, type_: str) -> Any:
+    #
+    kwargs: dict = {}
+    #
+    attr: str
+    for attr in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_]:
+        #
+        if attr not in in_dict:
+            #
+            if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], NoDefaultValues):
+                #
+                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type {type_} !\n\nDictionary : {in_dict}\n\n")
+            #
+            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyDict):
+                #
+                kwargs[attr] = {}
+            #
+            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyList):
+                #
+                kwargs[attr] = []
+            #
+            else:
+                #
+                kwargs[attr] = CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr]
+        #
+        else:
+            #
+            kwargs[attr] = in_dict[attr]
+
+    #
+    return class_name(**kwargs)
+
+#
+class NoDefaultValues:
+    pass
+
+
+#
+class ValueOfAttribute:
+    #
+    def __init__(self, attr: str) -> None:
+        #
+        self.attr: str = attr
+
+
+#
+class EmptyDict:
+    pass
+
+
+#
+class EmptyList:
+    pass
+
+
+#
+class ClassLoadFromDict:
+    #
+    def __init__(self, class_name: Callable) -> None:
+        #
+        self.class_name: Callable = class_name
 
 
 #
@@ -47,8 +148,8 @@ class Object(Thing):
             attributes: list[str] = [],
             parts: list[str] = [],
             part_of: Optional[str] = None,
-            is_open: int = 1,
-            is_locked: int = 1,
+            is_open: int = 0,
+            is_locked: int = 0,
             unlocks: list[str] = []
         ) -> None:
         #
@@ -79,6 +180,7 @@ class Object(Thing):
         #
         return res
 
+
 #
 class LifeSystem:
     #
@@ -92,6 +194,7 @@ class LifeSystem:
         self.max_pv: int = max_pv
         self.current_pv: int = current_pv if isinstance(current_pv, int) else self.max_pv
         self.state: dict[str, Any] = state if isinstance(state, dict) else {}
+
     #
     def to_dict(self) -> dict:
         #
@@ -104,7 +207,6 @@ class LifeSystem:
 
 #
 class Entity(Thing):
-    #
     #
     def __init__(
             self,
@@ -189,9 +291,7 @@ class Room:
                 access.to_dict() for access in self.accesses
             ],
             "description": self.description
-
         }
-
 
 
 #
@@ -199,7 +299,9 @@ class End:
     #
     def to_dict(self) -> dict:
         #
-        return {}
+        return {
+            "end_type": "End"
+        }
 
 
 #
@@ -213,8 +315,13 @@ class EndOneOf(End):
 
     #
     def to_dict(self) -> dict:
-        # TODO
-        return {}
+        #
+        return {
+            "end_type": "EndOneOf",
+            "lst": [
+                end.to_dict() for end in self.lst
+            ]
+        }
 
 
 #
@@ -228,8 +335,13 @@ class EndAllOf(End):
 
     #
     def to_dict(self) -> dict:
-        # TODO
-        return {}
+        #
+        return {
+            "end_type": "EndAllOf",
+            "lst": [
+                end.to_dict() for end in self.lst
+            ]
+        }
 
 
 #
@@ -243,8 +355,11 @@ class EndInsideRoom(End):
 
     #
     def to_dict(self) -> dict:
-        # TODO
-        return {}
+        #
+        return {
+            "end_type": "EndInsideRoom",
+            "room_id": self.room_id
+        }
 
 
 #
@@ -258,8 +373,11 @@ class EndEntityDead(End):
 
     #
     def to_dict(self) -> dict:
-        # TODO
-        return {}
+        #
+        return {
+            "end_type": "EndEntityDead",
+            "entity_id": self.entity_id
+        }
 
 
 #
@@ -362,3 +480,53 @@ def save_interactive_fiction_model_from_file(filepath: str, game_save_format: st
     game.save_to_filepath(filepath, game_save_format)
     #
     return game
+
+
+
+#
+CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
+    "Thing": {
+        "id": NoDefaultValues(),
+        "name": NoDefaultValues(),
+        "description": "",
+        "brief_description": "",
+        "attributes": EmptyList()
+    },
+    "Object": {
+        "id": NoDefaultValues(),
+        "name": NoDefaultValues(),
+        "description": "",
+        "brief_description": "",
+        "attributes": EmptyList(),
+        "parts": EmptyList(),
+        "part_of": None,
+        "is_open": 0,
+        "is_locked": 0,
+        "unlocks": EmptyList()
+    },
+    "LifeSystem": {
+        "max_pv": 100,
+        "current_pv": ValueOfAttribute(attr="max_pv"),
+        "state": None
+    },
+    "Entity": {
+        "id": NoDefaultValues(),
+        "name": NoDefaultValues(),
+        "description": "",
+        "brief_description": "",
+        "attributes": EmptyList(),
+        "room": NoDefaultValues(),
+        "inventory": EmptyDict(),
+        "life_system": ClassLoadFromDict(class_name=LifeSystem)
+    },
+    "Access": {
+        "thing_id": NoDefaultValues(),
+        "world_direction": NoDefaultValues(),
+        "links_to": NoDefaultValues()
+    },
+    "Room": {
+        "room_name": NoDefaultValues(),
+        "accesses": NoDefaultValues(),
+        "description": ""
+    }
+}

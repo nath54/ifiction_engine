@@ -3,16 +3,12 @@
         "door1": {
             "name": "door",
             "description": "a simple door with a golden lock",
-            "attributes": ["openable"],
-            "is_open": 0,
-            "is_locked": 1
+            "attributes": ["openable", "locked"]
         },
         "door2": {
             "name": "door",
             "description": "a simple door with a silver lock",
-            "attributes": ["openable"],
-            "is_open": 0,
-            "is_locked": 1
+            "attributes": ["openable", "locked"]
         },
         "silver_key": {
             "name": "silver key",
@@ -37,9 +33,7 @@
             "description": "a simple drawer",
             "attributes": ["openable", "container"],
             "contains": ["gold_key"],
-            "part_of": "buffet1",
-            "is_open": 0,
-            "is_locked": 0
+            "part_of": "buffet1"
         }
     },
     "rooms": {

@@ -519,11 +519,17 @@ class Game:
 #
 def load_interactive_fiction_model_from_file(filepath: str, game_save_format: str = "JSON") -> Game:
     #
-    game: Game = Game()
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"Error: file not found : `{filepath}`")
     #
-    game.load_from_filepath(filepath, game_save_format)
+    with open(filepath, "r", encoding="utf-8") as f:
+        dict_: dict = json.load(f)
     #
-    return game
+    return create_class_with_attributes_or_default_values_from_dict(
+        class_name=Game,
+        in_dict=dict_,
+        type_="Game"
+    )
 
 
 

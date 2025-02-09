@@ -3,9 +3,7 @@
         "door1": {
             "name": "door",
             "description": "a simple door",
-            "attributes": ["openable"],
-            "is_open": 0,
-            "is_locked": 1
+            "attributes": ["openable", "locked"]
         },
         "key1": {
             "name": "key",

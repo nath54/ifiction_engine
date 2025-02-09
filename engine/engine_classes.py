@@ -37,6 +37,31 @@ def create_default_value(default_value: Any, attr: str, in_dict: dict, type_: st
 
 
 #
+def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDependingOnDictValue", in_dict: dict, attr: str, type_: str) -> Any:
+    #
+    if attr not in in_dict:
+        #
+        if isinstance(clfddodv.default_value, NoDefaultValues):
+            #
+            raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
+        #
+        return create_default_value(default_value=clfddodv.default_value, attr=attr, in_dict=in_dict, type_=type_)
+    #
+    if clfddodv.dict_key_value not in in_dict[attr]:
+        #
+        raise KeyError(f"The attribute `{clfddodv.dict_key_value}` not in the dictionary for the type {type_} !\n\nDictionary : {in_dict[attr]}\n\n")
+    #
+    if in_dict[attr][clfddodv.dict_key_value] not in clfddodv.class_names_and_types:
+        #
+        raise KeyError(f"The attribute `{attr}` is an unkown type for `ClassLoadFromDictDependingOnDictValue` and its following class names available : {clfddodv.class_names_and_types.keys()}")
+    #
+    return create_class_with_attributes_or_default_values_from_dict(
+        class_name=clfddodv.class_names_and_types[in_dict[attr][clfddodv.dict_key_value]][0],
+        in_dict=in_dict[attr],
+        type_=clfddodv.class_names_and_types[in_dict[attr][clfddodv.dict_key_value]][1]
+    )
+
+#
 def create_kwargs(in_dict: dict, type_: str) -> dict:
     #
     kwargs: dict = {}
@@ -51,52 +76,48 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
             #
             clfddodv: ClassLoadFromDictDependingOnDictValue = CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr]
             #
-            if attr not in in_dict:
-                #
-                if isinstance(clfddodv.default_value, NoDefaultValues):
-                    #
-                    raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
-                #
-                kwargs[attr] = create_default_value(default_value=clfddodv.default_value, attr=attr, in_dict=in_dict, type_=type_)
-                #
-                continue
-            #
-            print(f"DEBUG | attr = {attr} | in_dict[{attr}] = {in_dict[attr]}")
-            #
-            print(f"DEBUG | CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr] = {clfddodv}")
-            #
-            if clfddodv.dict_key_value not in in_dict[attr]:
-                #
-                raise KeyError(f"The attribute `{clfddodv.dict_key_value}` not in the dictionary for the type {type_} !\n\nDictionary : {in_dict[attr]}\n\n")
-            #
-            if in_dict[attr][clfddodv.dict_key_value] not in clfddodv.class_names_and_types:
-                #
-                raise KeyError(f"The attribute `{attr}` is an unkown type for `ClassLoadFromDictDependingOnDictValue` and its following class names available : {clfddodv.class_names_and_types.keys()}")
-            #
-            kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
-                class_name=clfddodv.class_names_and_types[in_dict[attr][clfddodv.dict_key_value]][0],
-                in_dict=in_dict[attr],
-                type_=clfddodv.class_names_and_types[in_dict[attr][clfddodv.dict_key_value]][1]
-            )
+            kwargs[attr] = create_classloadfromdictdependingondictvalue(clfddodv=clfddodv, in_dict=in_dict, attr=attr, type_=type_)
             #
             continue
+        #
+        caadv: Any = CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr]
         #
         if attr not in in_dict:
             #
-            if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], NoDefaultValues):
+            if isinstance(caadv, NoDefaultValues) or isinstance(caadv, NoDefaultValueDictOfClassLoadFromDict) or isinstance(caadv, NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue):
                 #
-                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
+                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\nNo default values authorized for this attribute.\n\nDictionary : {in_dict}\n\n")
             #
-            kwargs[attr] = create_default_value(default_value=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], attr=attr, in_dict=in_dict, type_=type_)
+            kwargs[attr] = create_default_value(default_value=caadv, attr=attr, in_dict=in_dict, type_=type_)
             #
             continue
         #
-        if hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "class_name") and hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "type_") and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name is not None) and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_ is not None):
+        if isinstance(caadv, NoDefaultValueDictOfClassLoadFromDict):
+            #
+            kwargs[attr] = {}
+            #
+            k: str
+            #
+            for k in in_dict[attr]:
+                #
+                kwargs[attr][k] = caadv.clfd.class_name(**create_kwargs(in_dict[attr][k], type_=caadv.clfd.type_))
+        #
+        elif isinstance(caadv, NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue):
+            #
+            kwargs[attr] = {}
+            #
+            key: str
+            #
+            for key in in_dict[attr]:
+                #
+                kwargs[attr][key] = create_classloadfromdictdependingondictvalue(clfddodv=caadv.clfddodv, in_dict=in_dict, attr=attr, type_=type_)
+        #
+        elif hasattr(caadv, "class_name") and hasattr(caadv, "type_") and (caadv.class_name is not None) and (caadv.type_ is not None):
             #
             kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
-                class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name,
+                class_name=caadv.class_name,
                 in_dict=in_dict[attr],
-                type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_
+                type_=caadv.type_
             )
         #
         else:
@@ -144,12 +165,16 @@ class ValueOfAttribute:
 
 #
 class EmptyDict:
-    pass
+    #
+    def __init__(self) -> None:
+        pass
 
 
 #
 class EmptyList:
-    pass
+    #
+    def __init__(self) -> None:
+        pass
 
 
 #
@@ -169,6 +194,22 @@ class ClassLoadFromDictDependingOnDictValue:
         self.dict_key_value: str = dict_key_value
         self.class_names_and_types: dict[str, Tuple[Callable, str]] = class_names_and_types
         self.default_value: Any = default_value
+
+
+#
+class NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue:
+    #
+    def __init__(self, clfddodv: ClassLoadFromDictDependingOnDictValue) -> None:
+        #
+        self.clfddodv: ClassLoadFromDictDependingOnDictValue = clfddodv
+
+
+#
+class NoDefaultValueDictOfClassLoadFromDict:
+    #
+    def __init__(self, clfd: ClassLoadFromDict) -> None:
+        #
+        self.clfd: ClassLoadFromDict = clfd
 
 
 #
@@ -576,6 +617,32 @@ end_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingO
 
 
 #
+things_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
+    dict_key_value="type",
+    class_names_and_types={
+        "entity": (Entity, "Entity"),
+        "object": (Object, "Object")
+    },
+    default_value=None
+)
+
+
+#
+things_dict: NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue = NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue(
+    clfddodv=things_classes
+)
+
+
+#
+rooms_dict: NoDefaultValueDictOfClassLoadFromDict = NoDefaultValueDictOfClassLoadFromDict(
+    clfd=ClassLoadFromDict(
+        class_name=Room,
+        type_="Room"
+    )
+)
+
+
+#
 CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
     "Thing": {
         "id": NoDefaultValues(),
@@ -592,8 +659,6 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "attributes": EmptyList(),
         "parts": EmptyList(),
         "part_of": None,
-        "is_open": 0,
-        "is_locked": 0,
         "unlocks": EmptyList()
     },
     "LifeSystem": {
@@ -625,8 +690,8 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "game_name": NoDefaultValues(),
         "game_description": NoDefaultValues(),
         "game_author": "",
-        "things": NoDefaultValues(),
-        "rooms": NoDefaultValues(),
+        "things": things_dict,
+        "rooms": rooms_dict,
         "variables": EmptyDict(),
         "end": end_classes,
         "players": NoDefaultValues()

@@ -52,7 +52,7 @@ if __name__ == "__main__":
         ALL_COMMANDS_FUNCTIONS[parsed_command[0]](game, interaction_system, parsed_command, game.players[current_player], False)
 
         #
-        if parsed_command[0] == "QUIT":
+        if parsed_command[0] == "C_QUIT":
             break
 
         #

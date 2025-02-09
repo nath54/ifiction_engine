@@ -118,6 +118,9 @@ def execute_C_RECAP(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -129,6 +132,9 @@ def execute_C_BRIEF(game: engine.Game, interaction_system: InteractionSystem, co
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -144,6 +150,9 @@ def execute_C_DESCRIBE(game: engine.Game, interaction_system: InteractionSystem,
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -155,6 +164,9 @@ def execute_C_EXAMINE(game: engine.Game, interaction_system: InteractionSystem, 
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -170,6 +182,9 @@ def execute_C_RUMMAGE(game: engine.Game, interaction_system: InteractionSystem, 
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -181,6 +196,9 @@ def execute_C_LISTEN(game: engine.Game, interaction_system: InteractionSystem, c
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -196,6 +214,9 @@ def execute_C_TOUCH(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -207,6 +228,9 @@ def execute_C_READ(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -222,6 +246,9 @@ def execute_C_TASTE(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -233,6 +260,9 @@ def execute_C_SMELL(game: engine.Game, interaction_system: InteractionSystem, co
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -248,6 +278,9 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -259,6 +292,9 @@ def execute_C_PUT(game: engine.Game, interaction_system: InteractionSystem, comm
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -274,6 +310,9 @@ def execute_C_PUSH(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -285,6 +324,9 @@ def execute_C_PULL(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -300,6 +342,9 @@ def execute_C_ATTACH(game: engine.Game, interaction_system: InteractionSystem, c
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -311,6 +356,9 @@ def execute_C_BREAK(game: engine.Game, interaction_system: InteractionSystem, co
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -326,6 +374,9 @@ def execute_C_THROW(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -337,6 +388,9 @@ def execute_C_DROP(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -352,6 +406,9 @@ def execute_C_CLEAN(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -363,6 +420,9 @@ def execute_C_USE(game: engine.Game, interaction_system: InteractionSystem, comm
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -378,6 +438,9 @@ def execute_C_CLIMB(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -389,6 +452,9 @@ def execute_C_OPEN(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -404,6 +470,9 @@ def execute_C_CLOSE(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -415,6 +484,9 @@ def execute_C_LOCK(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -430,6 +502,9 @@ def execute_C_UNLOCK(game: engine.Game, interaction_system: InteractionSystem, c
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -441,6 +516,9 @@ def execute_C_FILL(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -456,6 +534,9 @@ def execute_C_POUR(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -467,6 +548,9 @@ def execute_C_INSERT(game: engine.Game, interaction_system: InteractionSystem, c
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -482,6 +566,9 @@ def execute_C_REMOVE(game: engine.Game, interaction_system: InteractionSystem, c
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -493,6 +580,9 @@ def execute_C_SET(game: engine.Game, interaction_system: InteractionSystem, comm
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -508,6 +598,9 @@ def execute_C_SPREAD(game: engine.Game, interaction_system: InteractionSystem, c
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -519,6 +612,9 @@ def execute_C_SQUEEZE(game: engine.Game, interaction_system: InteractionSystem, 
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -534,6 +630,9 @@ def execute_C_EAT(game: engine.Game, interaction_system: InteractionSystem, comm
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -545,6 +644,9 @@ def execute_C_DRINK(game: engine.Game, interaction_system: InteractionSystem, co
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -560,6 +662,9 @@ def execute_C_AWAKE(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -571,6 +676,9 @@ def execute_C_ATTACK(game: engine.Game, interaction_system: InteractionSystem, c
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -586,6 +694,9 @@ def execute_C_BUY(game: engine.Game, interaction_system: InteractionSystem, comm
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -597,6 +708,9 @@ def execute_C_SHOW(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -612,6 +726,9 @@ def execute_C_EMBRACE(game: engine.Game, interaction_system: InteractionSystem, 
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -623,6 +740,9 @@ def execute_C_FEED(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -638,6 +758,9 @@ def execute_C_GIVE(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -649,6 +772,9 @@ def execute_C_SAY(game: engine.Game, interaction_system: InteractionSystem, comm
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -664,6 +790,9 @@ def execute_C_ASK(game: engine.Game, interaction_system: InteractionSystem, comm
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -675,6 +804,9 @@ def execute_C_WRITE(game: engine.Game, interaction_system: InteractionSystem, co
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -690,6 +822,9 @@ def execute_C_ERASE(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -701,6 +836,9 @@ def execute_C_WEAR(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -716,6 +854,9 @@ def execute_C_UNDRESS(game: engine.Game, interaction_system: InteractionSystem, 
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -727,6 +868,9 @@ def execute_C_INVENTORY(game: engine.Game, interaction_system: InteractionSystem
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -742,6 +886,9 @@ def execute_C_WAIT(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -753,6 +900,9 @@ def execute_C_SLEEP(game: engine.Game, interaction_system: InteractionSystem, co
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -768,6 +918,9 @@ def execute_C_SIT_DOWN(game: engine.Game, interaction_system: InteractionSystem,
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -779,6 +932,9 @@ def execute_C_LIE_DOWN(game: engine.Game, interaction_system: InteractionSystem,
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -794,6 +950,9 @@ def execute_C_STAND_UP(game: engine.Game, interaction_system: InteractionSystem,
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -805,6 +964,9 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -820,6 +982,9 @@ def execute_C_DANCE(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -831,6 +996,9 @@ def execute_C_SING(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -846,6 +1014,9 @@ def execute_C_JUMP(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -857,6 +1028,9 @@ def execute_C_THINK(game: engine.Game, interaction_system: InteractionSystem, co
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -872,6 +1046,9 @@ def execute_C_QUIT(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -883,6 +1060,9 @@ def execute_C_SAVE(game: engine.Game, interaction_system: InteractionSystem, com
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -898,6 +1078,9 @@ def execute_C_LOAD(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -909,6 +1092,9 @@ def execute_C_RESTART(game: engine.Game, interaction_system: InteractionSystem, 
 
     # TODO
     pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -924,6 +1110,9 @@ def execute_C_SCORE(game: engine.Game, interaction_system: InteractionSystem, co
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -937,6 +1126,9 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
     return game
 
 
@@ -946,7 +1138,7 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-commands_fns: dict[str, Callable[[engine.Game, InteractionSystem, list[str], str, bool], engine.Game]] = {
+ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[engine.Game, InteractionSystem, list[str], str, bool], engine.Game]] = {
     "C_LOOKAROUND": execute_C_LOOKAROUND,
     "C_RECAP": execute_C_RECAP,
     "C_BRIEF": execute_C_BRIEF,

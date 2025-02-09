@@ -1,5 +1,5 @@
 #
-from typing import Callable
+from typing import Callable, Optional
 #
 from copy import deepcopy
 #
@@ -7,7 +7,42 @@ import engine_classes as engine
 
 
 #
-def execute_C_LOOKAROUND(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def get_opt_thing(game: engine.Game, thing_id: str) -> Optional[engine.Thing]:
+    # TODO
+    pass
+
+
+#
+def get_thing(game: engine.Game, thing_id: str) -> engine.Thing:
+    # TODO
+    pass
+
+#
+def get_opt_room(game: engine.Game, room_id: str) -> Optional[engine.Room]:
+    # TODO
+    pass
+
+
+#
+def get_room(game: engine.Game, room_id: str) -> engine.Room:
+    # TODO
+    pass
+
+
+#
+def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
+    # TODO
+    pass
+
+
+#
+def describe_room(room: engine.Room) -> str:
+    # TODO
+    pass
+
+
+#
+def execute_C_LOOKAROUND(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -20,7 +55,7 @@ def execute_C_LOOKAROUND(game: engine.Game, command: list[str], copy_game: bool 
 
 
 #
-def execute_C_RECAP(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_RECAP(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -33,7 +68,7 @@ def execute_C_RECAP(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_BRIEF(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_BRIEF(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -46,7 +81,7 @@ def execute_C_BRIEF(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_DESCRIBE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_DESCRIBE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -59,7 +94,7 @@ def execute_C_DESCRIBE(game: engine.Game, command: list[str], copy_game: bool = 
 
 
 #
-def execute_C_EXAMINE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_EXAMINE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -72,7 +107,7 @@ def execute_C_EXAMINE(game: engine.Game, command: list[str], copy_game: bool = F
 
 
 #
-def execute_C_RUMMAGE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_RUMMAGE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -85,7 +120,7 @@ def execute_C_RUMMAGE(game: engine.Game, command: list[str], copy_game: bool = F
 
 
 #
-def execute_C_LISTEN(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_LISTEN(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -98,7 +133,7 @@ def execute_C_LISTEN(game: engine.Game, command: list[str], copy_game: bool = Fa
 
 
 #
-def execute_C_TOUCH(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_TOUCH(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -111,7 +146,7 @@ def execute_C_TOUCH(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_READ(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_READ(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -124,7 +159,7 @@ def execute_C_READ(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_TASTE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_TASTE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -137,7 +172,7 @@ def execute_C_TASTE(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_SMELL(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SMELL(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -150,7 +185,7 @@ def execute_C_SMELL(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_GO(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_GO(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -163,7 +198,7 @@ def execute_C_GO(game: engine.Game, command: list[str], copy_game: bool = False)
 
 
 #
-def execute_C_PUT(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_PUT(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -176,7 +211,7 @@ def execute_C_PUT(game: engine.Game, command: list[str], copy_game: bool = False
 
 
 #
-def execute_C_PUSH(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_PUSH(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -189,7 +224,7 @@ def execute_C_PUSH(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_PULL(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_PULL(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -202,7 +237,7 @@ def execute_C_PULL(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_ATTACH(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_ATTACH(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -215,7 +250,7 @@ def execute_C_ATTACH(game: engine.Game, command: list[str], copy_game: bool = Fa
 
 
 #
-def execute_C_BREAK(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_BREAK(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -228,7 +263,7 @@ def execute_C_BREAK(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_THROW(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_THROW(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -241,7 +276,7 @@ def execute_C_THROW(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_DROP(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_DROP(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -254,7 +289,7 @@ def execute_C_DROP(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_CLEAN(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_CLEAN(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -267,7 +302,7 @@ def execute_C_CLEAN(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_USE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_USE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -280,7 +315,7 @@ def execute_C_USE(game: engine.Game, command: list[str], copy_game: bool = False
 
 
 #
-def execute_C_CLIMB(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_CLIMB(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -293,7 +328,7 @@ def execute_C_CLIMB(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_OPEN(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_OPEN(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -306,7 +341,7 @@ def execute_C_OPEN(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_CLOSE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_CLOSE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -319,7 +354,7 @@ def execute_C_CLOSE(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_LOCK(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_LOCK(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -332,7 +367,7 @@ def execute_C_LOCK(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_UNLOCK(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_UNLOCK(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -345,7 +380,7 @@ def execute_C_UNLOCK(game: engine.Game, command: list[str], copy_game: bool = Fa
 
 
 #
-def execute_C_FILL(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_FILL(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -358,7 +393,7 @@ def execute_C_FILL(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_POUR(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_POUR(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -371,7 +406,7 @@ def execute_C_POUR(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_INSERT(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_INSERT(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -384,7 +419,7 @@ def execute_C_INSERT(game: engine.Game, command: list[str], copy_game: bool = Fa
 
 
 #
-def execute_C_REMOVE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_REMOVE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -397,7 +432,7 @@ def execute_C_REMOVE(game: engine.Game, command: list[str], copy_game: bool = Fa
 
 
 #
-def execute_C_SET(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SET(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -410,7 +445,7 @@ def execute_C_SET(game: engine.Game, command: list[str], copy_game: bool = False
 
 
 #
-def execute_C_SPREAD(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SPREAD(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -423,7 +458,7 @@ def execute_C_SPREAD(game: engine.Game, command: list[str], copy_game: bool = Fa
 
 
 #
-def execute_C_SQUEEZE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SQUEEZE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -436,7 +471,7 @@ def execute_C_SQUEEZE(game: engine.Game, command: list[str], copy_game: bool = F
 
 
 #
-def execute_C_EAT(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_EAT(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -449,7 +484,7 @@ def execute_C_EAT(game: engine.Game, command: list[str], copy_game: bool = False
 
 
 #
-def execute_C_DRINK(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_DRINK(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -462,7 +497,7 @@ def execute_C_DRINK(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_AWAKE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_AWAKE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -475,7 +510,7 @@ def execute_C_AWAKE(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_ATTACK(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_ATTACK(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -488,7 +523,7 @@ def execute_C_ATTACK(game: engine.Game, command: list[str], copy_game: bool = Fa
 
 
 #
-def execute_C_BUY(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_BUY(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -501,7 +536,7 @@ def execute_C_BUY(game: engine.Game, command: list[str], copy_game: bool = False
 
 
 #
-def execute_C_SHOW(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SHOW(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -514,7 +549,7 @@ def execute_C_SHOW(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_EMBRACE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_EMBRACE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -527,7 +562,7 @@ def execute_C_EMBRACE(game: engine.Game, command: list[str], copy_game: bool = F
 
 
 #
-def execute_C_FEED(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_FEED(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -540,7 +575,7 @@ def execute_C_FEED(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_GIVE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_GIVE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -553,7 +588,7 @@ def execute_C_GIVE(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_SAY(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SAY(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -566,7 +601,7 @@ def execute_C_SAY(game: engine.Game, command: list[str], copy_game: bool = False
 
 
 #
-def execute_C_ASK(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_ASK(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -579,7 +614,7 @@ def execute_C_ASK(game: engine.Game, command: list[str], copy_game: bool = False
 
 
 #
-def execute_C_WRITE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_WRITE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -592,7 +627,7 @@ def execute_C_WRITE(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_ERASE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_ERASE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -605,7 +640,7 @@ def execute_C_ERASE(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_WEAR(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_WEAR(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -618,7 +653,7 @@ def execute_C_WEAR(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_UNDRESS(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_UNDRESS(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -631,7 +666,7 @@ def execute_C_UNDRESS(game: engine.Game, command: list[str], copy_game: bool = F
 
 
 #
-def execute_C_INVENTORY(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_INVENTORY(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -644,7 +679,7 @@ def execute_C_INVENTORY(game: engine.Game, command: list[str], copy_game: bool =
 
 
 #
-def execute_C_WAIT(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_WAIT(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -657,7 +692,7 @@ def execute_C_WAIT(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_SLEEP(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SLEEP(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -670,7 +705,7 @@ def execute_C_SLEEP(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_SIT_DOWN(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SIT_DOWN(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -683,7 +718,7 @@ def execute_C_SIT_DOWN(game: engine.Game, command: list[str], copy_game: bool = 
 
 
 #
-def execute_C_LIE_DOWN(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_LIE_DOWN(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -696,7 +731,7 @@ def execute_C_LIE_DOWN(game: engine.Game, command: list[str], copy_game: bool = 
 
 
 #
-def execute_C_STAND_UP(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_STAND_UP(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -709,7 +744,7 @@ def execute_C_STAND_UP(game: engine.Game, command: list[str], copy_game: bool = 
 
 
 #
-def execute_C_TAKE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_TAKE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -722,7 +757,7 @@ def execute_C_TAKE(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_DANCE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_DANCE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -735,7 +770,7 @@ def execute_C_DANCE(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_SING(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SING(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -748,7 +783,7 @@ def execute_C_SING(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_JUMP(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_JUMP(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -761,7 +796,7 @@ def execute_C_JUMP(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_THINK(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_THINK(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -774,7 +809,7 @@ def execute_C_THINK(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_QUIT(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_QUIT(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -787,7 +822,7 @@ def execute_C_QUIT(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_SAVE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SAVE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -800,7 +835,7 @@ def execute_C_SAVE(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_LOAD(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_LOAD(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -813,7 +848,7 @@ def execute_C_LOAD(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-def execute_C_RESTART(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_RESTART(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -826,7 +861,7 @@ def execute_C_RESTART(game: engine.Game, command: list[str], copy_game: bool = F
 
 
 #
-def execute_C_SCORE(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_SCORE(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -839,7 +874,7 @@ def execute_C_SCORE(game: engine.Game, command: list[str], copy_game: bool = Fal
 
 
 #
-def execute_C_HELP(game: engine.Game, command: list[str], copy_game: bool = False) -> engine.Game:
+def execute_C_HELP(game: engine.Game, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -852,7 +887,7 @@ def execute_C_HELP(game: engine.Game, command: list[str], copy_game: bool = Fals
 
 
 #
-commands_fns: dict[str, Callable[[engine.Game, list[str], bool], engine.Game]] = {
+commands_fns: dict[str, Callable[[engine.Game, list[str], str, bool], engine.Game]] = {
     "C_LOOKAROUND": execute_C_LOOKAROUND,
     "C_RECAP": execute_C_RECAP,
     "C_BRIEF": execute_C_BRIEF,

@@ -3,7 +3,7 @@ from typing import Callable, Optional
 #
 from copy import deepcopy
 #
-from . import engine_classes as engine  # type: ignore
+from . import engine_classes as engine
 from .interaction_system import InteractionSystem
 
 

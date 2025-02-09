@@ -555,9 +555,7 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
 
 
 #
-def save_interactive_fiction_model_from_file(filepath: str, game_save_format: str = "JSON") -> Game:
-    #
-    game: Game = Game()
+def save_interactive_fiction_model_to_file(game: Game, filepath: str, game_save_format: str = "JSON") -> Game:
     #
     game.save_to_filepath(filepath, game_save_format)
     #

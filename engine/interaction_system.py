@@ -4,7 +4,7 @@ class InteractionSystem:
     #
     def __init__(self) -> None:
         #
-        pass
+        self.running: bool = True
 
     #
     def write_to_output(self, txt: str) -> None:
@@ -28,6 +28,13 @@ class InteractionSystemWithBuffer(InteractionSystem):
     def write_to_output(self, txt: str) -> None:
         #
         self.buffer.append(txt)
+
+    #
+    def flush_output(self) -> None:
+        #
+        pass
+        #
+        self.buffer = []
 
 
 

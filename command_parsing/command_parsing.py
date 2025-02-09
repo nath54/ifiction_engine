@@ -661,7 +661,7 @@ def parse_command(command_input: str) -> list[str]:
     if res is not None:
         return res
 
-    #### COMMAND TAKE OFF
+    #### COMMAND UNDRESS
     # `(undress/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
 
     res = test_COMMAND_SOMETHING(command_input, "C_UNDRESS")
@@ -735,7 +735,7 @@ def parse_command(command_input: str) -> list[str]:
     #### COMMAND SING
     # `(chant/sing) ?{something}`: Sing or chant something. (ex: `sing`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_DANCE")
+    res = test_COMMAND_OPT_SOMETHING(command_input, "C_SING")
     if res is not None:
         return res
 

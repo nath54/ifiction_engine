@@ -11,6 +11,11 @@ class InteractionSystem:
         #
         pass
 
+    #
+    def ask_input(self) -> str:
+        #
+        return ""
+
 
 #
 class InteractionSystemWithBuffer(InteractionSystem):
@@ -23,6 +28,7 @@ class InteractionSystemWithBuffer(InteractionSystem):
     def write_to_output(self, txt: str) -> None:
         #
         self.buffer.append(txt)
+
 
 
 #
@@ -38,6 +44,9 @@ class BasicTerminalInteractionSystem(InteractionSystem):
         print(txt)
 
     #
+    def ask_input(self) -> str:
+        #
+        return input(">")
 
 
 

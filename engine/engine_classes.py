@@ -385,12 +385,14 @@ class Room:
             self,
             room_name: str,
             accesses: list[ Access ],
-            description: str = ""
+            description: str = "",
+            things_inside: list[str] = []
         ) -> None:
         #
         self.room_name: str = room_name
         self.accesses: list[ Access ] = accesses
         self.description: str = description
+        self.things_inside: list[str] = things_inside
 
     #
     def to_dict(self) -> dict:
@@ -400,7 +402,8 @@ class Room:
             "accesses": [
                 access.to_dict() for access in self.accesses
             ],
-            "description": self.description
+            "description": self.description,
+            "things_inside": self.things_inside
         }
 
 
@@ -688,6 +691,7 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
     "Room": {
         "room_name": NoDefaultValues(),
         "accesses": NoDefaultValues(),
+        "things_inside": EmptyList(),
         "description": ""
     },
     "Game": {

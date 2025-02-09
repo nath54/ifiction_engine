@@ -64,9 +64,7 @@ def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
 #
 def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine.Thing]:
     #
-    pass
-    #
-    return []
+    return [get_thing(game=game, thing_id=thing_id) for thing_id in room.things_inside]
 
 #
 def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> str:
@@ -1139,12 +1137,12 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
 
 def introduce_game(game: engine.Game, interaction_system: InteractionSystem) -> None:
     #
-    print("\nDEBUG : \n")
-    print("\nGame:")
-    print(f"  - game name : {game.game_name}")
-    print(f"  - game description : {game.game_description}")
-    print(f"  - game author : {game.game_author}")
-    print("  - game things :")
+    # print("\nDEBUG : \n")
+    # print("\nGame:")
+    # print(f"  - game name : {game.game_name}")
+    # print(f"  - game description : {game.game_description}")
+    # print(f"  - game author : {game.game_author}")
+    # print("  - game things :")
     #
     thing_id: str
     for thing_id in game.things:

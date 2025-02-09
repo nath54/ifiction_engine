@@ -86,7 +86,8 @@ Directions:
 
 - `(say/tell/answer/shout) "..." ?{to [someone/something]}`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
 - `ask [someone] (about/for/on) [something/someone]`: Ask someone for information. (ex: `ask merchant about potion`)
-- `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`)
+- `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`). ***Note:** if there is already a writen thing on the object, and you want only the text you want to write, you can try to erase the previous text on the object.*
+- `(erase/delete/efface/rub out) [something] ?{with [something]}`: Erase everything that is writen on an object. (Ex: `rub out the paper with gum` or `erase the blackboard with the brush`)
 
 ## Interaction with yourself
 

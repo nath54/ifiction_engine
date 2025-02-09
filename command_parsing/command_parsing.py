@@ -27,7 +27,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_BREAK": ["break", "destroy"],
     "C_THROW": ["throw"],
     "C_DROP": ["drop", "discard"],
-    "C_CLEAN": ["clean", "rub", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
+    "C_CLEAN": ["clean", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
     "C_USE": ["use"],
     "C_CLIMB": ["climb"],
     "C_OPEN": ["open"],
@@ -53,6 +53,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_SAY": ["say", "tell", "answer", "shout"],
     "C_ASK": ["ask"],
     "C_WRITE": ["write"],
+    "C_ERASE": ["erase", "efface", "rub out", "delete"],
     "C_WEAR": ["wear", "dress"],
     "C_UNDRESS": ["undress", "take off", "strip", "pull off", "shed"],
     "C_INVENTORY": ["inventory", "stock", "what's in my bag"],
@@ -636,9 +637,16 @@ def parse_command(command_input: str) -> list[str]:
         return res
 
     #### COMMAND WRITE
-    # `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`)
+    # `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`) ***Note:** if there is already a writen thing on the object, and you want only the text you want to write, you can try to erase the previous text on the object.*
 
     res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_WRITE", ["on"], ["with"])
+    if res is not None:
+        return res
+
+    #### COMMAND ERASE
+    # `(erase/efface/delete/rub out) [something] ?{with [something]}`: Erase everything that is writen on an object. (Ex: `rub out the paper with gum` or `erase the blackboard with the brush`)
+
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_ERASE", ["with"])
     if res is not None:
         return res
 

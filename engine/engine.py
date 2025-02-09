@@ -1,5 +1,5 @@
 #
-from typing import Any, Optional, Callable
+from typing import Any, Optional, Callable, Tuple
 #
 import os
 import json
@@ -15,6 +15,28 @@ def verify_keys_in_dict(dictionary: dict, keys: list[str], type_: str) -> None:
 
 
 #
+def create_default_value(default_value: Any, attr: str, in_dict: dict, type_: str) -> Any:
+    #
+    if isinstance(default_value, EmptyDict):
+        #
+        return {}
+    #
+    elif isinstance(default_value, EmptyList):
+        #
+        return []
+    #
+    elif isinstance(default_value, ClassLoadFromDict):
+        #
+        return create_class_with_attributes_or_default_values_from_dict(
+            class_name=default_value.class_name,
+            in_dict=in_dict[attr],
+            type_=default_value.type_
+        )
+    #
+    return default_value
+
+
+#
 def create_kwargs(in_dict: dict, type_: str) -> dict:
     #
     kwargs: dict = {}
@@ -22,45 +44,55 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
     attr: str
     for attr in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_]:
         #
+        if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], ClassLoadFromDictDependingOnDictValue):
+            #
+            if attr not in in_dict:
+                #
+                if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].default_value, NoDefaultValues):
+                    #
+                    raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
+                #
+                kwargs[attr] = create_default_value(default_value=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].default_value, attr=attr, in_dict=in_dict, type_=type_)
+                #
+                continue
+            #
+            if CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value not in in_dict:
+                #
+                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
+            #
+            if in_dict[CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value] not in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types:
+                #
+                raise KeyError(f"The attribute `{attr}` is an unkown type for `ClassLoadFromDictDependingOnDictValue` and its following class names available : {CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types.keys()}")
+            #
+            kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
+                class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types[in_dict[CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value]][0],
+                in_dict=in_dict[attr],
+                type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types[in_dict[CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value]][1]
+            )
+            #
+            continue
+        #
         if attr not in in_dict:
             #
             if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], NoDefaultValues):
                 #
                 raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
             #
-            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyDict):
-                #
-                kwargs[attr] = {}
+            kwargs[attr] = create_default_value(default_value=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], attr=attr, in_dict=in_dict, type_=type_)
             #
-            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyList):
-                #
-                kwargs[attr] = []
+            continue
+        #
+        if hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "class_name") and hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "type_") and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name is not None) and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_ is not None):
             #
-            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], ClassLoadFromDict):
-                #
-                kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
-                    class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name,
-                    in_dict=in_dict[attr],
-                    type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_
-                )
-            #
-            else:
-                #
-                kwargs[attr] = CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr]
+            kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
+                class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name,
+                in_dict=in_dict[attr],
+                type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_
+            )
         #
         else:
             #
-            if hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "class_name") and hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "type_") and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name is not None) and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_ is not None):
-                #
-                kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
-                    class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name,
-                    in_dict=in_dict[attr],
-                    type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_
-                )
-            #
-            else:
-                #
-                kwargs[attr] = in_dict[attr]
+            kwargs[attr] = in_dict[attr]
     #
     return kwargs
 
@@ -118,6 +150,17 @@ class ClassLoadFromDict:
         #
         self.class_name: Callable = class_name
         self.type_: str = type_
+
+
+#
+class ClassLoadFromDictDependingOnDictValue:
+    #
+    def __init__(self, dict_key_value: str, class_names_and_types: dict[str, Tuple[Callable, str]], default_value: Any) -> None:
+        #
+        self.dict_key_value: str = dict_key_value
+        self.class_names_and_types: dict[str, Tuple[Callable, str]] = class_names_and_types
+        self.default_value: Any = default_value
+
 
 #
 class Thing:
@@ -529,7 +572,7 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "attributes": EmptyList(),
         "room": NoDefaultValues(),
         "inventory": EmptyDict(),
-        "life_system": ClassLoadFromDict(class_name=LifeSystem)
+        "life_system": ClassLoadFromDict(class_name=LifeSystem, type_="LifeSystem")
     },
     "Access": {
         "thing_id": NoDefaultValues(),
@@ -548,7 +591,16 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "things": NoDefaultValues(),
         "rooms": NoDefaultValues(),
         "variables": EmptyDict(),
-        "end": NoDefaultValues(),
+        "end": ClassLoadFromDictDependingOnDictValue(
+            dict_key_value="end_type",
+            class_names_and_types={
+                "EndAllOf": (EndAllOf, "EndAllOf"),
+                "EndOneOf": (EndOneOf, "EndOneOf"),
+                "EndInsideRoom": (EndInsideRoom, "EndInsideRoom"),
+                "EndEntityDead": (EndEntityDead, "EndEntityDead")
+            },
+            default_value=End()
+        ),
         "players": NoDefaultValues()
     }
 }

@@ -7,6 +7,11 @@ import engine_classes as engine
 from interaction_system import InteractionSystem
 
 
+
+#################################################################################
+############################### UTILITY FUNCTIONS ###############################
+#################################################################################
+
 #
 def get_opt_thing(game: engine.Game, thing_id: str) -> Optional[engine.Thing]:
     #
@@ -57,12 +62,35 @@ def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
 
 
 #
-def describe_room(room: engine.Room) -> str:
-    # TODO
+def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine.Thing]:
+    #
     pass
     #
-    return ""
+    return []
 
+#
+def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> str:
+    #
+    text = f"""
+You are in {room.room_name}.
+
+{room.description}
+    """
+    #
+    thing: engine.Thing
+    for thing in get_all_thing_of_a_room(game=game, room=room):
+        #
+        if thing.id == player_id:
+            continue
+        #
+        text += f"\nYou can see {thing.name}. {thing.brief_description}"
+    #
+    return text
+
+
+############################################################################
+############################### ALL COMMANDS ###############################
+############################################################################
 
 #
 def execute_C_LOOKAROUND(game: engine.Game, interaction_system: InteractionSystem, command: list[str], player_id: str, copy_game: bool = False) -> engine.Game:
@@ -70,8 +98,11 @@ def execute_C_LOOKAROUND(game: engine.Game, interaction_system: InteractionSyste
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
+
+    #
+    interaction_system.write_to_output(txt=describe_room(game=game, room=current_player_room, player_id=player_id))
 
     #
     return game
@@ -909,8 +940,13 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
     return game
 
 
+###################################################################################
+############################### ALL COMMANDS LINKED ###############################
+###################################################################################
+
+
 #
-commands_fns: dict[str, Callable[[engine.Game, list[str], str, bool], engine.Game]] = {
+commands_fns: dict[str, Callable[[engine.Game, InteractionSystem, list[str], str, bool], engine.Game]] = {
     "C_LOOKAROUND": execute_C_LOOKAROUND,
     "C_RECAP": execute_C_RECAP,
     "C_BRIEF": execute_C_BRIEF,

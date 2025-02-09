@@ -20,6 +20,9 @@ A game file has the following structure:
 
 ```json
 {
+    "game_name": "",
+    "game_description": "",
+    "game_author": "",
     "things": {
         "thing_id": {
             "thing_attr_1": "", // Thing value 1
@@ -54,38 +57,64 @@ Thing:
     + description: str = ""
     + brief_description: str = ""
     + attributes: list[ str ] / list[ Attributes ]= []
+
+Object(Thing):
     + parts: list[ ThingId ] = []
     + part_of: Optional[ ThingId ] = None
     + is_open: int = 1
     + is_locked: int = 0
     + unlocks: list[ str ] / list[ ThingId ] = []
 
+## Entity class
+
+LifeSystem:
+    + max_pv: int = 100
+    + current_pv: int = max_pv
+    + state: dict[ str, Any ] / dict[ StateName, StateParameters ] = {}
+
+Entity(Thing):
+    * room: str / RoomId
+    + inventory: dict[ str, int ] / dict[ ThingId, Quantity ] = {}
+    + life_system: LifeSystem = LifeSystem()
+
 ## Rooms class
 
 Room:
     * room_name: str (unique)
-    * access: list[ dict[str, str] ] / list[ Access ]
+    * accesses: list[ Access ]
     + description: str = ""
 
 Access:
-    * thing: str / ThingId
-    * direction: str / Direction
+    * thing_id: str / ThingId
+    * world_direction: str / Direction
     * links_to: str / RoomId
 
 ## End classes
 
-EndOneOf:
-    * lst: list[ EndClass ]
+End:
+    general abstract class
 
-EndAllOf:
-    * lst: list[ EndClass ]
+EndOneOf(End):
+    * lst: list[ End ]
 
-EndInsideRoom:
-    * room: str / RoomId
+EndAllOf(End):
+    * lst: list[ End ]
 
-## Players class
+EndInsideRoom(End):
+    * room_id: str / RoomId
 
-Player:
-    * room: str / RoomId
-    + inventory: dict[ str, int ] / dict[ ThingId, Quantity ] = {}
+EndEntityDead(End):
+    * entity_id: str / EntityId
+
+## Game class (Global Structure)
+
+Game:
+    * game_name: str
+    * game_description: str
+    * game_author: str
+    * things: dict[ str, Thing ] / dict[ ThingId, Thing ]
+    * rooms: dict[ str, Room ] / dict[ RoomId, Room ]
+    * variables: dict[ str, Any ] / dict[ VariableName, VariableValue ]
+    * end: End
+    * players: list[ str ] / list[ EntityId ]
 

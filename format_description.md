@@ -61,8 +61,6 @@ Thing:
 Object(Thing):
     + parts: list[ ThingId ] = []
     + part_of: Optional[ ThingId ] = None
-    + is_open: int = 0
-    + is_locked: int = 0
     + unlocks: list[ str ] / list[ ThingId ] = []
 
 ## Entity class

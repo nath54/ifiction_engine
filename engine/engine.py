@@ -11,39 +11,11 @@ def verify_keys_in_dict(dictionary: dict, keys: list[str], type_: str) -> None:
     k: str
     for k in keys:
         if k not in keys:
-            raise KeyError(f"The key `{k}` not in the dictionary for the type {type_} !\n\nDictionary : {dictionary}\n\n")
+            raise KeyError(f"The key `{k}` not in the dictionary for the type_ {type_} !\n\nDictionary : {dictionary}\n\n")
 
 
 #
-def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict, type_: str) -> None:
-    #
-    attr: str
-    for attr in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_]:
-        #
-        if attr not in in_dict:
-            #
-            if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], NoDefaultValues):
-                #
-                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type {type_} !\n\nDictionary : {in_dict}\n\n")
-            #
-            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyDict):
-                #
-                setattr(obj, attr, {})
-            #
-            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyList):
-                #
-                setattr(obj, attr, [])
-            #
-            else:
-                setattr(obj, attr, CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr])
-        #
-        else:
-            #
-            setattr(obj, attr, in_dict[attr])
-
-
-#
-def create_class_with_attributes_or_default_values_from_dict(class_name: Callable, in_dict: dict, type_: str) -> Any:
+def create_kwargs(in_dict: dict, type_: str) -> dict:
     #
     kwargs: dict = {}
     #
@@ -54,7 +26,7 @@ def create_class_with_attributes_or_default_values_from_dict(class_name: Callabl
             #
             if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], NoDefaultValues):
                 #
-                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type {type_} !\n\nDictionary : {in_dict}\n\n")
+                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
             #
             elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], EmptyDict):
                 #
@@ -64,20 +36,61 @@ def create_class_with_attributes_or_default_values_from_dict(class_name: Callabl
                 #
                 kwargs[attr] = []
             #
+            elif isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], ClassLoadFromDict):
+                #
+                kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
+                    class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name,
+                    in_dict=in_dict[attr],
+                    type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_
+                )
+            #
             else:
                 #
                 kwargs[attr] = CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr]
         #
         else:
             #
-            kwargs[attr] = in_dict[attr]
+            if hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "class_name") and hasattr(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], "type_") and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name is not None) and (CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_ is not None):
+                #
+                kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
+                    class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_name,
+                    in_dict=in_dict[attr],
+                    type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].type_
+                )
+            #
+            else:
+                #
+                kwargs[attr] = in_dict[attr]
+    #
+    return kwargs
 
+
+#
+def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict, type_: str) -> None:
+    #
+    kwargs: dict = create_kwargs(in_dict=in_dict, type_=type_)
+    #
+    attr: str
+    #
+    for attr in kwargs:
+        setattr(obj, attr, kwargs[attr])
+
+
+#
+def create_class_with_attributes_or_default_values_from_dict(class_name: Callable, in_dict: dict, type_: str) -> Any:
+    #
+    kwargs: dict = create_kwargs(in_dict=in_dict, type_=type_)
     #
     return class_name(**kwargs)
 
+
 #
 class NoDefaultValues:
-    pass
+    #
+    def __init__(self, have_type_: Optional[str] = None, class_name: Optional[Callable] = None, type_: Optional[str] = None) -> None:
+        self.have_type_: Optional[str] = have_type_
+        self.class_name: Optional[Callable] = class_name
+        self.type_: Optional[str] = type_
 
 
 #
@@ -101,10 +114,10 @@ class EmptyList:
 #
 class ClassLoadFromDict:
     #
-    def __init__(self, class_name: Callable) -> None:
+    def __init__(self, class_name: Callable, type_: str) -> None:
         #
         self.class_name: Callable = class_name
-
+        self.type_: str = type_
 
 #
 class Thing:
@@ -300,7 +313,7 @@ class End:
     def to_dict(self) -> dict:
         #
         return {
-            "end_type": "End"
+            "end_type_": "End"
         }
 
 
@@ -317,7 +330,7 @@ class EndOneOf(End):
     def to_dict(self) -> dict:
         #
         return {
-            "end_type": "EndOneOf",
+            "end_type_": "EndOneOf",
             "lst": [
                 end.to_dict() for end in self.lst
             ]
@@ -337,7 +350,7 @@ class EndAllOf(End):
     def to_dict(self) -> dict:
         #
         return {
-            "end_type": "EndAllOf",
+            "end_type_": "EndAllOf",
             "lst": [
                 end.to_dict() for end in self.lst
             ]
@@ -357,7 +370,7 @@ class EndInsideRoom(End):
     def to_dict(self) -> dict:
         #
         return {
-            "end_type": "EndInsideRoom",
+            "end_type_": "EndInsideRoom",
             "room_id": self.room_id
         }
 
@@ -375,7 +388,7 @@ class EndEntityDead(End):
     def to_dict(self) -> dict:
         #
         return {
-            "end_type": "EndEntityDead",
+            "end_type_": "EndEntityDead",
             "entity_id": self.entity_id
         }
 
@@ -401,7 +414,6 @@ class Game:
 
     #
     def to_dict(self) -> dict:
-
         #
         res: dict = {
             "game_name": self.game_name,
@@ -528,5 +540,15 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "room_name": NoDefaultValues(),
         "accesses": NoDefaultValues(),
         "description": ""
+    },
+    "Game": {
+        "game_name": NoDefaultValues(),
+        "game_description": NoDefaultValues(),
+        "game_author": "",
+        "things": NoDefaultValues(),
+        "rooms": NoDefaultValues(),
+        "variables": EmptyDict(),
+        "end": NoDefaultValues(),
+        "players": NoDefaultValues()
     }
 }

@@ -1,17 +1,28 @@
 {
+    "game_name": "Basic Test 3",
+    "game_description": "Simple test",
+    "game_author": "Nathan Cerisara (aka github.com/nath54)",
     "things": {
+        "player1": {
+            "type": "entity",
+            "room": "room1",
+            "inventory": {}
+        },
         "door1": {
+            "type": "object",
             "name": "door",
             "description": "a simple door with a golden lock",
             "attributes": ["openable", "locked"]
         },
         "silver_key": {
+            "type": "object",
             "name": "silver key",
             "description": "a simple silver key",
             "attributes": ["item"],
             "unlocks": []
         },
         "gold_key": {
+            "type": "object",
             "name": "gold key",
             "description": "a simple gold key",
             "attributes": ["item"],
@@ -43,18 +54,11 @@
             ]
         }
     },
-    "end": [
-        {
-            "type": "inside",
-            "room": "room2"
-        }
-    ],
-    "variables": {},
-    "players": {
-        "player1": {
-            "room": "start",
-            "inventory": {}
-        }
+    "end": {
+        "end_type": "EndInsideRoom",
+        "room_id": "room2"
     },
+    "variables": {},
+    "players": ["player1"],
     "nb_turns": 0
 }

@@ -1,6 +1,15 @@
 {
+    "game_name": "Basic Test 1",
+    "game_description": "Simple test",
+    "game_author": "Nathan Cerisara (aka github.com/nath54)",
     "things": {
+        "player1": {
+            "type": "entity",
+            "room": "room1",
+            "inventory": {}
+        },
         "door1": {
+            "type": "object",
             "name": "door",
             "description": "a simple door",
             "attributes": ["openable"]
@@ -28,18 +37,11 @@
             ]
         }
     },
-    "end": [
-        {
-            "type": "inside",
-            "room": "room2"
-        }
-    ],
-    "variables": {},
-    "players": {
-        "player1": {
-            "room": "start",
-            "inventory": {}
-        }
+    "end": {
+        "end_type": "EndInsideRoom",
+        "room_id": "room2"
     },
+    "variables": {},
+    "players": ["player1"],
     "nb_turns": 0
 }

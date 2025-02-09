@@ -22,7 +22,20 @@ if __name__ == "__main__":
     introduce_game(game=game, interaction_system=interaction_system)
 
     #
+    nb_players: int = len(game.players)
+
+    #
+    if nb_players == 0:
+        raise RuntimeError(f"Error: No player for the game : `{game.game_name}` from `{game.game_author}`")
+
+    #
+    current_player: int = 0
+
+    #
     while interaction_system.running:
+        #
+        if nb_players > 1:
+            interaction_system.write_to_output(txt=f"\n\nPlayer: {game.players[current_player]}\n\n")
         #
         command_input: str = interaction_system.ask_input()
 
@@ -36,11 +49,15 @@ if __name__ == "__main__":
             continue
 
         #
-        ALL_COMMANDS_FUNCTIONS[parsed_command[0]](game, interaction_system, parsed_command, "player", False)
+        ALL_COMMANDS_FUNCTIONS[parsed_command[0]](game, interaction_system, parsed_command, game.players[current_player], False)
 
         #
         if parsed_command[0] == "QUIT":
             break
+
+        #
+        if nb_players > 1:
+            current_player = (current_player + 1) % nb_players
 
     #
     interaction_system.write_to_output(txt="\nSystem Exit\nGoodbye.")

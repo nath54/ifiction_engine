@@ -41,33 +41,42 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
     #
     kwargs: dict = {}
     #
+    if type_ not in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES:
+        raise UserWarning(f"Error: Unkown type: `{type_}`")
+    #
     attr: str
     for attr in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_]:
         #
         if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr], ClassLoadFromDictDependingOnDictValue):
             #
+            clfddodv: ClassLoadFromDictDependingOnDictValue = CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr]
+            #
             if attr not in in_dict:
                 #
-                if isinstance(CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].default_value, NoDefaultValues):
+                if isinstance(clfddodv.default_value, NoDefaultValues):
                     #
                     raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
                 #
-                kwargs[attr] = create_default_value(default_value=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].default_value, attr=attr, in_dict=in_dict, type_=type_)
+                kwargs[attr] = create_default_value(default_value=clfddodv.default_value, attr=attr, in_dict=in_dict, type_=type_)
                 #
                 continue
             #
-            if CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value not in in_dict:
-                #
-                raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\n\nDictionary : {in_dict}\n\n")
+            print(f"DEBUG | attr = {attr} | in_dict[{attr}] = {in_dict[attr]}")
             #
-            if in_dict[CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value] not in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types:
+            print(f"DEBUG | CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr] = {clfddodv}")
+            #
+            if clfddodv.dict_key_value not in in_dict[attr]:
                 #
-                raise KeyError(f"The attribute `{attr}` is an unkown type for `ClassLoadFromDictDependingOnDictValue` and its following class names available : {CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types.keys()}")
+                raise KeyError(f"The attribute `{clfddodv.dict_key_value}` not in the dictionary for the type {type_} !\n\nDictionary : {in_dict[attr]}\n\n")
+            #
+            if in_dict[attr][clfddodv.dict_key_value] not in clfddodv.class_names_and_types:
+                #
+                raise KeyError(f"The attribute `{attr}` is an unkown type for `ClassLoadFromDictDependingOnDictValue` and its following class names available : {clfddodv.class_names_and_types.keys()}")
             #
             kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
-                class_name=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types[in_dict[CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value]][0],
+                class_name=clfddodv.class_names_and_types[in_dict[attr][clfddodv.dict_key_value]][0],
                 in_dict=in_dict[attr],
-                type_=CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].class_names_and_types[in_dict[CLASS_ATTRIBUTES_AND_DEFAULT_VALUES[type_][attr].dict_key_value]][1]
+                type_=clfddodv.class_names_and_types[in_dict[attr][clfddodv.dict_key_value]][1]
             )
             #
             continue
@@ -363,7 +372,7 @@ class End:
 #
 class EndOneOf(End):
     #
-    def __init__(self, lst_of_ends: list[ End ]) -> None:
+    def __init__(self, end_type: str, lst_of_ends: list[ End ]) -> None:
         #
         super().__init__()
         #
@@ -383,7 +392,7 @@ class EndOneOf(End):
 #
 class EndAllOf(End):
     #
-    def __init__(self, lst_of_ends: list[ End ]) -> None:
+    def __init__(self, end_type: str, lst_of_ends: list[ End ]) -> None:
         #
         super().__init__()
         #
@@ -403,7 +412,7 @@ class EndAllOf(End):
 #
 class EndInsideRoom(End):
     #
-    def __init__(self, room_id: str) -> None:
+    def __init__(self, end_type: str, room_id: str) -> None:
         #
         super().__init__()
         #
@@ -421,7 +430,7 @@ class EndInsideRoom(End):
 #
 class EndEntityDead(End):
     #
-    def __init__(self, entity_id: str) -> None:
+    def __init__(self, end_type: str, entity_id: str) -> None:
         #
         super().__init__()
         #
@@ -439,16 +448,28 @@ class EndEntityDead(End):
 #
 class Game:
     #
-    def __init__(self) -> None:
+    def __init__(
+            self,
+            game_name: str,
+            game_description: str,
+            game_author: str,
+            things: dict[str, Thing],
+            rooms: dict[str, Room],
+            variables: dict[str, Any],
+            end: End,
+            players: list[str],
+            nb_turns: int = 0
+        ) -> None:
         #
-        self.game_name: str = ""
-        self.game_description: str = ""
-        self.game_author: str = ""
-        self.things: dict[str, Thing] = {}
-        self.rooms: dict[str, Room] = {}
-        self.variables: dict[str, Any] = {}
-        self.end: End = End()
-        self.players: list[str] = []
+        self.game_name: str = game_name
+        self.game_description: str = game_description
+        self.game_author: str = game_author
+        self.things: dict[str, Thing] = things
+        self.rooms: dict[str, Room] = rooms
+        self.variables: dict[str, Any] = variables
+        self.end: End = end
+        self.players: list[str] = players
+        self.nb_turns: int = nb_turns
 
     #
     def load_from_dict(self, game_dict: dict) -> None:
@@ -543,6 +564,18 @@ def save_interactive_fiction_model_from_file(filepath: str, game_save_format: st
     return game
 
 
+#
+end_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
+    dict_key_value="end_type",
+    class_names_and_types={
+        "EndAllOf": (EndAllOf, "EndAllOf"),
+        "EndOneOf": (EndOneOf, "EndOneOf"),
+        "EndInsideRoom": (EndInsideRoom, "EndInsideRoom"),
+        "EndEntityDead": (EndEntityDead, "EndEntityDead")
+    },
+    default_value=End()
+)
+
 
 #
 CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
@@ -597,16 +630,23 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "things": NoDefaultValues(),
         "rooms": NoDefaultValues(),
         "variables": EmptyDict(),
-        "end": ClassLoadFromDictDependingOnDictValue(
-            dict_key_value="end_type",
-            class_names_and_types={
-                "EndAllOf": (EndAllOf, "EndAllOf"),
-                "EndOneOf": (EndOneOf, "EndOneOf"),
-                "EndInsideRoom": (EndInsideRoom, "EndInsideRoom"),
-                "EndEntityDead": (EndEntityDead, "EndEntityDead")
-            },
-            default_value=End()
-        ),
+        "end": end_classes,
         "players": NoDefaultValues()
+    },
+    "EndInsideRoom": {
+        "end_type": NoDefaultValues(),
+        "room_id": NoDefaultValues()
+    },
+    "EndEntityDead": {
+        "end_type": NoDefaultValues(),
+        "entity_id": NoDefaultValues()
+    },
+    "EndAllOf": {
+        "end_type": NoDefaultValues(),
+        "lst": EmptyList()
+    },
+    "EndAnyOf": {
+        "end_type": NoDefaultValues(),
+        "lst": EmptyList()
     }
 }

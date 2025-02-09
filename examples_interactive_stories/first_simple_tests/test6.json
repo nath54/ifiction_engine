@@ -1,34 +1,48 @@
 {
+    "game_name": "Basic Test 6",
+    "game_description": "Simple test",
+    "game_author": "Nathan Cerisara (aka github.com/nath54)",
     "things": {
+        "player1": {
+            "type": "entity",
+            "room": "room1",
+            "inventory": {}
+        },
         "door1": {
+            "type": "object",
             "name": "door",
             "description": "a simple door with a golden lock",
             "attributes": ["openable", "locked"]
         },
         "door2": {
+            "type": "object",
             "name": "door",
             "description": "a simple door with a silver lock",
             "attributes": ["openable", "locked"]
         },
         "silver_key": {
+            "type": "object",
             "name": "silver key",
             "description": "a simple silver key",
             "attributes": ["item"],
             "unlocks": ["door2"]
         },
         "gold_key": {
+            "type": "object",
             "name": "gold key",
             "description": "a simple gold key",
             "attributes": ["item"],
             "unlocks": ["door1"]
         },
         "buffet1": {
+            "type": "object",
             "name": "buffet",
             "description": "a simple buffet, with a drawer",
             "attributes": [],
             "parts": ["drawer1"]
         },
         "drawer1": {
+            "type": "object",
             "name": "drawer",
             "description": "a simple drawer",
             "attributes": ["openable", "container"],
@@ -76,18 +90,11 @@
             ]
         }
     },
-    "end": [
-        {
-            "type": "inside",
-            "room": "room3"
-        }
-    ],
-    "variables": {},
-    "players": {
-        "player1": {
-            "room": "start",
-            "inventory": {}
-        }
+    "end": {
+        "end_type": "EndInsideRoom",
+        "room_id": "room3"
     },
+    "variables": {},
+    "players": ["player1"],
     "nb_turns": 0
 }

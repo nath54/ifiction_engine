@@ -1,23 +1,35 @@
 {
+    "game_name": "Basic Test 4",
+    "game_description": "Simple test",
+    "game_author": "Nathan Cerisara (aka github.com/nath54)",
     "things": {
+        "player1": {
+            "type": "entity",
+            "room": "room1",
+            "inventory": {}
+        },
         "door1": {
+            "type": "object",
             "name": "door",
             "description": "a simple door",
             "attributes": ["openable", "locked"]
         },
         "key1": {
+            "type": "object",
             "name": "key",
             "description": "a simple key",
             "attributes": ["item"],
             "unlocks": ["door1"]
         },
         "buffet1": {
+            "type": "object",
             "name": "buffet",
             "description": "a simple buffet, with a drawer",
             "attributes": [],
             "parts": ["drawer1"]
         },
         "drawer1": {
+            "type": "object",
             "name": "drawer",
             "description": "a simple drawer",
             "attributes": ["openable", "container"],
@@ -50,18 +62,11 @@
             ]
         }
     },
-    "end": [
-        {
-            "type": "inside",
-            "room": "room2"
-        }
-    ],
-    "variables": {},
-    "players": {
-        "player1": {
-            "room": "start",
-            "inventory": {}
-        }
+    "end": {
+        "end_type": "EndInsideRoom",
+        "room_id": "room2"
     },
+    "variables": {},
+    "players": ["player1"],
     "nb_turns": 0
 }

@@ -1138,7 +1138,19 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
 #
 def introduce_game(game: engine.Game, interaction_system: InteractionSystem) -> None:
     #
-    pass
+    if game.nb_turns == 0:
+        #
+        print(f"""
+
+  ############################################################
+  #                                                          #
+  #  {game.game_name} {(54 - len(game.game_name)) * ' '} #
+  #                                                          #
+  #  by {game.game_author} {(51 - len(game.game_author)) * ' '} #
+  #                                                          #
+  ############################################################
+
+        """)
 
 
 #
@@ -1151,6 +1163,8 @@ def after_each_player_turn(game: engine.Game, interaction_system: InteractionSys
 def after_all_players_turn(game: engine.Game, interaction_system: InteractionSystem) -> None:
     #
     pass
+    #
+    game.nb_turns += 1
 
 
 ###################################################################################

@@ -4,7 +4,7 @@ import sys
 from engine.interaction_system import BasicTerminalInteractionSystem
 from engine.engine_classes import load_interactive_fiction_model_from_file, Game
 from command_parsing.command_parsing import parse_command
-from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn
+from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn, execute_C_LOOKAROUND
 
 
 #
@@ -29,7 +29,17 @@ if __name__ == "__main__":
     while interaction_system.running:
         #
         if game.nb_players > 1:
-            interaction_system.write_to_output(txt=f"\n\nPlayer: {game.players[game.current_player]}\n\n")
+            #
+            interaction_system.write_to_output(txt=f"\n\n### Player: {game.players[game.current_player]}\n\n")
+            #
+            if game.nb_turns == 0:
+                #
+                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=["C_LOOKAROUND"], player_id=game.players[game.current_player])
+        #
+        elif game.nb_turns == 0:
+                #
+                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=["C_LOOKAROUND"], player_id=game.players[game.current_player])
+
         #
         command_input: str = interaction_system.ask_input()
 

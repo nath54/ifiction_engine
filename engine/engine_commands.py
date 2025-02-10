@@ -1135,26 +1135,20 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
 ###########################################################################################
 
 
+#
 def introduce_game(game: engine.Game, interaction_system: InteractionSystem) -> None:
     #
-    # print("\nDEBUG : \n")
-    # print("\nGame:")
-    # print(f"  - game name : {game.game_name}")
-    # print(f"  - game description : {game.game_description}")
-    # print(f"  - game author : {game.game_author}")
-    # print("  - game things :")
+    pass
+
+
+#
+def after_each_player_turn(game: engine.Game, interaction_system: InteractionSystem) -> None:
     #
-    thing_id: str
-    for thing_id in game.things:
-        #
-        print(f"    * {thing_id} : {game.things[thing_id]}")
-    #
-    print("  - game rooms :")
-    #
-    room_id: str
-    for room_id in game.rooms:
-        #
-        print(f"    * {room_id} : {game.rooms[room_id]}")
+    pass
+
+
+#
+def after_all_players_turn(game: engine.Game, interaction_system: InteractionSystem) -> None:
     #
     pass
 

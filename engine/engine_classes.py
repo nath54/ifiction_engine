@@ -245,6 +245,16 @@ class Thing:
             "attributes": self.attributes
         }
 
+    #
+    def __str__(self) -> str:
+        #
+        return f"Thing({self.id}, {self.attributes})"
+
+    #
+    def __repr__(self) -> str:
+        #
+        return self.__str__()
+
 
 #
 class Object(Thing):
@@ -314,6 +324,16 @@ class LifeSystem:
             "state": self.state
         }
 
+    #
+    def __str__(self) -> str:
+        #
+        return f"[{self.current_pv}/{self.max_pv}pv]"
+
+    #
+    def __repr__(self) -> str:
+        #
+        return self.__str__()
+
 
 #
 class Entity(Thing):
@@ -353,6 +373,16 @@ class Entity(Thing):
         #
         return res
 
+    #
+    def __str__(self) -> str:
+        #
+        return f"Entity({self.id}, in {self.room}, {self.life_system}, {self.attributes})"
+
+    #
+    def __repr__(self) -> str:
+        #
+        return self.__str__()
+
 
 #
 class Access:
@@ -376,6 +406,16 @@ class Access:
             "world_direction": self.world_direction,
             "links_to": self.links_to
         }
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You can go to {self.links_to} by {self.thing_id} [{self.world_direction}]"
+
+    #
+    def __repr__(self) -> str:
+        #
+        return self.__str__()
 
 
 #
@@ -405,6 +445,16 @@ class Room:
             "description": self.description,
             "things_inside": self.things_inside
         }
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"\n\nRoom:\n  + Room name = {self.room_name}\n{'  + Inside the room:\n\t-' if self.things_inside else ''}{'\n\t-'.join(self.things_inside)}"
+
+    #
+    def __repr__(self) -> str:
+        #
+        return self.__str__()
 
 
 #
@@ -516,13 +566,20 @@ class Game:
         self.rooms: dict[str, Room] = rooms
         self.variables: dict[str, Any] = variables
         self.end: End = end
-        self.players: list[str] = players
         self.nb_turns: int = nb_turns
+        self.players: list[str] = players
+        self.nb_players: int = len(self.players)
+        self.current_player: int = 0
 
     #
-    def load_from_dict(self, game_dict: dict) -> None:
-        # TODO
-        pass
+    def __str__(self) -> str:
+        #
+        return f"Game:\n\t-game name = {self.game_name}\n\t-game author = {self.game_author}\n\n*Things:\n\n{'\n\n'.join(t.__str__() for t in self.things.values())}\n\n*Rooms:\n\n{'\n\n'.join(t.__str__() for t in self.rooms.values())}\n\n*variables : {self.variables}\n\n*players : {self.players}\n\n*nb turns : {self.nb_turns}"
+
+    #
+    def __repr__(self) -> str:
+        #
+        return self.__str__()
 
     #
     def to_dict(self) -> dict:
@@ -547,27 +604,6 @@ class Game:
 
         #
         return res
-
-    #
-    def load_from_filepath(self, filepath: str, game_save_format: str = "JSON") -> None:
-        #
-        if not os.path.exists(filepath):
-            raise FileNotFoundError(f"This file wasn't found : {filepath} !")
-
-        #
-        if game_save_format == "JSON":
-            #
-            game_dict: dict
-
-            #
-            with open(filepath, "r", encoding="utf-8") as f:
-                game_dict = json.load(f)
-
-            #
-            self.load_from_dict(game_dict)
-        #
-        else:
-            raise UserWarning(f"ERROR: Unkown IFICTION game save format : `{game_save_format}`")
 
 
     #

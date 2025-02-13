@@ -4,6 +4,7 @@ from typing import Callable, Optional
 from copy import deepcopy
 #
 from . import engine_classes as engine
+from . import engine_results as er
 from .interaction_system import InteractionSystem
 
 
@@ -66,24 +67,11 @@ def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine
     #
     return [get_thing(game=game, thing_id=thing_id) for thing_id in room.things_inside]
 
-#
-def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> str:
-    #
-    text = f"""
-You are in {room.room_name}.
 
-{room.description}
-    """
+#
+def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> list[er.ThingShow]:
     #
-    thing: engine.Thing
-    for thing in get_all_thing_of_a_room(game=game, room=room):
-        #
-        if thing.id == player_id:
-            continue
-        #
-        text += f"\nYou can see {thing.name}. {thing.brief_description}"
-    #
-    return text
+    return [er.ThingShow(thing=t) for t in get_all_thing_of_a_room(game=game, room=room)]
 
 
 ############################################################################
@@ -100,7 +88,9 @@ def execute_C_LOOKAROUND(game: engine.Game, interaction_system: InteractionSyste
     current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
 
     #
-    interaction_system.write_to_output(txt=describe_room(game=game, room=current_player_room, player_id=player_id))
+    interaction_system.add_result(
+        result=er.ResultLookAround(room=current_player_room, things=describe_room(game=game, room=current_player_room, player_id=game.players[game.current_player]))
+    )
 
     #
     return game

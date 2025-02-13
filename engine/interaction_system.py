@@ -1,3 +1,6 @@
+#
+from . import engine_results as er
+
 
 #
 class InteractionSystem:
@@ -5,6 +8,13 @@ class InteractionSystem:
     def __init__(self) -> None:
         #
         self.running: bool = True
+        #
+        self.results: list[er.Result] = []
+
+    #
+    def add_result(self, result: er.Result) -> None:
+        #
+        self.results.append(result)
 
     #
     def write_to_output(self, txt: str) -> None:

@@ -37,7 +37,7 @@ class CommandBrief(Command):
         #
         super().__init__()
         #
-        self.something:
+        self.something: str = something
 
 
 

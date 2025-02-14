@@ -6,6 +6,20 @@ from . import engine_classes as engine
 
 
 
+#######################################################################
+############################### UTILITY ###############################
+#######################################################################
+
+
+things_attributes_explaination: dict[str, str] = {
+    "openable": "@THING can be opened",
+    "open": "@THING is open",
+    "lockable": "@THING can be locked",
+    "locked": "@THING is locked",
+    "item": "@THING can be taken"
+}
+
+
 ###############################################################################
 ############################### UTILITY CLASSES ###############################
 ###############################################################################
@@ -89,11 +103,16 @@ class ResultRecap(Result):
 #
 class ResultBrief(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing: ThingShow) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing: ThingShow = thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return self.thing.thing.brief_description
 
 
 
@@ -104,18 +123,35 @@ class ResultDescribe(Result):
         #
         super().__init__()
         #
-        pass
+        self.thing: ThingShow = thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return self.thing.thing.description
 
 
 
 #
 class ResultExamine(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing: ThingShow) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing: ThingShow = thing
+
+    #
+    def __str__(self) -> str:
+        #
+        text: str = self.thing.thing.description
+        #
+        attr: str
+        for attr in self.thing.thing.attributes:
+            if attr in things_attributes_explaination:
+                text += f"\n{things_attributes_explaination[attr].replace("@THING", self.thing.thing.name)}"
+        #
+        return text
 
 
 

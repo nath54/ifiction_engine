@@ -150,12 +150,25 @@ def execute_C_BRIEF(game: engine.Game, interaction_system: InteractionSystem, co
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    designed_thing: Optional[engine.Thing] = get_designed_thing(game=game, text=command.elt, player_id=player_id)
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
+    if designed_thing is not None:
+        #
+        interaction_system.add_result(
+            result=er.ResultBrief(
+                thing=er.ThingShow(thing=designed_thing)
+            )
+        )
+    #
+    else:
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorThingNotFound(
+                text_designing_thing=command[1]
+            )
+        )
     #
     return game
 
@@ -196,12 +209,25 @@ def execute_C_EXAMINE(game: engine.Game, interaction_system: InteractionSystem, 
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    designed_thing: Optional[engine.Thing] = get_designed_thing(game=game, text=command.elt, player_id=player_id)
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
+    if designed_thing is not None:
+        #
+        interaction_system.add_result(
+            result=er.ResultExamine(
+                thing=er.ThingShow(thing=designed_thing)
+            )
+        )
+    #
+    else:
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorThingNotFound(
+                text_designing_thing=command[1]
+            )
+        )
     #
     return game
 

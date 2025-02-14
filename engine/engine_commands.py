@@ -173,7 +173,7 @@ def execute_C_DESCRIBE(game: engine.Game, interaction_system: InteractionSystem,
         #
         interaction_system.add_result(
             result=er.ResultDescribe(
-                thing=designed_thing
+                thing=er.ThingShow(thing=designed_thing)
             )
         )
     #

@@ -67,9 +67,9 @@ class Command_Elt_Kw_Elt_OKw_OElt(Command):
 #
 @dataclass
 class Command_OElt_Kw_Elt_Kw_Elt(Command):
-    elt1: Optional[str] = None
     elt2: str
     elt3: str
+    elt1: Optional[str] = None
     kw1: Optional[str] = None
     kw2: Optional[str] = None
 

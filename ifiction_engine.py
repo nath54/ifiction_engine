@@ -4,6 +4,7 @@ import sys
 from engine.interaction_system import BasicTerminalInteractionSystem
 from engine.engine_classes import load_interactive_fiction_model_from_file, Game
 from engine.command_parsing import parse_command
+import engine.engine_classes_commands as ecc
 from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn, execute_C_LOOKAROUND
 
 
@@ -44,19 +45,19 @@ if __name__ == "__main__":
         command_input: str = interaction_system.ask_input()
 
         #
-        parsed_command: list[str] = parse_command(command_input=command_input)
+        parsed_command: ecc.Command = parse_command(command_input=command_input)
 
         #
-        if not parsed_command or parsed_command[0] not in ALL_COMMANDS_FUNCTIONS:
+        if not parsed_command or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:
             #
             interaction_system.write_to_output(txt="Unkown Command\n")
             continue
 
         #
-        ALL_COMMANDS_FUNCTIONS[parsed_command[0]](game, interaction_system, parsed_command, game.players[game.current_player], False)
+        ALL_COMMANDS_FUNCTIONS[parsed_command.command_name](game, interaction_system, parsed_command, game.players[game.current_player], False)
 
         #
-        if parsed_command[0] == "C_QUIT":
+        if parsed_command.command_name == "C_QUIT":
             break
 
         #

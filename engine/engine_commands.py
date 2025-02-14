@@ -74,6 +74,37 @@ def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> 
     return [er.ThingShow(thing=t) for t in get_all_thing_of_a_room(game=game, room=room)]
 
 
+#
+def is_designing_thing(text: str, thing: engine.Thing) -> bool:
+    #
+    if text == thing.name:
+        return True
+    #
+    if text == thing.id:
+        return True
+    #
+    return False
+
+
+#
+def get_designed_thing(game: engine.Game, text: str, player_id: str) -> Optional[engine.Thing]:
+    #
+    current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
+
+    #
+    things_in_room: list[engine.Thing] = get_all_thing_of_a_room(game=game, room=current_player_room)
+
+    #
+    thing: engine.Thing
+    for thing in things_in_room:
+        #
+        if is_designing_thing(text=text, thing=thing):
+            return thing
+
+    #
+    return None
+
+
 ############################################################################
 ############################### ALL COMMANDS ###############################
 ############################################################################
@@ -134,11 +165,25 @@ def execute_C_DESCRIBE(game: engine.Game, interaction_system: InteractionSystem,
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    designed_thing: Optional[engine.Thing] = get_designed_thing(game=game, text=command[1], player_id=player_id)
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    if designed_thing is not None:
+        #
+        interaction_system.add_result(
+            result=er.ResultDescribe(
+                thing=designed_thing
+            )
+        )
+    #
+    else:
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorThingNotFound(
+                text_designing_thing=command[1]
+            )
+        )
 
     #
     return game

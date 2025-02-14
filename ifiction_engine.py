@@ -60,7 +60,7 @@ if __name__ == "__main__":
             break
 
         #
-        after_each_player_turn(game=game, interaction_system=interaction_system)
+        after_all_players_turn(game=game, interaction_system=interaction_system)
 
         #
         if game.nb_players > 1:

@@ -17,6 +17,710 @@ class ThingShow:
     #
     thing: engine.Thing
 
+    #
+    def __str__(self) -> str:
+        #
+        return self.thing.name
+
+
+
+###################################################################################
+############################### CLASSES FOR RESULTS ###############################
+###################################################################################
+
+
+#
+class Result:
+    #
+    def __init__(self) -> None:
+        #
+        pass
+
+    #
+    def __str__(self) -> str:
+        #
+        return "[RESULT PLACEHOLDER]"
+
+
+
+#
+class ResultLookAround(Result):
+    #
+    def __init__(self, room: engine.Room, things: list[ThingShow]) -> None:
+        #
+        super().__init__()
+        #
+        self.room: engine.Room = room
+        self.things: list[ThingShow] = things
+
+    #
+    def __str__(self) -> str:
+        #
+        text: str = f"""
+You are in {self.room.room_name}.
+
+{self.room.description}
+
+        """
+        #
+        if not self.things:
+            return text
+        #
+        text += "\nYou can see:\n"
+        #
+        for thing in self.things:
+            text += f" - {thing}\n"
+        #
+        return text
+
+
+
+#
+class ResultRecap(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultBrief(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultDescribe(Result):
+    #
+    def __init__(self, thing: ThingShow) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultExamine(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultRummage(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultListen(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultTouch(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultRead(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultTaste(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSmell(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultGo(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultPut(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultPush(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultPull(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultAttach(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultBreak(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultThrow(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultDrop(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultClean(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultUse(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultClimb(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultOpen(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultClose(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultLock(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultUnlock(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultFill(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultPour(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultInsert(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultRemove(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSet(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSpread(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSqueeze(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultEat(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultDrink(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultAwake(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultAttack(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultBuy(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultShow(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultEmbrace(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultFeed(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultGive(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSay(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultAsk(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultWrite(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultErase(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultWear(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultUndress(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultInventory(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultWait(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSleep(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSitDown(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultStandUp(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultTake(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultDance(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultSing(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultJump(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultThink(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultScore(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
+
+
+
+#
+class ResultHelp(Result):
+    #
+    def __init__(self) -> None:
+        #
+        super().__init__()
+        #
+        pass
 
 
 
@@ -27,612 +731,32 @@ class ThingShow:
 
 
 #
-class Result:
+class ResultError(Result):
     #
     def __init__(self) -> None:
         #
+        super().__init__()
+        #
         pass
+
+    #
+    def __str__(self) -> str:
+        #
+        return "Error\n"
 
 
 
 #
-class ResultLookAround(Result):
+class ResultErrorThingNotFound(Result):
     #
-    def __init__(self, room: engine.Room, things: list[ThingShow]) -> None:
+    def __init__(self, text_designing_thing: str) -> None:
         #
-        self.room: engine.Room = room
-        self.things: list[ThingShow] = things
+        super().__init__()
+        #
+        self.text_designing_thing: str = text_designing_thing
 
-
-#
-class ResultRecap(Result):
     #
-    def __init__(self) -> None:
+    def __str__(self) -> str:
         #
-
-        pass
-
-
-
-#
-class ResultBrief(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultDescribe(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultExamine(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultRummage(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultListen(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultTouch(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultRead(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultTaste(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSmell(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultGo(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultPut(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultPush(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultPull(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultAttach(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultBreak(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultThrow(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultDrop(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultClean(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultUse(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultClimb(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultOpen(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultClose(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultLock(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultUnlock(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultFill(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultPour(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultInsert(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultRemove(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSet(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSpread(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSqueeze(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultEat(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultDrink(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultAwake(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultAttack(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultBuy(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultShow(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultEmbrace(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultFeed(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultGive(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSay(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultAsk(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultWrite(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultErase(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultWear(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultUndress(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultInventory(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultWait(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSleep(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSitDown(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultStandUp(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultTake(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultDance(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultSing(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultJump(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultThink(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultScore(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-#
-class ResultHelp(Result):
-    #
-    def __init__(self) -> None:
-        #
-
-        pass
-
-
-
-
+        return f"Object not found: {self.text_designing_thing}\n"
 

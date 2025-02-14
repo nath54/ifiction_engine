@@ -65,5 +65,12 @@ class BasicTerminalInteractionSystem(InteractionSystem):
         #
         return input(">")
 
+    #
+    def add_result(self, result: er.Result) -> None:
+        #
+        self.results.append(result)
+        #
+        self.write_to_output(result.__str__())
+
 
 

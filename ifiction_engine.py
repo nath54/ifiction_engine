@@ -3,7 +3,7 @@ import sys
 #
 from engine.interaction_system import BasicTerminalInteractionSystem
 from engine.engine_classes import load_interactive_fiction_model_from_file, Game
-from command_parsing.command_parsing import parse_command
+from engine.command_parsing import parse_command
 from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn, execute_C_LOOKAROUND
 
 

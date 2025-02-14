@@ -61,7 +61,7 @@ Directions:
 - `unlock [something] ?{with [something]}`: Unlock an object. (ex: `unlock chest with rusty key`)
 - `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
 - `(pour) [something] (into/in) [something]`: Pour a liquid. (ex: `pour coffee into cup`)
-- `insert [something] into [something]`: Insert an item. (ex: `insert coin into vending machine`)
+- `insert [something] (into/in) [something]`: Insert an item. (ex: `insert coin into vending machine`)
 - `remove [something] from [something]`: Take something out of another object. (ex: `remove book from shelf`)
 - `set [something] to [state]`: Adjust an object’s state. (ex: `set lamp to on`)
 - `spread [something] ?{on [something/someone]}`: Apply something over a surface. (ex: `spread butter on bread`)
@@ -93,7 +93,7 @@ Directions:
 
 - `(wear/dress) [something]`: Wear clothing or equipment. (ex: `wear helmet`)
 - `(undress/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
-- `(inventory, "stock")`: List the objects in your inventory. (ex: `inv`)
+- `(inventory/stock)`: List the objects in your inventory. (ex: `inv`)
 - `wait ?{[duration]}`: Pause and let time pass. (ex: `wait 5 minutes`)
 - `(sleep/nap)`: Rest and possibly recover. (ex: `sleep`)
 - `sit on [something]`: Take a seat on an object. (ex: `sit on chair`)
@@ -104,14 +104,14 @@ Directions:
 
 - `dance`: Perform a dance. (ex: `dance`)
 - `(chant/sing)`: Sing or chant something. (ex: `sing`)
-- `(jump/hop)`: Jump up or forward. (ex: `jump`)
+- `(jump/hop)`: Jump up. (ex: `jump`)
 - `(think)`: Reflect or contemplate. (ex: `think`)
 
 ## System commands
 
 - `save ?{filepath of game save}`: Save the game. (ex: `save game1.sav`)
 - `(quit/q)`: Quit the game. (ex: `quit`)
-- `(load/restore) {filepath of game save}`: Load a saved game. (ex: `load game1.sav`)
+- `(load/restore) filepath of game save`: Load a saved game. (ex: `load game1.sav`)
 - `restart`: Restart the game. (ex: `restart`)
 - `score`: Show current progress. (ex: `score`)
 - `help`: Show the list of commands. (ex: `help`)

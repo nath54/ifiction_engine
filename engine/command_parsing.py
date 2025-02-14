@@ -1,6 +1,8 @@
 #
 from typing import Optional
 #
+from . import engine_classes_commands as ecc
+#
 import sys
 import re
 import os
@@ -85,16 +87,18 @@ def traite_txt(txt: str) -> str:
     return txt
 
 #
-def test_COMMAND(command_input: str, command_name: str) -> Optional[list[str]]:
+def test_COMMAND(command_input: str, command_name: str) -> Optional[ecc.Command]:
     #
     for kw in commands_keywords[command_name]:
         if traite_txt(kw) == command_input:
-            return [command_name]
+            return ecc.Command(
+                command_name=command_name
+            )
     #
     return None
 
 #
-def test_COMMAND_SOMETHING(command_input: str, command_name: str) -> Optional[list[str]]:
+def test_COMMAND_SOMETHING(command_input: str, command_name: str) -> Optional[ecc.Command_Elt]:
     #
     kw: str
     for kw in commands_keywords[command_name]:
@@ -104,12 +108,15 @@ def test_COMMAND_SOMETHING(command_input: str, command_name: str) -> Optional[li
         #
         if command_input.startswith(tkw) and len(command_input) > ltkw:
             #
-            return [command_name, command_input[ltkw:].strip()]
+            return ecc.Command_Elt(
+                command_name=command_name,
+                elt=command_input[ltkw:].strip()
+            )
     #
     return None
 
 #
-def test_COMMAND_OPT_SOMETHING(command_input: str, command_name: str) -> Optional[list[str]]:
+def test_COMMAND_OPT_SOMETHING(command_input: str, command_name: str) -> Optional[ecc.Command_OElt]:
     #
     kw: str
     for kw in commands_keywords[command_name]:
@@ -119,31 +126,106 @@ def test_COMMAND_OPT_SOMETHING(command_input: str, command_name: str) -> Optiona
         #
         if command_input.startswith(tkw):
             #
-            return [command_name, command_input[ltkw:].strip()]
+            elt: str = command_input[ltkw:].strip()
+            #
+            return ecc.Command_OElt(
+                command_name=command_name,
+                elt = elt if elt != "" else None
+            )
     #
     return None
 
 #
-def test_COMMAND_OPT_TO_SOMETHING(command_input: str, command_name: str) -> Optional[list[str]]:
+def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_opt: list[str] = ["to"], return_keyword: bool = False) -> Optional[ecc.Command_OKw_Elt]:
     #
-    kw: str
-    for kw in commands_keywords[command_name]:
-        #
-        tkw: str = traite_txt(kw)
-        ltkw: int = len(tkw)
-        #
-        if command_input.startswith(tkw+" to ") and len(command_input) > (ltkw + 4):
-            #
-            return [command_name, command_input[(ltkw+4):].strip()]
-        #
-        if command_input.startswith(tkw) and len(command_input) > ltkw:
-            #
-            return [command_name, command_input[ltkw:].strip()]
+    if isinstance(keyword_opt, str):
+        keyword_opt = [keyword_opt]
+
     #
-    return None
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_opt)
+
+    # Construct the main regex pattern with optional `{}` group
+    pattern = rf"""
+        ({keywords_a_pattern})                  # Keyword A
+        (?:\s*({keywords_b_pattern}))           # Optional Keyword B
+        (\s*(.*))                               # Text
+    """
+
+    # Match using regex with re.VERBOSE for readability
+    match = re.match(pattern, command_input, re.VERBOSE)
+
+    #
+    if match:
+        keyword_a, keyword_b, text_b = match.groups()
+        return ecc.Command_OKw_Elt(
+            command_name=command_name,
+            elt=text_b.strip() if text_b else '',
+            kw=keyword_b
+        )
+    else:
+        #
+        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_name)
+        #
+        if res is not None:
+            return ecc.Command_OKw_Elt(
+                command_name=res.command_name,
+                elt=res.elt
+            )
+        #
+        return None
 
 #
-def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_connection: str | list[str], return_keyword: bool = False) -> Optional[list[str]]:
+def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_name: str, keyword_opt: list[str] = ["to"], return_keyword: bool = False) -> Optional[ecc.Command_OKw_OElt]:
+    #
+    if isinstance(keyword_opt, str):
+        keyword_opt = [keyword_opt]
+
+    #
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_opt)
+
+    # Construct the main regex pattern with optional `{}` group
+    pattern = rf"""
+        ({keywords_a_pattern})                  # Keyword A
+        (?:\s*({keywords_b_pattern}))           # Optional Keyword B
+        (\s*(.*))                               # Text
+    """
+
+    # Match using regex with re.VERBOSE for readability
+    match = re.match(pattern, command_input, re.VERBOSE)
+
+    #
+    if match:
+        keyword_a, keyword_b, text_b = match.groups()
+        return ecc.Command_OKw_OElt(
+            command_name=command_name,
+            elt=text_b.strip() if text_b else '',
+            kw=keyword_b
+        )
+    else:
+        #
+        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_name)
+        #
+        if res is not None:
+            return ecc.Command_OKw_OElt(
+                command_name=res.command_name,
+                elt=res.elt
+            )
+        #
+        else:
+            #
+            res: Optional[ecc.Command] = test_COMMAND(command_input, command_name)
+            #
+            if res is not None:
+                return ecc.Command_OKw_OElt(
+                    command_name=res.command_name
+                )
+            #
+            return None
+
+#
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_connection: str | list[str], return_keyword: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt]:
     #
     if isinstance(keyword_connection, str):
         keyword_connection = [keyword_connection]
@@ -162,18 +244,17 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: s
     if match:
         keyword_a, text_a, keyword_b, text_b = match.groups()
         #
-        if return_keyword:
-            #
-            return [command_name, text_a.strip(), keyword_b, text_b.strip()]
-        #
-        return [command_name, text_a.strip(), text_b.strip()]
-    else:
-        return None
+        return ecc.Command_Elt_Kw_Elt(
+            command_name=command_name,
+            elt1=text_a.strip(),
+            elt2=text_b.strip(),
+            kw=keyword_b
+        )
     #
     return None
 
 
-def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
     #
     if isinstance(keyword_B, str):
         keyword_B = [keyword_B]
@@ -198,30 +279,46 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
         #
         keyword_a, text_a, keyword_b, text_b, _, keyword_c, text_c = match.groups()
         #
-        if return_keywords:
-            return [command_name, text_a, keyword_b, text_b, keyword_c, text_c]
-        #
-        return [command_name, text_a, text_b, text_c]
+        return ecc.Command_Elt_Kw_Elt_Kw_Elt(
+            command_name=command_name,
+            elt1=text_a,
+            elt2=text_b,
+            elt3=text_c,
+            kw1=keyword_b,
+            kw2=keyword_c
+        )
     else:
         return None
 
 #
-def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt_OKw_OElt]:
     #
-    res: Optional[list[str]] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, keyword_C, return_keywords)
+    res: Optional[ecc.Command] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, keyword_C, return_keywords)
     #
     if res is not None:
-        return res
+        return ecc.Command_Elt_Kw_Elt_OKw_OElt(
+            command_name=res.command_name,
+            elt1=res.elt1,
+            elt2=res.elt2,
+            elt3=res.elt3,
+            kw1=res.kw1,
+            kw2=res.kw2
+        )
     #
     res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, return_keywords)
     #
     if res is not None:
-        return res + ['']
+        return ecc.Command_Elt_Kw_Elt_OKw_OElt(
+            command_name=res.command_name,
+            elt1=res.elt1,
+            elt2=res.elt2,
+            kw1=res.kw
+        )
     #
     return None
 
 #
-def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_opt: str | list[str], return_keyword: bool = False) -> Optional[list[str]]:
+def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_opt: str | list[str], return_keyword: bool = False) -> Optional[ecc.Command_Elt_OKw_OElt]:
     #
     if isinstance(keyword_opt, str):
         keyword_opt = [keyword_opt]
@@ -243,20 +340,28 @@ def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_nam
     #
     if match:
         keyword_a, text_a, keyword_b, text_b = match.groups()
-        if return_keyword:
-            return [command_name, text_a.strip(), keyword_b, text_b.strip() if text_b else '']
-        return [command_name, text_a.strip(), text_b.strip() if text_b else '']
+        #
+        return ecc.Command_Elt_OKw_OElt(
+            command_name=command_name,
+            elt1=text_a.strip(),
+            elt2=text_b.strip(),
+            kw=keyword_b
+        )
     else:
         #
-        res: Optional[list[str]] = test_COMMAND_SOMETHING(command_input, command_name)
+        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_name)
         #
         if res is not None:
-            return res + ['']
+            #
+            return ecc.Command_Elt_OKw_OElt(
+                command_name=command_name,
+                elt1=res.elt
+            )
         #
         return None
 
 #
-def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[list[str]]:
+def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
     #
     if isinstance(keyword_B, str):
         keyword_B = [keyword_B]
@@ -288,20 +393,24 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
     if match:
         keyword_a, quantity, keyword_b, item, keyword_c, target = match.groups()
         quantity = quantity if quantity else "1"  # Default to 1 if not specified
-
-        if return_keywords:
-            return [command_name, quantity.strip(), keyword_b.strip(), item.strip(), keyword_c.strip(), target.strip()]
-
-        return [command_name, quantity.strip(), item.strip(), target.strip()]
+        #
+        return ecc.Command_Elt_Kw_Elt_Kw_Elt(
+            command_name=command_name,
+            elt1=quantity,
+            elt2=item,
+            elt3=target,
+            kw1=keyword_b,
+            kw2=keyword_c
+        )
     else:
         return None
 
 #
-def parse_command(command_input: str) -> list[str]:
+def parse_command(command_input: str) -> Optional[ecc.Command]:
 
     #
     command_input = traite_txt(command_input)
-    res: Optional[list[str]] = None
+    res: Optional[ecc.Command] = None
 
     ##################################
     ###### OBSERVATION COMMANDS ######
@@ -352,7 +461,7 @@ def parse_command(command_input: str) -> list[str]:
     #### COMMAND LISTEN
     # `(hear/listen) ?{TO} ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
 
-    res = test_COMMAND_OPT_TO_SOMETHING(command_input, "C_LISTEN")
+    res = test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input, "C_LISTEN")
     if res is not None:
         return res
 

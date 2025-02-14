@@ -4,9 +4,12 @@ from command_parsing import parse_command
 import os
 
 #
+tests_path: str = "tests_command_parsing"
+
+#
 test_files: list[tuple[str, str]] = [
-    ("tests/test1_in.txt", "tests/test1_out.txt"),
-#    ("tests/test2_in.txt", "tests/test2_out.txt")
+    (f"{tests_path}/test1_in.txt", f"{tests_path}/test1_out.txt"),
+#    (f"{tests_path}/test2_in.txt", f"{tests_path}/test2_out.txt")
 ]
 
 #

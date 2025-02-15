@@ -224,11 +224,17 @@ class ResultSmell(Result):
 #
 class ResultGo(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, direction: str, access_thing: ThingShow) -> None:
         #
         super().__init__()
         #
-        pass
+        self.direction: str = direction
+        self.access_thing: ThingShow = access_thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You move toward {self.direction} by {self.access_thing.thing.name}"
 
 
 
@@ -797,7 +803,7 @@ class ResultSystemError(ResultError):
 
 
 #
-class ResultDirectionError(ResultError):
+class ResultErrorDirection(ResultError):
     #
     def __init__(self, input_txt: str) -> None:
         #
@@ -811,32 +817,33 @@ class ResultDirectionError(ResultError):
         return f"Syntax Error :  `{self.input_txt}` is not a direction, the possible directions are : north, south, east, west, up, down, or a combinaison of thoses.  \n"
 
 #
-class ResultCannotGoDirection(ResultError):
+class ResultErrorCannotGoDirection(ResultError):
     #
-    def __init__(self, input_txt: str) -> None:
+    def __init__(self, direction: str) -> None:
         #
         super().__init__()
         #
-        self.input_txt: str = ""
+        self.direction: str = direction
 
     #
     def __str__(self) -> str:
         #
-        return f"Cannot go to the direction `{self.input_txt}` because it is locked\n"
+        return f"Cannot go to the direction `{self.direction}`, there are no access toward it.\n"
 
 #
-class ResultAccessLocked(ResultError):
+class ResultErrorAccessLocked(ResultError):
     #
-    def __init__(self, input_txt: str) -> None:
+    def __init__(self, direction: str, access_thing: ThingShow) -> None:
         #
         super().__init__()
         #
-        self.input_txt: str = ""
+        self.direction: str = direction
+        self.access_thing: ThingShow = access_thing
 
     #
     def __str__(self) -> str:
         #
-        return f"Access Locked `{self.input_txt}` is not a direction, the possible directions are : north, south, east, west, up, down, or a combinaison of thoses.  \n"
+        return f"Access Locked. You cannot go to the {self.direction} by {self.access_thing.thing.name}, because {self.access_thing.thing.name} is locked !\n"
 
 #
 class ResultErrorThingNotFound(ResultError):

@@ -549,7 +549,7 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     if parsed_direc is None:
         #
         interaction_system.add_result(
-            result=er.ResultDirectionError(input_txt=command.elt)
+            result=er.ResultErrorDirection(input_txt=command.elt)
         )
         #
         return game
@@ -569,16 +569,37 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     #
     if choosen_access is not None:
         #
-        remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
+        access_thing: engine.Thing = get_thing(game=game, thing_id=choosen_access.thing_id)
         #
-        add_thing_from_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
+        if "locked" in access_thing.attributes:
+            #
+            interaction_system.add_result(
+                result=er.ResultErrorAccessLocked(
+                    direction=choosen_access.world_direction,
+                    access_thing=er.ThingShow(thing=access_thing)
+                )
+            )
         #
-        # TODO: results
+        else:
+            #
+            remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
+            #
+            add_thing_from_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
+            #
+            interaction_system.add_result(
+                result=er.ResultGo(
+                    direction=choosen_access.world_direction,
+                    access_thing=er.ThingShow(thing=access_thing)
+                )
+            )
     #
     else:
-        # TODO: error
         #
-        pass
+        interaction_system.add_result(
+            result=er.ResultErrorCannotGoDirection(
+                direction=parsed_direc
+            )
+        )
     #
     return game
 

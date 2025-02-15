@@ -1,5 +1,5 @@
 #
-from typing import Callable, Optional, Any
+from typing import Callable, Optional, Any, cast
 #
 import os
 import json
@@ -562,7 +562,7 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     access: engine.Access
     for access in current_player_room.accesses:
         #
-        if access.world_direction == parsed_direc:
+        if access.direction == parsed_direc:
             #
             choosen_access = access
             break
@@ -575,7 +575,7 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
             #
             interaction_system.add_result(
                 result=er.ResultErrorAccessLocked(
-                    direction=choosen_access.world_direction,
+                    direction=choosen_access.direction,
                     access_thing=er.ThingShow(thing=access_thing)
                 )
             )
@@ -586,12 +586,18 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
             #
             add_thing_from_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
             #
+            player: engine.Entity = cast(engine.Entity, get_thing(game=game, thing_id=player_id))
+            #
+            player.room = choosen_access.links_to
+            #
             interaction_system.add_result(
                 result=er.ResultGo(
-                    direction=choosen_access.world_direction,
+                    direction=choosen_access.direction,
                     access_thing=er.ThingShow(thing=access_thing)
                 )
             )
+            #
+            return execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUDN"), player_id=player_id, copy_game=copy_game)
     #
     else:
         #

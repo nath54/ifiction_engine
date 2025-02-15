@@ -85,6 +85,12 @@ You are in {self.room.room_name}.
         for thing in self.things:
             text += f" - {thing}\n"
         #
+        text += "\nYou can go :\n"
+        #
+        access: engine.Access
+        for access in self.room.accesses:
+            text += f"  - To {access.links_to} in the {access.direction} by {access.thing_id}\n"
+        #
         return text
 
 

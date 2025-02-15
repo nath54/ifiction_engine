@@ -66,11 +66,12 @@
             "description": "the first room",
             "things_inside": {
                 "buffet1": 1,
-                "silver_key": 1
+                "silver_key": 1,
+                "door1": 1
             },
             "accesses": [
                 {
-                    "thing": "door1",
+                    "thing_id": "door1",
                     "direction": "east",
                     "links_to": "room2"
                 }
@@ -81,27 +82,34 @@
             "description": "the second room",
             "accesses": [
                 {
-                    "thing": "door1",
+                    "thing_id": "door1",
                     "direction": "west",
                     "links_to": "room1"
                 },
                 {
-                    "thing": "door2",
+                    "thing_id": "door2",
                     "direction": "north",
                     "links_to": "room3"
                 }
-            ]
+            ],
+            "things_inside": {
+                "door1": 1,
+                "door2": 1
+            }
         },
         "room3": {
             "room_name": "Room 3",
             "description": "the third room",
             "accesses": [
                 {
-                    "thing": "door2",
+                    "thing_id": "door2",
                     "direction": "south",
                     "links_to": "room2"
                 }
-            ]
+            ],
+            "things_inside": {
+                "door2": 1
+            }
         }
     },
     "end": {

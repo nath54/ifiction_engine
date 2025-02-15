@@ -120,6 +120,18 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
                 #
                 kwargs[attr][key] = create_classloadfromdictdependingondictvalue(clfddodv=caadv.clfddodv, in_dict=in_dict[attr], attr=key, type_=type_)
         #
+        elif isinstance(caadv, NoDefaultValueListOfClassLoadFromDict):
+            #
+            kwargs[attr] = []
+            #
+            i: int
+            #
+            for i in range(len(in_dict[attr])):
+                #
+                kwargs[attr].append(
+                    caadv.clfd.class_name(**create_kwargs(in_dict[attr][i], type_=caadv.clfd.type_))
+                )
+        #
         elif hasattr(caadv, "class_name") and hasattr(caadv, "type_") and (caadv.class_name is not None) and (caadv.type_ is not None):
             #
             kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
@@ -192,6 +204,14 @@ class ClassLoadFromDict:
         #
         self.class_name: Callable = class_name
         self.type_: str = type_
+
+
+#
+class NoDefaultValueListOfClassLoadFromDict:
+    #
+    def __init__(self, clfd: ClassLoadFromDict) -> None:
+        #
+        self.clfd: ClassLoadFromDict = clfd
 
 
 #
@@ -397,12 +417,12 @@ class Access:
     def __init__(
             self,
             thing_id: str,
-            world_direction: str,
+            direction: str,
             links_to: str
         ) -> None:
         #
         self.thing_id: str = thing_id
-        self.world_direction: str = world_direction
+        self.direction: str = direction
         self.links_to: str = links_to
 
     #
@@ -410,14 +430,14 @@ class Access:
         #
         return {
             "thing_id": self.thing_id,
-            "world_direction": self.world_direction,
+            "direction": self.direction,
             "links_to": self.links_to
         }
 
     #
     def __str__(self) -> str:
         #
-        return f"You can go to {self.links_to} by {self.thing_id} [{self.world_direction}]"
+        return f"You can go to {self.links_to} by {self.thing_id} [{self.direction}]"
 
     #
     def __repr__(self) -> str:
@@ -730,12 +750,12 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
     },
     "Access": {
         "thing_id": NoDefaultValues(),
-        "world_direction": NoDefaultValues(),
+        "direction": NoDefaultValues(),
         "links_to": NoDefaultValues()
     },
     "Room": {
         "room_name": NoDefaultValues(),
-        "accesses": NoDefaultValues(),
+        "accesses": NoDefaultValueListOfClassLoadFromDict(clfd=ClassLoadFromDict(class_name=Access, type_="Access")),
         "things_inside": EmptyDict(),
         "description": ""
     },

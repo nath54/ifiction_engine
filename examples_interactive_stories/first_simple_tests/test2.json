@@ -31,11 +31,12 @@
             "room_name": "Room 1",
             "description": "a simple room",
             "things_inside": {
-                "key1": 1
+                "key1": 1,
+                "door1": 1
             },
             "accesses": [
                 {
-                    "thing": "door1",
+                    "thing_id": "door1",
                     "direction": "east",
                     "links_to": "room2"
                 }
@@ -46,11 +47,14 @@
             "description": "a simple empty room",
             "accesses": [
                 {
-                    "thing": "door1",
+                    "thing_id": "door1",
                     "direction": "west",
                     "links_to": "room1"
                 }
-            ]
+            ],
+            "things_inside": {
+                "door1": 1
+            }
         }
     },
     "end": {

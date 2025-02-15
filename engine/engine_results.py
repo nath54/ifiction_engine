@@ -781,9 +781,24 @@ class ResultError(Result):
         return "Error\n"
 
 
+#
+class ResultSystemError(ResultError):
+    #
+    def __init__(self, error_msg: str) -> None:
+        #
+        super().__init__()
+        #
+        self.error_msg: str = ""
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"System Error : {self.error_msg}\n"
+
+
 
 #
-class ResultErrorThingNotFound(Result):
+class ResultErrorThingNotFound(ResultError):
     #
     def __init__(self, text_designing_thing: str) -> None:
         #

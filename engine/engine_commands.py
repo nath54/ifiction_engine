@@ -1,12 +1,88 @@
 #
 from typing import Callable, Optional
 #
+import os
+import json
+from datetime import datetime
+#
 from copy import deepcopy
 #
 from . import engine_classes as engine
 from . import engine_results as er
 from . import engine_classes_commands as ecc
 from .interaction_system import InteractionSystem
+
+
+
+########################################################################################
+############################### SYSTEM UTILITY FUNCTIONS ###############################
+########################################################################################
+
+FOLDER_SAVE_GAMES: str = "ifiction_games_saves"
+
+
+#
+def traite_txt_for_filepaths(txt: str) -> str:
+    #
+    txt = txt.replace("\\", "")
+    txt = txt.replace("/", "")
+    txt = txt.replace("*", "")
+    #
+    while "  " in txt:
+        txt = txt.replace("  ", " ")
+    #
+    txt = txt.replace(" ", "_")
+    txt = txt.replace("\t", "_")
+    txt = txt.replace("\n", "_")
+    txt = txt.replace("'", "_")
+    txt = txt.replace("\"", "_")
+    #
+    return txt
+
+
+#
+def get_game_savedir(game: engine.Game) -> str:
+    #
+    if not os.path.exists(FOLDER_SAVE_GAMES):
+        #
+        os.mkdir(FOLDER_SAVE_GAMES)
+    #
+    elif not os.path.isdir(FOLDER_SAVE_GAMES):
+        #
+        raise SystemError(f"Error: path `{FOLDER_SAVE_GAMES}` exists and is not a directory !")
+    #
+    game_savedir: str = f"{FOLDER_SAVE_GAMES}/{traite_txt_for_filepaths(game.game_name)}"
+    #
+    if not os.path.exists(game_savedir):
+        #
+        os.mkdir(game_savedir)
+    #
+    elif not os.path.isdir(game_savedir):
+        #
+        raise SystemError(f"Error: path `{game_savedir}` exists and is not a directory !")
+    #
+    return game_savedir
+
+
+#
+def get_next_available_auto_savegame_filepath(game: engine.Game) -> str:
+    #
+    game_savedir: str = get_game_savedir(game=game)
+    #
+    now: str = datetime.now().strftime("d-M-y-h-m-s")
+    #
+    game_savepath: str = f"{game_savedir}/N_TURNS_{game.nb_turns}_PLAYER_{game.current_player}_DATE_{now}.json"
+    #
+    if not os.path.exists(game_savepath):
+        return game_savepath
+    #
+    i: int = 2
+    game_savepath = f"{game_savedir}/N_TURNS_{game.nb_turns}_PLAYER_{game.current_player}_DATE_{now}_{i}.json"
+    while os.path.exists(game_savepath):
+        i += 1
+        game_savepath = f"{game_savedir}/N_TURNS_{game.nb_turns}_PLAYER_{game.current_player}_DATE_{now}_{i}.json"
+    #
+    return game_savepath
 
 
 
@@ -1118,11 +1194,36 @@ def execute_C_SAVE(game: engine.Game, interaction_system: InteractionSystem, com
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    savegame_filepath: str = ""
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    if command.elt is not None:
+        #
+        c_elt: str = traite_txt_for_filepaths(command.elt)
+        #
+        if not c_elt.endswith(".json"):
+            interaction_system.add_result(result=er.ResultSystemError(f"Le fichier de sauvegarde demandé ne finit pas par `.json` ! (rappel fichier demandé: `{c_elt}`)"))
+        #
+        game_savedir: str = get_game_savedir(game=game)
+        #
+        if os.path.exists(f"{game_savedir}/{c_elt}"):
+            interaction_system.add_result(result=er.ResultSystemError(f"Le fichier de sauvegarde demandé existe déjà, sauvegarde annulée ! (rappel fichier demandé: `{c_elt}`)"))
+        #
+        savegame_filepath = command.elt
+    #
+    else:
+        savegame_filepath = get_next_available_auto_savegame_filepath(game=game)
+
+    #
+    game_dict: dict = game.to_dict()
+
+    #
+    with open(savegame_filepath, "w", encoding="utf-8") as f:
+        json.dump(game_dict, f)
+
+    #
+    interaction_system.write_to_output(txt=f"File saved to `{savegame_filepath}`")
 
     #
     return game

@@ -1,10 +1,12 @@
 #
 from typing import Any, Optional, Callable, Tuple
 #
-from .engine_results import Result
-#
 import os
 import json
+
+# FORWARD CLASS FOR   from .engine_results import Result  (circular import else)
+class Result:
+    pass
 
 
 #

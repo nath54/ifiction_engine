@@ -810,7 +810,33 @@ class ResultDirectionError(ResultError):
         #
         return f"Syntax Error :  `{self.input_txt}` is not a direction, the possible directions are : north, south, east, west, up, down, or a combinaison of thoses.  \n"
 
+#
+class ResultCannotGoDirection(ResultError):
+    #
+    def __init__(self, input_txt: str) -> None:
+        #
+        super().__init__()
+        #
+        self.input_txt: str = ""
 
+    #
+    def __str__(self) -> str:
+        #
+        return f"Cannot go to the direction `{self.input_txt}` because it is locked\n"
+
+#
+class ResultAccessLocked(ResultError):
+    #
+    def __init__(self, input_txt: str) -> None:
+        #
+        super().__init__()
+        #
+        self.input_txt: str = ""
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"Access Locked `{self.input_txt}` is not a direction, the possible directions are : north, south, east, west, up, down, or a combinaison of thoses.  \n"
 
 #
 class ResultErrorThingNotFound(ResultError):

@@ -207,7 +207,7 @@ letters: set[str] = set("".join(atomics_directions))
 #
 def parse_directions(txt: str) -> Optional[str]:
     #
-    traited_txt: str = "".join([l for l in txt if l in letters])
+    traited_txt: str = "".join([letter for letter in txt if letter in letters])
     #
     if traited_txt in atomics_directions:
         return traited_txt
@@ -551,22 +551,34 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
         interaction_system.add_result(
             result=er.ResultDirectionError(input_txt=command.elt)
         )
+        #
+        return game
+
+    #
+    current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
+    #
+    choosen_access: Optional[engine.Access] = None
+    #
+    access: engine.Access
+    for access in current_player_room.accesses:
+        #
+        if access.world_direction == parsed_direc:
+            #
+            choosen_access = access
+            break
+    #
+    if choosen_access is not None:
+        #
+        remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
+        #
+        add_thing_from_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
+        #
+        # TODO: results
     #
     else:
+        # TODO: error
         #
-        current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
-        #
-        choosen_access: Optional[engine.Access] = None
-        #
-        access: engine.Access
-        for access in current_player_room.accesses:
-            #
-            if access.world_direction == parsed_direc:
-                #
-                choosen_access = access
-                break
-        #
-
+        pass
     #
     return game
 
@@ -1482,68 +1494,68 @@ def after_all_players_turn(game: engine.Game, interaction_system: InteractionSys
 
 #
 ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[engine.Game, InteractionSystem, ecc.Command, str, bool], engine.Game]] = {
-    "C_LOOKAROUND": execute_C_LOOKAROUND,
-    "C_RECAP": execute_C_RECAP,
-    "C_BRIEF": execute_C_BRIEF,
-    "C_DESCRIBE": execute_C_DESCRIBE,
-    "C_EXAMINE": execute_C_EXAMINE,
-    "C_RUMMAGE": execute_C_RUMMAGE,
-    "C_LISTEN": execute_C_LISTEN,
-    "C_TOUCH": execute_C_TOUCH,
-    "C_READ": execute_C_READ,
-    "C_TASTE": execute_C_TASTE,
-    "C_SMELL": execute_C_SMELL,
-    "C_GO": execute_C_GO,
-    "C_PUT": execute_C_PUT,
-    "C_PUSH": execute_C_PUSH,
-    "C_PULL": execute_C_PULL,
-    "C_ATTACH": execute_C_ATTACH,
-    "C_BREAK": execute_C_BREAK,
-    "C_THROW": execute_C_THROW,
-    "C_DROP": execute_C_DROP,
-    "C_CLEAN": execute_C_CLEAN,
-    "C_CLIMB": execute_C_CLIMB,
-    "C_OPEN": execute_C_OPEN,
-    "C_CLOSE": execute_C_CLOSE,
-    "C_LOCK": execute_C_LOCK,
-    "C_UNLOCK": execute_C_UNLOCK,
-    "C_FILL": execute_C_FILL,
-    "C_POUR": execute_C_POUR,
-    "C_INSERT": execute_C_INSERT,
-    "C_REMOVE": execute_C_REMOVE,
-    "C_SET": execute_C_SET,
-    "C_SPREAD": execute_C_SPREAD,
-    "C_SQUEEZE": execute_C_SQUEEZE,
-    "C_EAT": execute_C_EAT,
-    "C_DRINK": execute_C_DRINK,
-    "C_AWAKE": execute_C_AWAKE,
-    "C_ATTACK": execute_C_ATTACK,
-    "C_BUY": execute_C_BUY,
-    "C_SHOW": execute_C_SHOW,
-    "C_EMBRACE": execute_C_EMBRACE,
-    "C_FEED": execute_C_FEED,
-    "C_GIVE": execute_C_GIVE,
-    "C_SAY": execute_C_SAY,
-    "C_ASK": execute_C_ASK,
-    "C_WRITE": execute_C_WRITE,
-    "C_ERASE": execute_C_ERASE,
-    "C_WEAR": execute_C_WEAR,
-    "C_UNDRESS": execute_C_UNDRESS,
-    "C_INVENTORY": execute_C_INVENTORY,
-    "C_WAIT": execute_C_WAIT,
-    "C_SLEEP": execute_C_SLEEP,
-    "C_SIT_DOWN": execute_C_SIT_DOWN,
-    "C_LIE_DOWN": execute_C_LIE_DOWN,
-    "C_STAND_UP": execute_C_STAND_UP,
-    "C_TAKE": execute_C_TAKE,
-    "C_DANCE": execute_C_DANCE,
-    "C_SING": execute_C_SING,
-    "C_JUMP": execute_C_JUMP,
-    "C_THINK": execute_C_THINK,
-    "C_QUIT": execute_C_QUIT,
-    "C_SAVE": execute_C_SAVE,
-    "C_LOAD": execute_C_LOAD,
-    "C_RESTART": execute_C_RESTART,
-    "C_SCORE": execute_C_SCORE,
-    "C_HELP": execute_C_HELP
+    "C_LOOKAROUND": execute_C_LOOKAROUND,   # type: ignore
+    "C_RECAP": execute_C_RECAP,             # type: ignore
+    "C_BRIEF": execute_C_BRIEF,             # type: ignore
+    "C_DESCRIBE": execute_C_DESCRIBE,       # type: ignore
+    "C_EXAMINE": execute_C_EXAMINE,         # type: ignore
+    "C_RUMMAGE": execute_C_RUMMAGE,         # type: ignore
+    "C_LISTEN": execute_C_LISTEN,           # type: ignore
+    "C_TOUCH": execute_C_TOUCH,             # type: ignore
+    "C_READ": execute_C_READ,               # type: ignore
+    "C_TASTE": execute_C_TASTE,             # type: ignore
+    "C_SMELL": execute_C_SMELL,             # type: ignore
+    "C_GO": execute_C_GO,                   # type: ignore
+    "C_PUT": execute_C_PUT,                 # type: ignore
+    "C_PUSH": execute_C_PUSH,               # type: ignore
+    "C_PULL": execute_C_PULL,               # type: ignore
+    "C_ATTACH": execute_C_ATTACH,           # type: ignore
+    "C_BREAK": execute_C_BREAK,             # type: ignore
+    "C_THROW": execute_C_THROW,             # type: ignore
+    "C_DROP": execute_C_DROP,               # type: ignore
+    "C_CLEAN": execute_C_CLEAN,             # type: ignore
+    "C_CLIMB": execute_C_CLIMB,             # type: ignore
+    "C_OPEN": execute_C_OPEN,               # type: ignore
+    "C_CLOSE": execute_C_CLOSE,             # type: ignore
+    "C_LOCK": execute_C_LOCK,               # type: ignore
+    "C_UNLOCK": execute_C_UNLOCK,           # type: ignore
+    "C_FILL": execute_C_FILL,               # type: ignore
+    "C_POUR": execute_C_POUR,               # type: ignore
+    "C_INSERT": execute_C_INSERT,           # type: ignore
+    "C_REMOVE": execute_C_REMOVE,           # type: ignore
+    "C_SET": execute_C_SET,                 # type: ignore
+    "C_SPREAD": execute_C_SPREAD,           # type: ignore
+    "C_SQUEEZE": execute_C_SQUEEZE,         # type: ignore
+    "C_EAT": execute_C_EAT,                 # type: ignore
+    "C_DRINK": execute_C_DRINK,             # type: ignore
+    "C_AWAKE": execute_C_AWAKE,             # type: ignore
+    "C_ATTACK": execute_C_ATTACK,           # type: ignore
+    "C_BUY": execute_C_BUY,                 # type: ignore
+    "C_SHOW": execute_C_SHOW,               # type: ignore
+    "C_EMBRACE": execute_C_EMBRACE,         # type: ignore
+    "C_FEED": execute_C_FEED,               # type: ignore
+    "C_GIVE": execute_C_GIVE,               # type: ignore
+    "C_SAY": execute_C_SAY,                 # type: ignore
+    "C_ASK": execute_C_ASK,                 # type: ignore
+    "C_WRITE": execute_C_WRITE,             # type: ignore
+    "C_ERASE": execute_C_ERASE,             # type: ignore
+    "C_WEAR": execute_C_WEAR,               # type: ignore
+    "C_UNDRESS": execute_C_UNDRESS,         # type: ignore
+    "C_INVENTORY": execute_C_INVENTORY,     # type: ignore
+    "C_WAIT": execute_C_WAIT,               # type: ignore
+    "C_SLEEP": execute_C_SLEEP,             # type: ignore
+    "C_SIT_DOWN": execute_C_SIT_DOWN,       # type: ignore
+    "C_LIE_DOWN": execute_C_LIE_DOWN,       # type: ignore
+    "C_STAND_UP": execute_C_STAND_UP,       # type: ignore
+    "C_TAKE": execute_C_TAKE,               # type: ignore
+    "C_DANCE": execute_C_DANCE,             # type: ignore
+    "C_SING": execute_C_SING,               # type: ignore
+    "C_JUMP": execute_C_JUMP,               # type: ignore
+    "C_THINK": execute_C_THINK,             # type: ignore
+    "C_QUIT": execute_C_QUIT,               # type: ignore
+    "C_SAVE": execute_C_SAVE,               # type: ignore
+    "C_LOAD": execute_C_LOAD,               # type: ignore
+    "C_RESTART": execute_C_RESTART,         # type: ignore
+    "C_SCORE": execute_C_SCORE,             # type: ignore
+    "C_HELP": execute_C_HELP                # type: ignore
 }

@@ -8,8 +8,6 @@ from dataclasses import dataclass
 class Command:
     command_name: str
 
-
-
 #
 @dataclass
 class Command_Elt(Command):

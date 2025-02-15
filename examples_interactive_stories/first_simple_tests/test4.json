@@ -39,7 +39,9 @@
             "name": "drawer",
             "description": "a simple drawer",
             "attributes": ["openable", "container"],
-            "contains": ["key1"],
+            "contains": {
+                "key1": 1
+            },
             "part_of": "buffet1"
         }
     },
@@ -47,7 +49,9 @@
         "room1": {
             "room_name": "Room 1",
             "description": "a simple room",
-            "things_inside": ["buffet1"],
+            "things_inside": {
+                "buffet1": 1
+            },
             "accesses": [
                 {
                     "thing": "door1",

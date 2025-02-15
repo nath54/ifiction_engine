@@ -1,5 +1,5 @@
 #
-from typing import Callable, Optional
+from typing import Callable, Optional, Any
 #
 import os
 import json
@@ -140,6 +140,16 @@ def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
 
 
 #
+def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dict[engine.Thing, tuple[str, Any]]:
+    # TODO
+    return {}
+
+#
+def get_rec_all_things_of_a_room(game: engine.Game, room: engine.Room) -> dict[engine.Thing, tuple[str, Any]]:
+    # TODO
+    return {}
+
+#
 def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine.Thing]:
     #
     return [get_thing(game=game, thing_id=thing_id) for thing_id in room.things_inside]
@@ -180,6 +190,128 @@ def get_designed_thing(game: engine.Game, text: str, player_id: str) -> Optional
 
     #
     return None
+
+#
+atomics_directions: list[str] = [
+    "north",
+    "south",
+    "east",
+    "west",
+    "up",
+    "down"
+]
+
+#
+letters: set[str] = set("".join(atomics_directions))
+
+#
+def parse_directions(txt: str) -> Optional[str]:
+    #
+    traited_txt: str = "".join([l for l in txt if l in letters])
+    #
+    if traited_txt in atomics_directions:
+        return traited_txt
+    #
+    i1: int
+    i2: int
+    direc1: str
+    direc2: str
+    #
+    for i1 in range(len(atomics_directions)):
+        #
+        direc1 = atomics_directions[i1]
+        #
+        for i2 in range(len(atomics_directions)):
+            #
+            if i1 // 2 == i2 // 2:
+                continue
+            #
+            direc2 = atomics_directions[i2]
+            #
+            if traited_txt.startswith(direc1) and traited_txt.endswith(direc2):
+                return direc1 + "-" + direc2
+    #
+    return None
+
+
+#
+def remove_thing_from_thing(game: engine.Game, thing_to_remove_id: str, thing: engine.Thing, quantity: int = 1) -> None:
+    #
+    if isinstance(thing, engine.Object):
+        #
+        if thing_to_remove_id not in thing.contains:
+            return
+        #
+        if thing.contains[thing_to_remove_id] > quantity:
+            thing.contains[thing_to_remove_id] -= quantity
+        #
+        else:
+            del thing.contains[thing_to_remove_id]
+    #
+    elif isinstance(thing, engine.Entity):
+        #
+        if thing_to_remove_id not in thing.inventory:
+            return
+        #
+        if thing.inventory[thing_to_remove_id] > quantity:
+            thing.inventory[thing_to_remove_id] -= quantity
+        #
+        else:
+            del thing.inventory[thing_to_remove_id]
+
+
+#
+def add_thing_from_thing(game: engine.Game, thing_to_add_id: str, thing: engine.Thing, quantity: int = 1) -> None:
+    #
+    if isinstance(thing, engine.Object):
+        #
+        if thing_to_add_id not in thing.contains:
+            thing.contains[thing_to_add_id] = 0
+        #
+        thing.contains[thing_to_add_id] += quantity
+    #
+    elif isinstance(thing, engine.Entity):
+        #
+        if thing_to_add_id not in thing.inventory:
+            thing.inventory[thing_to_add_id] = 0
+        #
+        thing.inventory[thing_to_add_id] += quantity
+
+
+#
+def move_thing_from_thing_to_thing(game: engine.Game, thing_id: str, thing_from: engine.Thing, thing_to: engine.Thing, quantity: int = 1) -> None:
+    #
+    remove_thing_from_thing(game=game, thing_to_remove_id=thing_id, thing=thing_from, quantity=quantity)
+    add_thing_from_thing(game=game, thing_to_add_id=thing_id, thing=thing_to, quantity=quantity)
+
+
+#
+def remove_thing_from_room(game: engine.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
+    #
+    if thing_id not in room.things_inside:
+        return
+    #
+    if room.things_inside[thing_id] > quantity:
+        room.things_inside[thing_id] -= quantity
+    #
+    else:
+        del room.things_inside[thing_id]
+
+
+#
+def add_thing_from_room(game: engine.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
+    #
+    if thing_id not in room.things_inside:
+        room.things_inside[thing_id] = 0
+    #
+    room.things_inside[thing_id] += quantity
+
+
+#
+def move_thing_from_room_to_room(game: engine.Game, thing_id: str, room_from: engine.Room, room_to: engine.Room, quantity: int = 1) -> None:
+    #
+    remove_thing_from_room(game=game, thing_id=thing_id, room=room_from, quantity=quantity)
+    add_thing_from_room(game=game, thing_id=thing_id, room=room_to, quantity=quantity)
 
 
 ############################################################################
@@ -410,11 +542,30 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    parsed_direc: Optional[str] = parse_directions(command.elt)
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    if parsed_direc is None:
+        #
+        interaction_system.add_result(
+            result=er.ResultDirectionError(input_txt=command.elt)
+        )
+    #
+    else:
+        #
+        current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
+        #
+        choosen_access: Optional[engine.Access] = None
+        #
+        access: engine.Access
+        for access in current_player_room.accesses:
+            #
+            if access.world_direction == parsed_direc:
+                #
+                choosen_access = access
+                break
+        #
 
     #
     return game
@@ -1177,12 +1328,6 @@ def execute_C_QUIT(game: engine.Game, interaction_system: InteractionSystem, com
     #
     if copy_game:
         game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game

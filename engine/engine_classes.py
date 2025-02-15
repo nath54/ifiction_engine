@@ -274,7 +274,8 @@ class Object(Thing):
             part_of: Optional[str] = None,
             is_open: int = 0,
             is_locked: int = 0,
-            unlocks: list[str] = []
+            unlocks: list[str] = [],
+            contains: Optional[dict[str, int]] = None
         ) -> None:
         #
         super().__init__(
@@ -290,6 +291,7 @@ class Object(Thing):
         self.is_open: int = is_open
         self.is_locked: int = is_locked
         self.unlocks: list[str] = unlocks
+        self.contains: dict[str, int] = {} if contains is None else contains
 
     #
     def to_dict(self) -> dict:
@@ -301,6 +303,7 @@ class Object(Thing):
         res["is_open"] = self.is_open
         res["is_locked"] = self.is_locked
         res["unlocks"] = self.unlocks
+        res["contains"] = self.contains
         #
         return res
 
@@ -430,13 +433,13 @@ class Room:
             room_name: str,
             accesses: list[ Access ],
             description: str = "",
-            things_inside: list[str] = []
+            things_inside: Optional[dict[str, int]] = None
         ) -> None:
         #
         self.room_name: str = room_name
         self.accesses: list[ Access ] = accesses
         self.description: str = description
-        self.things_inside: list[str] = things_inside
+        self.things_inside: dict[str, int] = {} if things_inside is None else things_inside
 
     #
     def to_dict(self) -> dict:
@@ -707,7 +710,8 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "attributes": EmptyList(),
         "parts": EmptyList(),
         "part_of": None,
-        "unlocks": EmptyList()
+        "unlocks": EmptyList(),
+        "contains": EmptyDict()
     },
     "LifeSystem": {
         "max_pv": 100,
@@ -732,7 +736,7 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
     "Room": {
         "room_name": NoDefaultValues(),
         "accesses": NoDefaultValues(),
-        "things_inside": EmptyList(),
+        "things_inside": EmptyDict(),
         "description": ""
     },
     "Game": {

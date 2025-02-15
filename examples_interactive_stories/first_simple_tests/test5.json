@@ -47,7 +47,7 @@
             "name": "drawer",
             "description": "a simple drawer",
             "attributes": ["openable", "container"],
-            "contains": ["gold_key"],
+            "contains": {"gold_key": 1},
             "part_of": "buffet1"
         }
     },
@@ -55,7 +55,10 @@
         "room1": {
             "room_name": "Room 1",
             "description": "a simple room",
-            "things_inside": ["buffet1", "silver_key"],
+            "things_inside": {
+                "buffet1": 1,
+                "silver_key": 1
+            },
             "accesses": [
                 {
                     "thing": "door1",

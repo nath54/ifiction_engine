@@ -796,6 +796,21 @@ class ResultSystemError(ResultError):
         return f"System Error : {self.error_msg}\n"
 
 
+#
+class ResultDirectionError(ResultError):
+    #
+    def __init__(self, input_txt: str) -> None:
+        #
+        super().__init__()
+        #
+        self.input_txt: str = ""
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"Syntax Error :  `{self.input_txt}` is not a direction, the possible directions are : north, south, east, west, up, down, or a combinaison of thoses.  \n"
+
+
 
 #
 class ResultErrorThingNotFound(ResultError):

@@ -30,7 +30,9 @@
         "room1": {
             "room_name": "Room 1",
             "description": "a simple room",
-            "things_inside": ["key1"],
+            "things_inside": {
+                "key1": 1
+            },
             "accesses": [
                 {
                     "thing": "door1",

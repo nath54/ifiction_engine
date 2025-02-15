@@ -38,7 +38,10 @@
         "room1": {
             "room_name": "Room 1",
             "description": "a simple room",
-            "things_inside": ["silver_key", "gold_key"],
+            "things_inside": {
+                "silver_key": 1,
+                "gold_key": 1
+            },
             "accesses": [
                 {
                     "thing": "door1",

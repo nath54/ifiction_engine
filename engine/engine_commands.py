@@ -166,7 +166,7 @@ def execute_C_BRIEF(game: engine.Game, interaction_system: InteractionSystem, co
         #
         interaction_system.add_result(
             result=er.ResultErrorThingNotFound(
-                text_designing_thing=command[1]
+                text_designing_thing=command.elt
             )
         )
     #
@@ -195,7 +195,7 @@ def execute_C_DESCRIBE(game: engine.Game, interaction_system: InteractionSystem,
         #
         interaction_system.add_result(
             result=er.ResultErrorThingNotFound(
-                text_designing_thing=command[1]
+                text_designing_thing=command.elt
             )
         )
 
@@ -225,7 +225,7 @@ def execute_C_EXAMINE(game: engine.Game, interaction_system: InteractionSystem, 
         #
         interaction_system.add_result(
             result=er.ResultErrorThingNotFound(
-                text_designing_thing=command[1]
+                text_designing_thing=command.elt
             )
         )
     #
@@ -1235,7 +1235,7 @@ def after_all_players_turn(game: engine.Game, interaction_system: InteractionSys
 
 
 #
-ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[engine.Game, InteractionSystem, list[str], str, bool], engine.Game]] = {
+ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[engine.Game, InteractionSystem, ecc.Command, str, bool], engine.Game]] = {
     "C_LOOKAROUND": execute_C_LOOKAROUND,
     "C_RECAP": execute_C_RECAP,
     "C_BRIEF": execute_C_BRIEF,

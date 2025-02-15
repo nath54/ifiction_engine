@@ -1,6 +1,8 @@
 #
 from typing import Any, Optional, Callable, Tuple
 #
+from .engine_results import Result
+#
 import os
 import json
 
@@ -570,6 +572,7 @@ class Game:
         self.players: list[str] = players
         self.nb_players: int = len(self.players)
         self.current_player: int = 0
+        self.history: list[Result] = []
 
     #
     def __str__(self) -> str:

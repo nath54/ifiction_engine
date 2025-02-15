@@ -10,7 +10,7 @@ import os
 #
 commands_keywords: dict[str, list[str]] = {
     "C_LOOKAROUND": ["see", "look around", "look"],
-    "C_RECAP": ["recap"],
+    "C_RECAP": ["recap", "history"],
     "C_BRIEF": ["brief"],
     "C_DESCRIBE": ["describe", "watch"],
     "C_EXAMINE": ["examine", "inspect", "check"],
@@ -215,11 +215,11 @@ def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_name: str
         #
         else:
             #
-            res: Optional[ecc.Command] = test_COMMAND(command_input, command_name)
+            res2: Optional[ecc.Command] = test_COMMAND(command_input, command_name)
             #
-            if res is not None:
+            if res2 is not None:
                 return ecc.Command_OKw_OElt(
-                    command_name=res.command_name
+                    command_name=res2.command_name
                 )
             #
             return None
@@ -293,7 +293,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
 #
 def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt_OKw_OElt]:
     #
-    res: Optional[ecc.Command] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, keyword_C, return_keywords)
+    res: Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, keyword_C, return_keywords)
     #
     if res is not None:
         return ecc.Command_Elt_Kw_Elt_OKw_OElt(
@@ -305,14 +305,14 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input
             kw2=res.kw2
         )
     #
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, return_keywords)
+    res2: Optional[ecc.Command_Elt_Kw_Elt] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, return_keywords)
     #
-    if res is not None:
+    if res2 is not None:
         return ecc.Command_Elt_Kw_Elt_OKw_OElt(
-            command_name=res.command_name,
-            elt1=res.elt1,
-            elt2=res.elt2,
-            kw1=res.kw
+            command_name=res2.command_name,
+            elt1=res2.elt1,
+            elt2=res2.elt2,
+            kw1=res2.kw
         )
     #
     return None
@@ -913,15 +913,15 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     ##############################
 
     #
-    return []  # Commande vide
+    return None  # Commande vide
 
 
 #
 def main_user_input_test() -> None:
     #
-    res: list[str] = []
+    res: Optional[ecc.Command] = None
     #
-    while not (len(res) == 1 and res[0] == "C_QUIT"):
+    while res is None or not (res.command_name == "C_QUIT"):
         #
         command_input: str = input("> ")
         #

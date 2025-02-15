@@ -1,4 +1,6 @@
 #
+from typing import Optional
+#
 import sys
 #
 from engine.interaction_system import BasicTerminalInteractionSystem
@@ -17,7 +19,7 @@ if __name__ == "__main__":
 
     #
     game: Game = load_interactive_fiction_model_from_file(filepath=sys.argv[1])
-    interaction_system: BasicTerminalInteractionSystem = BasicTerminalInteractionSystem()
+    interaction_system: BasicTerminalInteractionSystem = BasicTerminalInteractionSystem(game=game)
 
     #
     introduce_game(game=game, interaction_system=interaction_system)
@@ -35,17 +37,17 @@ if __name__ == "__main__":
             #
             if game.nb_turns == 0:
                 #
-                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=["C_LOOKAROUND"], player_id=game.players[game.current_player])
+                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUND"), player_id=game.players[game.current_player])
         #
         elif game.nb_turns == 0:
                 #
-                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=["C_LOOKAROUND"], player_id=game.players[game.current_player])
+                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUND"), player_id=game.players[game.current_player])
 
         #
         command_input: str = interaction_system.ask_input()
 
         #
-        parsed_command: ecc.Command = parse_command(command_input=command_input)
+        parsed_command: Optional[ecc.Command] = parse_command(command_input=command_input)
 
         #
         if not parsed_command or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:
@@ -61,7 +63,7 @@ if __name__ == "__main__":
             break
 
         #
-        after_all_players_turn(game=game, interaction_system=interaction_system)
+        after_each_player_turn(game=game, interaction_system=interaction_system)
 
         #
         if game.nb_players > 1:
@@ -73,6 +75,8 @@ if __name__ == "__main__":
                 game.nb_players -= game.nb_players
                 #
                 after_all_players_turn(game=game, interaction_system=interaction_system)
+        else:
+            after_all_players_turn(game=game, interaction_system=interaction_system)
 
     #
     interaction_system.write_to_output(txt="\nSystem Exit\nGoodbye.")

@@ -3,7 +3,7 @@
 ## Observation
 
 - `(see/look around/look)`: Observe the surroundings and get a description of the current area.
-- `recap`: Summarize recent events, clues, or interactions.
+- `(recap/history) ?{number_of_turns}`: Summarize the `after_each_player_turn` number of turns, by default, it resumes 5. User can also enter `all` to get the full story and events and actions until now.
 - `brief [something/someone]`: Give a short description of something or someone. (ex: `brief ancient statue`)
 - `(watch/describe) [something/someone]`: Give a detailed description of an object or character. (ex: `describe mysterious painting`)
 - `(examine/inspect/check) [something/someone]`: Closely inspect something or someone to reveal details. (ex: `examine old diary`)

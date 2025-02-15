@@ -1,13 +1,16 @@
 #
 from . import engine_results as er
+from .engine_classes import Game
 
 
 #
 class InteractionSystem:
     #
-    def __init__(self) -> None:
+    def __init__(self, game: Game) -> None:
         #
         self.running: bool = True
+        #
+        self.game: Game = game
         #
         self.results: list[er.Result] = []
 
@@ -30,7 +33,9 @@ class InteractionSystem:
 #
 class InteractionSystemWithBuffer(InteractionSystem):
     #
-    def __init__(self) -> None:
+    def __init__(self, game: Game) -> None:
+        #
+        super().__init__(game)
         #
         self.buffer: list[str] = []
 
@@ -51,9 +56,9 @@ class InteractionSystemWithBuffer(InteractionSystem):
 #
 class BasicTerminalInteractionSystem(InteractionSystem):
     #
-    def __init__(self) -> None:
+    def __init__(self, game: Game) -> None:
         #
-        super().__init__()
+        super().__init__(game)
 
     #
     def write_to_output(self, txt: str) -> None:

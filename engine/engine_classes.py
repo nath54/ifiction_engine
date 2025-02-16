@@ -279,6 +279,11 @@ class Thing:
         #
         return self.__str__()
 
+    #
+    def __hash__(self) -> int:
+        #
+        return self.id.__hash__()
+
 
 #
 class Object(Thing):

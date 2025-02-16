@@ -140,14 +140,71 @@ def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
 
 
 #
+def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, Any]], res2: dict[engine.Thing, tuple[str, Any]]) -> dict[engine.Thing, tuple[str, Any]]:
+    #
+    for k in res2:
+        if k not in res1:
+            res1[k] = res2[k]
+    #
+    return res1
+
+
+#
+def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, Any]], res_tuple_keyword: str, res_tuple_value: Any) -> dict[engine.Thing, tuple[str, Any]]:
+    #
+    subthing = get_thing(game=game, thing_id=subthing_id)
+    #
+    if "hidden" in subthing.attributes:
+        return res
+    #
+    res[subthing] = (res_tuple_keyword, res_tuple_value)
+    #
+    if "locked" in subthing.attributes or "closed" in subthing.attributes or ("openable" in subthing.attributes and "open" not in subthing.attributes):
+        return res
+    #
+    res = fusion_rec_res_things(
+        res1=res,
+        res2=get_rec_all_things_of_a_thing(game=game, thing=subthing)
+    )
+    #
+    return res
+
+#
 def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dict[engine.Thing, tuple[str, Any]]:
-    # TODO
-    return {}
+    #
+    res: dict[engine.Thing, tuple[str, Any]] = {}
+    #
+    subthing_id: str
+    #
+    if isinstance(thing, engine.Object):
+        #
+        for subthing_id in thing.parts:
+            #
+            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="PartOf", res_tuple_value=thing.id)
+        #
+        for subthing_id in thing.contains:
+            #
+            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="Contained", res_tuple_value=thing.id)
+    #
+    if isinstance(thing, engine.Entity):
+        #
+        for subthing_id in thing.inventory:
+            #
+            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="Inventory", res_tuple_value=thing.id)
+    #
+    return res
 
 #
 def get_rec_all_things_of_a_room(game: engine.Game, room: engine.Room) -> dict[engine.Thing, tuple[str, Any]]:
-    # TODO
-    return {}
+    #
+    res: dict[engine.Thing, tuple[str, Any]] = {}
+    #
+    subthing_id: str
+    for subthing_id in room.things_inside:
+        #
+        res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="InsideRoom", res_tuple_value=room.room_name)
+    #
+    return res
 
 #
 def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine.Thing]:

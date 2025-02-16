@@ -1,5 +1,5 @@
 #
-from typing import Callable, Optional
+# from typing import Callable, Optional
 from dataclasses import dataclass
 #
 from . import engine_classes as engine
@@ -35,6 +35,11 @@ class ThingShow:
     def __str__(self) -> str:
         #
         return self.thing.name
+
+    #
+    def __hash__(self) -> int:
+        #
+        return self.thing.__hash__()
 
 
 
@@ -643,11 +648,26 @@ class ResultUndress(Result):
 #
 class ResultInventory(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, inventory: dict[ThingShow, int]) -> None:
         #
         super().__init__()
         #
-        pass
+        self.inventory: dict[ThingShow, int] = inventory
+
+    #
+    def __str__(self) -> str:
+        #
+        if len(self.inventory) == 0:
+            #
+            return "You have nothing."
+        #
+        text: str = "You have:"
+        #
+        thing: ThingShow
+        for thing in self.inventory:
+            text += f"\n  - {self.inventory[thing]}x {thing}"
+        #
+        return text
 
 
 
@@ -698,11 +718,16 @@ class ResultStandUp(Result):
 #
 class ResultTake(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing: ThingShow) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing: ThingShow = thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You take {self.thing}."
 
 
 
@@ -864,4 +889,19 @@ class ResultErrorThingNotFound(ResultError):
     def __str__(self) -> str:
         #
         return f"Object not found: {self.text_designing_thing}\n"
+
+#
+class ResultErrorCannotTakeThing(ResultError):
+    #
+    def __init__(self, thing: ThingShow, reason: str = "") -> None:
+        #
+        super().__init__()
+        #
+        self.thing: ThingShow = thing
+        self.reason: str = reason
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"Cannot take {self.thing}. {self.reason}.\n"
 

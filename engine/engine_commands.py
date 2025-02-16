@@ -1,5 +1,5 @@
 #
-from typing import Callable, Optional, Any, cast
+from typing import Callable, Optional, Any
 #
 import os
 import json
@@ -98,7 +98,6 @@ def get_opt_thing(game: engine.Game, thing_id: str) -> Optional[engine.Thing]:
     #
     return None
 
-
 #
 def get_thing(game: engine.Game, thing_id: str) -> engine.Thing:
     #
@@ -107,6 +106,18 @@ def get_thing(game: engine.Game, thing_id: str) -> engine.Thing:
     #
     raise RuntimeError(f"Error: There are no thing with id `{thing_id}` in the current ifiction game: {game.game_name}.")
 
+#
+def get_entity(game: engine.Game, entity_id: str) -> engine.Entity:
+    #
+    if entity_id in game.things:
+        thing: engine.Thing = game.things[entity_id]
+        #
+        if isinstance(thing, engine.Entity):
+            return thing
+        #
+        raise RuntimeError(f"Error: Thing {thing} is not entity in the current ifiction game: {game.game_name}.")
+    #
+    raise RuntimeError(f"Error: There are no thing with id `{entity_id}` in the current ifiction game: {game.game_name}.")
 
 #
 def get_opt_room(game: engine.Game, room_id: str) -> Optional[engine.Room]:
@@ -116,7 +127,6 @@ def get_opt_room(game: engine.Game, room_id: str) -> Optional[engine.Room]:
     #
     return None
 
-
 #
 def get_room(game: engine.Game, room_id: str) -> engine.Room:
     #
@@ -124,7 +134,6 @@ def get_room(game: engine.Game, room_id: str) -> engine.Room:
         return game.rooms[room_id]
     #
     raise RuntimeError(f"Engine error: There are no room with id `{room_id}` in the current ifiction game: {game.game_name}.")
-
 
 #
 def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
@@ -138,9 +147,8 @@ def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
     #
     return get_room(game=game, room_id=player.room)
 
-
 #
-def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, Any]], res2: dict[engine.Thing, tuple[str, Any]]) -> dict[engine.Thing, tuple[str, Any]]:
+def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res2: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
     for k in res2:
         if k not in res1:
@@ -148,9 +156,8 @@ def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, Any]], res2: dict[
     #
     return res1
 
-
 #
-def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, Any]], res_tuple_keyword: str, res_tuple_value: Any) -> dict[engine.Thing, tuple[str, Any]]:
+def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res_tuple_keyword: str, res_tuple_value: Any) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
     subthing = get_thing(game=game, thing_id=subthing_id)
     #
@@ -170,9 +177,9 @@ def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engin
     return res
 
 #
-def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dict[engine.Thing, tuple[str, Any]]:
+def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
-    res: dict[engine.Thing, tuple[str, Any]] = {}
+    res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = {}
     #
     subthing_id: str
     #
@@ -195,9 +202,9 @@ def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dic
     return res
 
 #
-def get_rec_all_things_of_a_room(game: engine.Game, room: engine.Room) -> dict[engine.Thing, tuple[str, Any]]:
+def get_rec_all_things_of_a_room(game: engine.Game, room: engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
-    res: dict[engine.Thing, tuple[str, Any]] = {}
+    res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = {}
     #
     subthing_id: str
     for subthing_id in room.things_inside:
@@ -211,12 +218,10 @@ def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine
     #
     return [get_thing(game=game, thing_id=thing_id) for thing_id in room.things_inside]
 
-
 #
 def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> list[er.ThingShow]:
     #
-    return [er.ThingShow(thing=t) for t in get_all_thing_of_a_room(game=game, room=room)]
-
+    return [er.ThingShow(thing=t) for t in get_all_thing_of_a_room(game=game, room=room) if t.id != player_id]
 
 #
 def is_designing_thing(text: str, thing: engine.Thing) -> bool:
@@ -228,7 +233,6 @@ def is_designing_thing(text: str, thing: engine.Thing) -> bool:
         return True
     #
     return False
-
 
 #
 def get_designed_thing(game: engine.Game, text: str, player_id: str) -> Optional[engine.Thing]:
@@ -290,7 +294,6 @@ def parse_directions(txt: str) -> Optional[str]:
     #
     return None
 
-
 #
 def remove_thing_from_thing(game: engine.Game, thing_to_remove_id: str, thing: engine.Thing, quantity: int = 1) -> None:
     #
@@ -316,31 +319,30 @@ def remove_thing_from_thing(game: engine.Game, thing_to_remove_id: str, thing: e
         else:
             del thing.inventory[thing_to_remove_id]
 
-
 #
-def add_thing_from_thing(game: engine.Game, thing_to_add_id: str, thing: engine.Thing, quantity: int = 1) -> None:
+def add_thing_to_thing(game: engine.Game, thing_to_add_id: str, thing: engine.Thing, quantity: int = 1) -> None:
     #
     if isinstance(thing, engine.Object):
         #
         if thing_to_add_id not in thing.contains:
-            thing.contains[thing_to_add_id] = 0
+            thing.contains[thing_to_add_id] = quantity
+        return
         #
         thing.contains[thing_to_add_id] += quantity
     #
     elif isinstance(thing, engine.Entity):
         #
         if thing_to_add_id not in thing.inventory:
-            thing.inventory[thing_to_add_id] = 0
+            thing.inventory[thing_to_add_id] = quantity
+        return
         #
         thing.inventory[thing_to_add_id] += quantity
-
 
 #
 def move_thing_from_thing_to_thing(game: engine.Game, thing_id: str, thing_from: engine.Thing, thing_to: engine.Thing, quantity: int = 1) -> None:
     #
     remove_thing_from_thing(game=game, thing_to_remove_id=thing_id, thing=thing_from, quantity=quantity)
-    add_thing_from_thing(game=game, thing_to_add_id=thing_id, thing=thing_to, quantity=quantity)
-
+    add_thing_to_thing(game=game, thing_to_add_id=thing_id, thing=thing_to, quantity=quantity)
 
 #
 def remove_thing_from_room(game: engine.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
@@ -354,21 +356,41 @@ def remove_thing_from_room(game: engine.Game, thing_id: str, room: engine.Room, 
     else:
         del room.things_inside[thing_id]
 
-
 #
-def add_thing_from_room(game: engine.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
+def add_thing_to_room(game: engine.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
     #
     if thing_id not in room.things_inside:
-        room.things_inside[thing_id] = 0
+        room.things_inside[thing_id] = quantity
+        return
     #
     room.things_inside[thing_id] += quantity
 
+#
+def remove_thing_from_inventory(game: engine.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
+    #
+    if thing_id not in entity.inventory:
+        return
+    #
+    if entity.inventory[thing_id] > quantity:
+        entity.inventory[thing_id] -= quantity
+    #
+    else:
+        del entity.inventory[thing_id]
+
+#
+def add_thing_to_inventory(game: engine.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
+    #
+    if thing_id not in entity.inventory:
+        entity.inventory[thing_id] = quantity
+        return
+    #
+    entity.inventory[thing_id] += quantity
 
 #
 def move_thing_from_room_to_room(game: engine.Game, thing_id: str, room_from: engine.Room, room_to: engine.Room, quantity: int = 1) -> None:
     #
     remove_thing_from_room(game=game, thing_id=thing_id, room=room_from, quantity=quantity)
-    add_thing_from_room(game=game, thing_id=thing_id, room=room_to, quantity=quantity)
+    add_thing_to_room(game=game, thing_id=thing_id, room=room_to, quantity=quantity)
 
 
 ############################################################################
@@ -641,9 +663,9 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
             #
             remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
             #
-            add_thing_from_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
+            add_thing_to_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
             #
-            player: engine.Entity = cast(engine.Entity, get_thing(game=game, thing_id=player_id))
+            player: engine.Entity = get_entity(game=game, entity_id=player_id)
             #
             player.room = choosen_access.links_to
             #
@@ -1249,11 +1271,21 @@ def execute_C_INVENTORY(game: engine.Game, interaction_system: InteractionSystem
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    player: engine.Entity = get_entity(game=game, entity_id=player_id)
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    inv_dict: dict[er.ThingShow, int] = {}
+
+    #
+    thing_id: str
+    for thing_id in player.inventory:
+        inv_dict[er.ThingShow(thing=get_thing(game=game, thing_id=thing_id))] = player.inventory[thing_id]
+
+    #
+    interaction_system.add_result(
+        result=er.ResultInventory(inventory=inv_dict)
+    )
 
     #
     return game
@@ -1345,11 +1377,78 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    player: engine.Entity = get_entity(game=game, entity_id=player_id)
+
+    #
+    things_in_room: dict[engine.Thing, tuple[str, Any]] = get_rec_all_things_of_a_room(game=game, room=current_player_room)
+
+    #
+    designated_thing: Optional[engine.Thing] = None
+
+    #
+    thing: engine.Thing
+    for thing in things_in_room:
+        #
+        if is_designing_thing(text=command.elt, thing=thing):
+            #
+            designated_thing = thing
+            break
+
+    #
+    if designated_thing is None:
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorThingNotFound(text_designing_thing=command.elt)
+        )
+        #
+        return game
+
+    #
+    if things_in_room[designated_thing][0] == "Inventory":
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is already in an inventory.")
+        )
+        #
+        return game
+
+    #
+    elif things_in_room[designated_thing][0] == "PartOf":
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=f"It is a part of {things_in_room[designated_thing][1]}.")
+        )
+        #
+        return game
+
+    #
+    elif "item" not in designated_thing.attributes:
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is not an item to take.")
+        )
+        #
+        return game
+
+    #
+    if things_in_room[designated_thing][0] == "Contained":
+        #
+        remove_thing_from_thing(game=game, thing_to_remove_id=designated_thing.id, thing=things_in_room[designated_thing][1])
+    #
+    elif things_in_room[designated_thing][0] == "InsideRoom":
+        #
+        remove_thing_from_room(game=game, thing_id=designated_thing.id, room=current_player_room)
+    #
+    add_thing_to_inventory(game=game, thing_id=designated_thing.id, entity=player)
+
+    #
+    interaction_system.add_result(
+        result=er.ResultTake(thing=er.ThingShow(thing=designated_thing))
+    )
 
     #
     return game

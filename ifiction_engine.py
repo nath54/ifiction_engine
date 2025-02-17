@@ -4,10 +4,10 @@ from typing import Optional
 import sys
 #
 from engine.interaction_system import BasicTerminalInteractionSystem
-from engine.engine_classes import load_interactive_fiction_model_from_file, Game
+from engine.engine_classes import load_interactive_fiction_model_from_file, Game, Room
 from engine.command_parsing import parse_command
 import engine.engine_classes_commands as ecc
-from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn, execute_C_LOOKAROUND
+from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn, execute_C_LOOKAROUND, get_room_of_player
 
 
 #
@@ -27,6 +27,15 @@ if __name__ == "__main__":
     #
     if game.nb_players == 0:
         raise RuntimeError(f"Error: No player for the game : `{game.game_name}` from `{game.game_author}`")
+
+    #
+    player_id: str
+    for player_id in game.players:
+        #
+        room: Room = get_room_of_player(game=game, player_id=player_id)
+        #
+        if player_id not in room.things_inside:
+            room.things_inside[player_id] = 1
 
     #
     while interaction_system.running:

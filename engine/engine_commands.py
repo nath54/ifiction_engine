@@ -924,7 +924,7 @@ def execute_C_UNLOCK(game: engine.Game, interaction_system: InteractionSystem, c
     #
     if "locked" not in elt_to_unlock.attributes:
         #
-        interaction_system.add_result( result=er.ResultErrorCannotUnlockThingSolo(thing=er.ThingShow(elt_to_unlock), reason="It is already unlocked !") )
+        interaction_system.add_result( result=er.ResultErrorCannotUnlockThingSolo(thing=er.ThingShow(elt_to_unlock), reason=". It is already unlocked !") )
         return game
 
     #
@@ -1450,19 +1450,19 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
     #
     if things_in_room[designated_thing][0] == "Inventory":
         #
-        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is already in an inventory.") )
+        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=". It is already in an inventory.") )
         return game
 
     #
     elif things_in_room[designated_thing][0] == "PartOf":
         #
-        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=f"It is a part of {things_in_room[designated_thing][1]}.") )
+        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=f". It is a part of {things_in_room[designated_thing][1]}.") )
         return game
 
     #
     elif "item" not in designated_thing.attributes:
         #
-        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is not an item to take.") )
+        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=". It is not an item to take.") )
         return game
 
     #

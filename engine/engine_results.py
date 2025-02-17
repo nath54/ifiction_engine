@@ -915,7 +915,7 @@ class ResultErrorCannotTakeThing(ResultError):
     #
     def __str__(self) -> str:
         #
-        return f"Cannot take {self.thing}. {self.reason}.\n"
+        return f"Cannot take {self.thing}{self.reason}.\n"
 
 #
 class ResultErrorCannotUnlockThingSolo(ResultError):
@@ -930,7 +930,7 @@ class ResultErrorCannotUnlockThingSolo(ResultError):
     #
     def __str__(self) -> str:
         #
-        return f"Cannot unlock {self.thing}. {self.reason}.\n"
+        return f"Cannot unlock {self.thing}{self.reason}.\n"
 
 #
 class ResultErrorCannotUnlockThingWithThing(ResultError):
@@ -946,5 +946,5 @@ class ResultErrorCannotUnlockThingWithThing(ResultError):
     #
     def __str__(self) -> str:
         #
-        return f"Cannot unlock {self.thing1} with {self.thing2}. {self.reason}.\n"
+        return f"Cannot unlock {self.thing1} with {self.thing2}{self.reason}.\n"
 

@@ -392,6 +392,18 @@ def move_thing_from_room_to_room(game: engine.Game, thing_id: str, room_from: en
     remove_thing_from_room(game=game, thing_id=thing_id, room=room_from, quantity=quantity)
     add_thing_to_room(game=game, thing_id=thing_id, room=room_to, quantity=quantity)
 
+#
+def get_thing_designed(game: engine.Game, text: str, list_of_things: list[engine.Thing]) -> Optional[engine.Thing]:
+    #
+    thing: engine.Thing
+    #
+    for thing in list_of_things:
+        #
+        if is_designing_thing(text=text, thing=thing):
+            return thing
+    #
+    return None
+
 
 ############################################################################
 ############################### ALL COMMANDS ###############################
@@ -408,7 +420,10 @@ def execute_C_LOOKAROUND(game: engine.Game, interaction_system: InteractionSyste
 
     #
     interaction_system.add_result(
-        result=er.ResultLookAround(room=current_player_room, things=describe_room(game=game, room=current_player_room, player_id=game.players[game.current_player]))
+        result=er.ResultLookAround(
+                    room=current_player_room,
+                    things=describe_room(game=game, room=current_player_room, player_id=game.players[game.current_player])
+        )
     )
 
     #
@@ -443,19 +458,11 @@ def execute_C_BRIEF(game: engine.Game, interaction_system: InteractionSystem, co
     #
     if designed_thing is not None:
         #
-        interaction_system.add_result(
-            result=er.ResultBrief(
-                thing=er.ThingShow(thing=designed_thing)
-            )
-        )
+        interaction_system.add_result( result=er.ResultBrief( thing=er.ThingShow(thing=designed_thing) ) )
     #
     else:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorThingNotFound(
-                text_designing_thing=command.elt
-            )
-        )
+        interaction_system.add_result( result=er.ResultErrorThingNotFound( text_designing_thing=command.elt ) )
     #
     return game
 
@@ -472,19 +479,11 @@ def execute_C_DESCRIBE(game: engine.Game, interaction_system: InteractionSystem,
     #
     if designed_thing is not None:
         #
-        interaction_system.add_result(
-            result=er.ResultDescribe(
-                thing=er.ThingShow(thing=designed_thing)
-            )
-        )
+        interaction_system.add_result( result=er.ResultDescribe( thing=er.ThingShow(thing=designed_thing) ) )
     #
     else:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorThingNotFound(
-                text_designing_thing=command.elt
-            )
-        )
+        interaction_system.add_result( result=er.ResultErrorThingNotFound( text_designing_thing=command.elt ) )
 
     #
     return game
@@ -502,19 +501,11 @@ def execute_C_EXAMINE(game: engine.Game, interaction_system: InteractionSystem, 
     #
     if designed_thing is not None:
         #
-        interaction_system.add_result(
-            result=er.ResultExamine(
-                thing=er.ThingShow(thing=designed_thing)
-            )
-        )
+        interaction_system.add_result( result=er.ResultExamine( thing=er.ThingShow(thing=designed_thing) ) )
     #
     else:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorThingNotFound(
-                text_designing_thing=command.elt
-            )
-        )
+        interaction_system.add_result( result=er.ResultErrorThingNotFound( text_designing_thing=command.elt ) )
     #
     return game
 
@@ -627,10 +618,7 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     #
     if parsed_direc is None:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorDirection(input_txt=command.elt)
-        )
-        #
+        interaction_system.add_result( result=er.ResultErrorDirection(input_txt=command.elt) )
         return game
 
     #
@@ -680,11 +668,7 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     #
     else:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorCannotGoDirection(
-                direction=parsed_direc
-            )
-        )
+        interaction_system.add_result( result=er.ResultErrorCannotGoDirection( direction=parsed_direc ) )
     #
     return game
 
@@ -791,36 +775,18 @@ def execute_C_DROP(game: engine.Game, interaction_system: InteractionSystem, com
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
-
     #
     current_player: engine.Entity = get_entity(game=game, entity_id=player_id)
     #
     current_room: engine.Room = get_room(game=game, room_id=current_player.room)
 
     #
-    designated_thing: Optional[engine.Thing] = None
-
-    #
-    thing_id: str
-    thing: engine.Thing
-    for thing_id in current_player.inventory:
-        #
-        thing = get_thing(game=game, thing_id=thing_id)
-        #
-        if is_designing_thing(text=command.elt, thing=thing):
-            #
-            designated_thing = thing
-            break
+    designated_thing: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt, list_of_things=[get_thing(game=game, thing_id=thing_id) for thing_id in current_player.inventory])
 
     #
     if designated_thing is None:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorThingNotFound(text_designing_thing=command.elt)
-        )
-        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt) )
         return game
 
     #
@@ -941,11 +907,63 @@ def execute_C_UNLOCK(game: engine.Game, interaction_system: InteractionSystem, c
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    current_player: engine.Entity = get_entity(game=game, entity_id=player_id)
+    current_room: engine.Room = get_room(game=game, room_id=current_player.room)
+    #
+    all_things_in_room: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = get_rec_all_things_of_a_room(game=game, room=current_room)
+    #
+    elt_to_unlock: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt1, list_of_things=list(all_things_in_room.keys()))
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    if elt_to_unlock is None:
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt1) )
+        return game
+
+    #
+    if "locked" not in elt_to_unlock.attributes:
+        #
+        interaction_system.add_result( result=er.ResultErrorCannotUnlockThingSolo(thing=er.ThingShow(elt_to_unlock), reason="It is already unlocked !") )
+        return game
+
+    #
+    if command.elt2 is None:
+        #
+        if "easy_unlock" not in elt_to_unlock.attributes:
+            #
+            interaction_system.add_result( result=er.ResultErrorCannotUnlockThingSolo(thing=er.ThingShow(elt_to_unlock)) )
+            return game
+        #
+        elt_to_unlock.attributes.remove("locked")
+        #
+        interaction_system.add_result( result=er.ResultUnlock(thing1=er.ThingShow(elt_to_unlock)) )
+        return game
+
+    #
+    elt_that_unlock: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt2, list_of_things=list(all_things_in_room.keys()))
+    #
+    if elt_that_unlock is None:
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt2) )
+        return game
+
+    #
+    if not isinstance(elt_that_unlock, engine.Object):
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt2) )
+        return game
+
+    #
+    if elt_to_unlock.id not in elt_that_unlock.unlocks:
+        #
+        interaction_system.add_result( result=er.ResultErrorCannotUnlockThingWithThing(thing1=er.ThingShow(elt_to_unlock), thing2=er.ThingShow(elt_that_unlock)) )
+        return game
+
+    #
+    elt_to_unlock.attributes.remove("locked")
+    #
+    interaction_system.add_result( result=er.ResultUnlock(thing1=er.ThingShow(elt_to_unlock), thing2=er.ThingShow(elt_that_unlock)) )
 
     #
     return game
@@ -1321,11 +1339,7 @@ def execute_C_INVENTORY(game: engine.Game, interaction_system: InteractionSystem
         inv_dict[er.ThingShow(thing=get_thing(game=game, thing_id=thing_id))] = player.inventory[thing_id]
 
     #
-    interaction_system.add_result(
-        result=er.ResultInventory(inventory=inv_dict)
-    )
-
-    #
+    interaction_system.add_result( result=er.ResultInventory(inventory=inv_dict) )
     return game
 
 
@@ -1425,51 +1439,30 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
     things_in_room: dict[engine.Thing, tuple[str, Any]] = get_rec_all_things_of_a_room(game=game, room=current_player_room)
 
     #
-    designated_thing: Optional[engine.Thing] = None
-
-    #
-    thing: engine.Thing
-    for thing in things_in_room:
-        #
-        if is_designing_thing(text=command.elt, thing=thing):
-            #
-            designated_thing = thing
-            break
+    designated_thing: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt, list_of_things=list(things_in_room.keys()))
 
     #
     if designated_thing is None:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorThingNotFound(text_designing_thing=command.elt)
-        )
-        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt) )
         return game
 
     #
     if things_in_room[designated_thing][0] == "Inventory":
         #
-        interaction_system.add_result(
-            result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is already in an inventory.")
-        )
-        #
+        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is already in an inventory.") )
         return game
 
     #
     elif things_in_room[designated_thing][0] == "PartOf":
         #
-        interaction_system.add_result(
-            result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=f"It is a part of {things_in_room[designated_thing][1]}.")
-        )
-        #
+        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=f"It is a part of {things_in_room[designated_thing][1]}.") )
         return game
 
     #
     elif "item" not in designated_thing.attributes:
         #
-        interaction_system.add_result(
-            result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is not an item to take.")
-        )
-        #
+        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason="It is not an item to take.") )
         return game
 
     #
@@ -1484,11 +1477,7 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
     add_thing_to_inventory(game=game, thing_id=designated_thing.id, entity=player)
 
     #
-    interaction_system.add_result(
-        result=er.ResultTake(thing=er.ThingShow(thing=designated_thing))
-    )
-
-    #
+    interaction_system.add_result( result=er.ResultTake(thing=er.ThingShow(thing=designated_thing)) )
     return game
 
 

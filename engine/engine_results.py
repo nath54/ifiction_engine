@@ -1,5 +1,5 @@
 #
-# from typing import Callable, Optional
+from typing import Optional
 from dataclasses import dataclass
 #
 from . import engine_classes as engine
@@ -401,11 +401,17 @@ class ResultLock(Result):
 #
 class ResultUnlock(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing1: ThingShow, thing2: Optional[ThingShow] = None) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing1: ThingShow = thing1
+        self.thing2: Optional[ThingShow] = thing2
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You unlock {self.thing1}{f"with {self.thing2}" if self.thing2 is not None else ""}."
 
 
 
@@ -910,4 +916,35 @@ class ResultErrorCannotTakeThing(ResultError):
     def __str__(self) -> str:
         #
         return f"Cannot take {self.thing}. {self.reason}.\n"
+
+#
+class ResultErrorCannotUnlockThingSolo(ResultError):
+    #
+    def __init__(self, thing: ThingShow, reason: str = "") -> None:
+        #
+        super().__init__()
+        #
+        self.thing: ThingShow = thing
+        self.reason: str = reason
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"Cannot unlock {self.thing}. {self.reason}.\n"
+
+#
+class ResultErrorCannotUnlockThingWithThing(ResultError):
+    #
+    def __init__(self, thing1: ThingShow, thing2: ThingShow, reason: str = "") -> None:
+        #
+        super().__init__()
+        #
+        self.thing1: ThingShow = thing1
+        self.thing2: ThingShow = thing2
+        self.reason: str = reason
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"Cannot unlock {self.thing1} with {self.thing2}. {self.reason}.\n"
 

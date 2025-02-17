@@ -318,11 +318,17 @@ class ResultThrow(Result):
 #
 class ResultDrop(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing: ThingShow, room: engine.Room) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing: ThingShow = thing
+        self.room: engine.Room = room
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You drop {self.thing} in the room {self.room.room_name}."
 
 
 

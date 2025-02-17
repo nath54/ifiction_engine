@@ -795,7 +795,45 @@ def execute_C_DROP(game: engine.Game, interaction_system: InteractionSystem, com
     pass
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    current_player: engine.Entity = get_entity(game=game, entity_id=player_id)
+    #
+    current_room: engine.Room = get_room(game=game, room_id=current_player.room)
+
+    #
+    designated_thing: Optional[engine.Thing] = None
+
+    #
+    thing_id: str
+    thing: engine.Thing
+    for thing_id in current_player.inventory:
+        #
+        thing = get_thing(game=game, thing_id=thing_id)
+        #
+        if is_designing_thing(text=command.elt, thing=thing):
+            #
+            designated_thing = thing
+            break
+
+    #
+    if designated_thing is None:
+        #
+        interaction_system.add_result(
+            result=er.ResultErrorThingNotFound(text_designing_thing=command.elt)
+        )
+        #
+        return game
+
+    #
+    remove_thing_from_inventory(game=game, thing_id=designated_thing.id, entity=current_player)
+    add_thing_to_room(game=game, thing_id=designated_thing.id, room=current_room)
+
+    #
+    interaction_system.add_result(
+        result=er.ResultDrop(
+            thing=er.ThingShow(thing=designated_thing),
+            room=current_room
+        )
+    )
 
     #
     return game

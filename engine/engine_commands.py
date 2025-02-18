@@ -157,7 +157,7 @@ def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, engine.Thing | eng
     return res1
 
 #
-def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res_tuple_keyword: str, res_tuple_value: Any) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
+def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res_tuple_keyword: str, res_tuple_value: engine.Thing | engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
     subthing = get_thing(game=game, thing_id=subthing_id)
     #
@@ -187,17 +187,17 @@ def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dic
         #
         for subthing_id in thing.parts:
             #
-            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="PartOf", res_tuple_value=thing.id)
+            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="PartOf", res_tuple_value=thing)
         #
         for subthing_id in thing.contains:
             #
-            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="Contained", res_tuple_value=thing.id)
+            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="Contained", res_tuple_value=thing)
     #
     if isinstance(thing, engine.Entity):
         #
         for subthing_id in thing.inventory:
             #
-            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="Inventory", res_tuple_value=thing.id)
+            res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="Inventory", res_tuple_value=thing)
     #
     return res
 
@@ -209,7 +209,7 @@ def get_rec_all_things_of_a_room(game: engine.Game, room: engine.Room) -> dict[e
     subthing_id: str
     for subthing_id in room.things_inside:
         #
-        res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="InsideRoom", res_tuple_value=room.room_name)
+        res = add_subthing_to_rec_res(game=game, subthing_id=subthing_id, res=res, res_tuple_keyword="InsideRoom", res_tuple_value=room)
     #
     return res
 
@@ -219,9 +219,22 @@ def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine
     return [get_thing(game=game, thing_id=thing_id) for thing_id in room.things_inside]
 
 #
-def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> list[er.ThingShow]:
+def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
-    return [er.ThingShow(thing=t) for t in get_all_thing_of_a_room(game=game, room=room) if t.id != player_id]
+    things_in_room: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = get_rec_all_things_of_a_room(game=game, room=room)
+    #
+    thing: engine.Thing
+    for thing in list(things_in_room.keys()):
+        #
+        if things_in_room[thing][0] == "Inventory":
+            del(things_in_room[thing])
+        #
+        elif thing.id == player_id:
+            del(things_in_room[thing])
+    #
+    return things_in_room
+
+
 
 #
 def is_designing_thing(text: str, thing: engine.Thing) -> bool:
@@ -422,7 +435,7 @@ def execute_C_LOOKAROUND(game: engine.Game, interaction_system: InteractionSyste
     interaction_system.add_result(
         result=er.ResultLookAround(
                     room=current_player_room,
-                    things=describe_room(game=game, room=current_player_room, player_id=game.players[game.current_player])
+                    things_in_room=describe_room(game=game, room=current_player_room, player_id=game.players[game.current_player])
         )
     )
 

@@ -1,5 +1,5 @@
 #
-from typing import Optional
+from typing import Optional, cast
 from dataclasses import dataclass
 #
 from . import engine_classes as engine
@@ -65,12 +65,12 @@ class Result:
 #
 class ResultLookAround(Result):
     #
-    def __init__(self, room: engine.Room, things: list[ThingShow]) -> None:
+    def __init__(self, room: engine.Room, things_in_room: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]) -> None:
         #
         super().__init__()
         #
         self.room: engine.Room = room
-        self.things: list[ThingShow] = things
+        self.things_in_room: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = things_in_room
 
     #
     def __str__(self) -> str:
@@ -82,13 +82,29 @@ You are in {self.room.room_name}.
 
         """
         #
-        if not self.things:
+        if not self.things_in_room:
             return text
         #
         text += "\nYou can see:\n"
         #
-        for thing in self.things:
-            text += f" - {thing}\n"
+        thing: engine.Thing
+        for thing in self.things_in_room:
+            #
+            text += f" - {thing.name}"
+            #
+            if self.things_in_room[thing][0] == "PartOf":
+                #
+                thing_of: engine.Thing = cast(engine.Thing, self.things_in_room[thing][1])
+                #
+                text += f" (part of {thing_of.name})"
+            #
+            elif self.things_in_room[thing][0] == "Contained":
+                #
+                thing_of = cast(engine.Thing, self.things_in_room[thing][1])
+                #
+                text += f" (contained in {thing_of.name})"
+            #
+            text += "\n"
         #
         text += "\nYou can go :\n"
         #

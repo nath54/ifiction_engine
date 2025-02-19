@@ -30,7 +30,7 @@ commands_keywords: dict[str, list[str]] = {
     "C_THROW": ["throw"],
     "C_DROP": ["drop", "discard"],
     "C_CLEAN": ["clean", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
-    "C_USE": ["use"],
+    "C_USE": ["use", "utilise"],
     "C_CLIMB": ["climb"],
     "C_OPEN": ["open"],
     "C_CLOSE": ["close", "shut"],
@@ -568,7 +568,7 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND USE
     # `use [something] ?{on [something/someone]}`: Use an object, optionally on something or someone. (ex: `use key on door`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_USE", ["on"])
+    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_USE", ["on", "onto"])
     if res is not None:
         return res
 

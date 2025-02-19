@@ -384,11 +384,16 @@ class ResultClimb(Result):
 #
 class ResultOpen(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing: ThingShow) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing: ThingShow = thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You open {self.thing}."
 
 
 
@@ -427,7 +432,7 @@ class ResultUnlock(Result):
     #
     def __str__(self) -> str:
         #
-        return f"You unlock {self.thing1}{f"with {self.thing2}" if self.thing2 is not None else ""}."
+        return f"You unlock {self.thing1}{f" with {self.thing2}" if self.thing2 is not None else ""}."
 
 
 
@@ -919,19 +924,49 @@ class ResultErrorThingNotFound(ResultError):
         return f"Object not found: {self.text_designing_thing}\n"
 
 #
-class ResultErrorCannotTakeThing(ResultError):
+class ResultErrorCannotActionThing(ResultError):
     #
-    def __init__(self, thing: ThingShow, reason: str = "") -> None:
+    def __init__(self, action: str, thing: ThingShow, reason: str = "") -> None:
         #
         super().__init__()
         #
+        self.action: str = action
         self.thing: ThingShow = thing
         self.reason: str = reason
 
     #
     def __str__(self) -> str:
         #
-        return f"Cannot take {self.thing}{self.reason}.\n"
+        return f"Cannot {self.action} {self.thing}{self.reason}.\n"
+
+#
+class ResultErrorDoesntPossessThing(ResultError):
+    #
+    def __init__(self, thing: ThingShow) -> None:
+        #
+        super().__init__()
+        #
+        self.thing: ThingShow = thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You don't possess {self.thing}. You should take {self.thing} before.\n"
+
+#
+class ResultErrorAnotherPossessThing(ResultError):
+    #
+    def __init__(self, thing: ThingShow, possessor: ThingShow) -> None:
+        #
+        super().__init__()
+        #
+        self.thing: ThingShow = thing
+        self.possessor: ThingShow = possessor
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"{self.possessor} possess {self.thing}. You cannot interact with possessions of other entities.\n"
 
 #
 class ResultErrorCannotUnlockThingSolo(ResultError):

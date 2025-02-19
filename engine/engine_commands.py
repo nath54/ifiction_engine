@@ -840,10 +840,85 @@ def execute_C_USE(game: engine.Game, interaction_system: InteractionSystem, comm
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    current_player: engine.Entity = get_entity(game=game, entity_id=player_id)
+    #
+    current_room: engine.Room = get_room(game=game, room_id=current_player.room)
+    #
+    dict_of_things: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = get_rec_all_things_of_a_room(game=game, room=current_room)
+    #
+    list_of_things: list[engine.Thing] = list(dict_of_things.keys())
+    #
+    elt1: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt1, list_of_things=list_of_things)
 
     #
+    if elt1 is None:
+        interaction_system.add_result(result=er.ResultErrorThingNotFound(command.elt1))
+        return game
+
+    #
+    possessor: engine.Thing | engine.Room = dict_of_things[elt1][1]
+    if dict_of_things[elt1][0] == "Inventory" and isinstance(possessor, engine.Thing) and possessor != current_player:
+        #
+        interaction_system.add_result(result=er.ResultErrorAnotherPossessThing(thing=er.ThingShow(elt1), possessor=er.ThingShow(possessor)))
+        return game
+
+    #
+    if command.elt2 is None:
+
+        #
+        accesses_idxs: list[int] = [i for i in range(len(current_room.accesses)) if current_room.accesses[i].thing_id == elt1.id]
+        access_idx: int = accesses_idxs[-1] if accesses_idxs else -1
+        #
+        if access_idx != -1:
+
+            # For doors
+            if "open" in elt1.attributes:
+                #
+                return execute_C_GO(game=game, interaction_system=interaction_system, command=ecc.Command_Elt(command_name="C_GO", elt=current_room.accesses[access_idx].direction), player_id=player_id, copy_game=copy_game)
+
+        # TODO
+        interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+        #
+        return game
+
+    #
+    elt2: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt2, list_of_things=list_of_things)
+
+    #
+    if elt2 is None:
+        interaction_system.add_result(result=er.ResultErrorThingNotFound(command.elt2))
+        return game
+
+    #
+    possessor = dict_of_things[elt2][1]
+    if dict_of_things[elt2][0] == "Inventory" and isinstance(possessor, engine.Thing) and possessor != current_player:
+        #
+        interaction_system.add_result(result=er.ResultErrorAnotherPossessThing(thing=er.ThingShow(elt2), possessor=er.ThingShow(possessor)))
+        return game
+
+    #
+    if command.kw in ["on", "onto"]:
+
+        #
+        if dict_of_things[elt1][0] != "Inventory" or dict_of_things[elt1][1] != current_player:
+            #
+            interaction_system.add_result(result=er.ResultErrorDoesntPossessThing(er.ThingShow(elt1)))
+            return game
+
+
+        # Unlocks
+        if isinstance(elt1, engine.Object) and elt2.id in elt1.unlocks and "locked" in elt2.attributes:
+            #
+            elt2.attributes.remove("locked")
+            #
+            interaction_system.add_result( result=er.ResultUnlock(thing1=er.ThingShow(elt2), thing2=er.ThingShow(elt1)) )
+            #
+            return game
+
+
+    # TODO
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
@@ -872,11 +947,49 @@ def execute_C_OPEN(game: engine.Game, interaction_system: InteractionSystem, com
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    current_player: engine.Entity = get_entity(game=game, entity_id=player_id)
+    #
+    current_room: engine.Room = get_room(game=game, room_id=current_player.room)
+    #
+    things_in_room: dict[engine.Thing, tuple[str, Any]] = get_rec_all_things_of_a_room(game=game, room=current_room)
+    #
+    designated_thing: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt, list_of_things=list(things_in_room.keys()))
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    if designated_thing is None:
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt) )
+        return game
+
+    #
+    possessor: engine.Thing | engine.Room = things_in_room[designated_thing][1]
+    if things_in_room[designated_thing][0] == "Inventory" and isinstance(possessor, engine.Thing) and possessor != current_player:
+        #
+        interaction_system.add_result(result=er.ResultErrorAnotherPossessThing(thing=er.ThingShow(designated_thing), possessor=er.ThingShow(possessor)))
+        return game
+
+    #
+    if "openable" not in designated_thing.attributes:
+        #
+        interaction_system.add_result(result=er.ResultErrorCannotActionThing(action="open", thing=er.ThingShow(designated_thing), reason=". It is not openable"))
+        return game
+
+    #
+    if "locked" in designated_thing.attributes:
+        #
+        interaction_system.add_result(result=er.ResultErrorCannotActionThing(action="open", thing=er.ThingShow(designated_thing), reason=". It is locked"))
+        return game
+
+    #
+    if "open" in designated_thing.attributes:
+        #
+        interaction_system.add_result(result=er.ResultErrorCannotActionThing(action="open", thing=er.ThingShow(designated_thing), reason=". It is already open"))
+        return game
+
+    #
+    designated_thing.attributes.append("open")
+    interaction_system.add_result(result=er.ResultOpen(thing=er.ThingShow(designated_thing)))
 
     #
     return game
@@ -1444,13 +1557,10 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
 
     #
     current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
-
     #
     player: engine.Entity = get_entity(game=game, entity_id=player_id)
-
     #
     things_in_room: dict[engine.Thing, tuple[str, Any]] = get_rec_all_things_of_a_room(game=game, room=current_player_room)
-
     #
     designated_thing: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt, list_of_things=list(things_in_room.keys()))
 
@@ -1463,19 +1573,19 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
     #
     if things_in_room[designated_thing][0] == "Inventory":
         #
-        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=". It is already in an inventory.") )
+        interaction_system.add_result( result=er.ResultErrorCannotActionThing(action="take", thing=er.ThingShow(thing=designated_thing), reason=". It is already in an inventory.") )
         return game
 
     #
     elif things_in_room[designated_thing][0] == "PartOf":
         #
-        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=f". It is a part of {things_in_room[designated_thing][1]}.") )
+        interaction_system.add_result( result=er.ResultErrorCannotActionThing(action="take", thing=er.ThingShow(thing=designated_thing), reason=f". It is a part of {things_in_room[designated_thing][1]}.") )
         return game
 
     #
     elif "item" not in designated_thing.attributes:
         #
-        interaction_system.add_result( result=er.ResultErrorCannotTakeThing(thing=er.ThingShow(thing=designated_thing), reason=". It is not an item to take.") )
+        interaction_system.add_result( result=er.ResultErrorCannotActionThing(action="take", thing=er.ThingShow(thing=designated_thing), reason=". It is not an item to take.") )
         return game
 
     #
@@ -1737,6 +1847,7 @@ ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[engine.Game, InteractionSystem, ecc.
     "C_THROW": execute_C_THROW,             # type: ignore
     "C_DROP": execute_C_DROP,               # type: ignore
     "C_CLEAN": execute_C_CLEAN,             # type: ignore
+    "C_USE": execute_C_USE,                 # type: ignore
     "C_CLIMB": execute_C_CLIMB,             # type: ignore
     "C_OPEN": execute_C_OPEN,               # type: ignore
     "C_CLOSE": execute_C_CLOSE,             # type: ignore

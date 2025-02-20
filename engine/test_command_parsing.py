@@ -1,5 +1,5 @@
 #
-from command_parsing import parse_command
+from .command_parsing import parse_command
 #
 import os
 

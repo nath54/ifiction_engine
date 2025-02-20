@@ -71,7 +71,6 @@ commands_keywords: dict[str, list[str]] = {
     "C_SAVE": ["save"],
     "C_QUIT": ["quit", "exit"],
     "C_LOAD": ["load", "restore"],
-    "C_RESTART": ["restart"],
     "C_SCORE": ["score"],
     "C_HELP": ["help"]
 }
@@ -197,7 +196,7 @@ def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_name: str
 
     #
     if match:
-        keyword_a, keyword_b, text_b = match.groups()
+        keyword_a, keyword_b, _, text_b = match.groups()
         return ecc.Command_OKw_OElt(
             command_name=command_name,
             elt=text_b.strip() if text_b else '',
@@ -884,13 +883,6 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     # `(load/restore) {filepath of game save}`: Load a saved game. (ex: `load game1.sav`)
 
     res = test_COMMAND_OPT_SOMETHING(command_input, "C_LOAD")
-    if res is not None:
-        return res
-
-    #### COMMAND RESTART
-    # `restart`: Restart the game. (ex: `restart`)
-
-    res = test_COMMAND(command_input, "C_RESTART")
     if res is not None:
         return res
 

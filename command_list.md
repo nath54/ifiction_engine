@@ -109,9 +109,8 @@ Directions:
 
 ## System commands
 
-- `save ?{filepath of game save}`: Save the game. (ex: `save game1.sav`)
+- `save ?{filepath of game save}`: Save the game. (ex: `save game1.json`)
 - `(quit/q)`: Quit the game. (ex: `quit`)
-- `(load/restore) filepath of game save`: Load a saved game. (ex: `load game1.sav`)
-- `restart`: Restart the game. (ex: `restart`)
+- `(load/restore) filepath of game save`: Load a saved game. (ex: `load game1.json`)
 - `score`: Show current progress. (ex: `score`)
 - `help`: Show the list of commands. (ex: `help`)

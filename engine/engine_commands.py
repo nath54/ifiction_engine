@@ -918,11 +918,19 @@ def execute_C_USE(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
         # Unlocks
-        if isinstance(elt1, engine.Object) and elt2.id in elt1.unlocks and "locked" in elt2.attributes:
+        if isinstance(elt1, engine.Object) and elt2.id in elt1.unlocks:
             #
-            elt2.attributes.remove("locked")
+            if "locked" in elt2.attributes:
+                #
+                elt2.attributes.remove("locked")
+                #
+                interaction_system.add_result( result=er.ResultUnlock(thing1=er.ThingShow(elt2), thing2=er.ThingShow(elt1)) )
             #
-            interaction_system.add_result( result=er.ResultUnlock(thing1=er.ThingShow(elt2), thing2=er.ThingShow(elt1)) )
+            else:
+                #
+                elt2.attributes.append("locked")
+                #
+                interaction_system.add_result( result=er.ResultLock(thing1=er.ThingShow(elt2), thing2=er.ThingShow(elt1)) )
             #
             return game
 
@@ -1853,22 +1861,6 @@ def execute_C_LOAD(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_RESTART(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
 def execute_C_SCORE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
     #
     if copy_game:
@@ -2006,7 +1998,6 @@ ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[engine.Game, InteractionSystem, ecc.
     "C_QUIT": execute_C_QUIT,               # type: ignore
     "C_SAVE": execute_C_SAVE,               # type: ignore
     "C_LOAD": execute_C_LOAD,               # type: ignore
-    "C_RESTART": execute_C_RESTART,         # type: ignore
     "C_SCORE": execute_C_SCORE,             # type: ignore
     "C_HELP": execute_C_HELP                # type: ignore
 }

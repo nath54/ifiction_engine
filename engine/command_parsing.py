@@ -1,5 +1,6 @@
 #
-from typing import Optional
+from typing import Optional, Callable, Any
+from dataclasses import dataclass
 #
 from . import engine_classes_commands as ecc
 #
@@ -7,73 +8,17 @@ import sys
 import re
 import os
 
+
 #
-commands_keywords: dict[str, list[str]] = {
-    "C_LOOKAROUND": ["see", "look around", "look"],
-    "C_RECAP": ["recap", "history"],
-    "C_BRIEF": ["brief"],
-    "C_DESCRIBE": ["describe", "watch"],
-    "C_EXAMINE": ["examine", "inspect", "check"],
-    "C_RUMMAGE": ["rummage", "search", "dig in"],
-    "C_LISTEN": ["hear", "listen"],
-    "C_TOUCH": ["touch", "feel"],
-    "C_READ": ["read"],
-    "C_TASTE": ["taste"],
-    "C_SMELL": ["smell", "sniff"],
-    "C_GO": ["go", "displace", "walk", "run", "sprint"],
-    "C_TAKE": ["take", "carry", "hold", "pick up", "pick"],
-    "C_PUT": ["put", "move"],
-    "C_PUSH": ["push", "press", "apply force on"],
-    "C_PULL": ["pull"],
-    "C_ATTACH": ["attach", "tie"],
-    "C_BREAK": ["break", "destroy"],
-    "C_THROW": ["throw"],
-    "C_DROP": ["drop", "discard"],
-    "C_CLEAN": ["clean", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
-    "C_USE": ["use", "utilise"],
-    "C_CLIMB": ["climb"],
-    "C_OPEN": ["open"],
-    "C_CLOSE": ["close", "shut"],
-    "C_LOCK": ["lock"],
-    "C_UNLOCK": ["unlock"],
-    "C_FILL": ["fill"],
-    "C_POUR": ["pour"],
-    "C_INSERT": ["insert"],
-    "C_REMOVE": ["remove"],
-    "C_SET": ["set"],
-    "C_SPREAD": ["spread"],
-    "C_SQUEEZE": ["squeeze", "squash"],
-    "C_EAT": ["eat", "consume"],
-    "C_DRINK": ["drink", "swallow", "sip"],
-    "C_AWAKE": ["awake", "wake up", "wake"],
-    "C_ATTACK": ["attack", "smash", "fight", "hit", "hurt", "kill", "murder", "punch", "slice"],
-    "C_BUY": ["buy", "purchase"],
-    "C_SHOW": ["show", "display", "present"],
-    "C_EMBRACE": ["embrace", "kiss", "hug"],
-    "C_FEED": ["feed"],
-    "C_GIVE": ["give", "offer"],
-    "C_SAY": ["say", "tell", "answer", "shout"],
-    "C_ASK": ["ask"],
-    "C_WRITE": ["write"],
-    "C_ERASE": ["erase", "efface", "rub out", "delete"],
-    "C_WEAR": ["wear", "dress"],
-    "C_UNDRESS": ["undress", "take off", "strip", "pull off", "shed"],
-    "C_INVENTORY": ["inventory", "stock", "what's in my bag"],
-    "C_WAIT": ["wait"],
-    "C_SLEEP": ["sleep", "nap"],
-    "C_SIT_DOWN": ["sit down", "sit on", "sit"],
-    "C_LIE_DOWN": ["lie down on", "lie on"],
-    "C_STAND_UP": ["stand up", "stand"],
-    "C_DANCE": ["dance"],
-    "C_SING": ["sing", "chant"],
-    "C_JUMP": ["jump", "hop"],
-    "C_THINK": ["think"],
-    "C_SAVE": ["save"],
-    "C_QUIT": ["quit", "exit"],
-    "C_LOAD": ["load", "restore"],
-    "C_SCORE": ["score"],
-    "C_HELP": ["help"]
-}
+@dataclass
+class CommandDefinition:
+    #
+    command_name: str
+    keywords: list[str]
+    command_type: Callable
+    kwargs: Optional[dict[str, Any]] = None
+
+
 
 #
 def traite_txt(txt: str) -> str:
@@ -86,21 +31,21 @@ def traite_txt(txt: str) -> str:
     return txt
 
 #
-def test_COMMAND(command_input: str, command_name: str) -> Optional[ecc.Command]:
+def test_COMMAND(command_input: str, command_def: CommandDefinition) -> Optional[ecc.Command]:
     #
-    for kw in commands_keywords[command_name]:
+    for kw in command_def.keywords:
         if traite_txt(kw) == command_input:
             return ecc.Command(
-                command_name=command_name
+                command_name=command_def.command_name
             )
     #
     return None
 
 #
-def test_COMMAND_SOMETHING(command_input: str, command_name: str) -> Optional[ecc.Command_Elt]:
+def test_COMMAND_SOMETHING(command_input: str, command_def: CommandDefinition) -> Optional[ecc.Command_Elt]:
     #
     kw: str
-    for kw in commands_keywords[command_name]:
+    for kw in command_def.keywords:
         #
         tkw: str = traite_txt(kw)
         ltkw: int = len(tkw)
@@ -108,17 +53,17 @@ def test_COMMAND_SOMETHING(command_input: str, command_name: str) -> Optional[ec
         if command_input.startswith(tkw) and len(command_input) > ltkw:
             #
             return ecc.Command_Elt(
-                command_name=command_name,
+                command_name=command_def.command_name,
                 elt=command_input[ltkw:].strip()
             )
     #
     return None
 
 #
-def test_COMMAND_OPT_SOMETHING(command_input: str, command_name: str) -> Optional[ecc.Command_OElt]:
+def test_COMMAND_OPT_SOMETHING(command_input: str, command_def: CommandDefinition) -> Optional[ecc.Command_OElt]:
     #
     kw: str
-    for kw in commands_keywords[command_name]:
+    for kw in command_def.keywords:
         #
         tkw: str = traite_txt(kw)
         ltkw: int = len(tkw)
@@ -128,20 +73,20 @@ def test_COMMAND_OPT_SOMETHING(command_input: str, command_name: str) -> Optiona
             elt: str = command_input[ltkw:].strip()
             #
             return ecc.Command_OElt(
-                command_name=command_name,
+                command_name=command_def.command_name,
                 elt = elt if elt != "" else None
             )
     #
     return None
 
 #
-def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_opt: list[str] = ["to"], return_keyword: bool = False) -> Optional[ecc.Command_OKw_Elt]:
+def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_opt: list[str] = ["to"]) -> Optional[ecc.Command_OKw_Elt]:
     #
     if isinstance(keyword_opt, str):
         keyword_opt = [keyword_opt]
 
     #
-    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in command_def.keywords)
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_opt)
 
     # Construct the main regex pattern with optional `{}` group
@@ -158,13 +103,13 @@ def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, ke
     if match:
         keyword_a, keyword_b, text_b = match.groups()
         return ecc.Command_OKw_Elt(
-            command_name=command_name,
+            command_name=command_def.command_name,
             elt=text_b.strip() if text_b else '',
             kw=keyword_b
         )
     else:
         #
-        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_name)
+        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_def)
         #
         if res is not None:
             return ecc.Command_OKw_Elt(
@@ -175,13 +120,13 @@ def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, ke
         return None
 
 #
-def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_name: str, keyword_opt: list[str] = ["to"], return_keyword: bool = False) -> Optional[ecc.Command_OKw_OElt]:
+def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_opt: list[str] = ["to"]) -> Optional[ecc.Command_OKw_OElt]:
     #
     if isinstance(keyword_opt, str):
         keyword_opt = [keyword_opt]
 
     #
-    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in command_def.keywords)
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_opt)
 
     # Construct the main regex pattern with optional `{}` group
@@ -198,13 +143,13 @@ def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_name: str
     if match:
         keyword_a, keyword_b, _, text_b = match.groups()
         return ecc.Command_OKw_OElt(
-            command_name=command_name,
+            command_name=command_def.command_name,
             elt=text_b.strip() if text_b else '',
             kw=keyword_b
         )
     else:
         #
-        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_name)
+        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_def)
         #
         if res is not None:
             return ecc.Command_OKw_OElt(
@@ -214,7 +159,7 @@ def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_name: str
         #
         else:
             #
-            res2: Optional[ecc.Command] = test_COMMAND(command_input, command_name)
+            res2: Optional[ecc.Command] = test_COMMAND(command_input, command_def)
             #
             if res2 is not None:
                 return ecc.Command_OKw_OElt(
@@ -224,13 +169,13 @@ def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_name: str
             return None
 
 #
-def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_connection: str | list[str], return_keyword: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt]:
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_connection: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt]:
     #
     if isinstance(keyword_connection, str):
         keyword_connection = [keyword_connection]
 
     # Create regex patterns for the keywords (using the | operator for "or")
-    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])  # Escape keywords for safety
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in command_def.keywords)  # Escape keywords for safety
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_connection)
 
     # Construct the main regex pattern
@@ -244,7 +189,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: s
         keyword_a, text_a, keyword_b, text_b = match.groups()
         #
         return ecc.Command_Elt_Kw_Elt(
-            command_name=command_name,
+            command_name=command_def.command_name,
             elt1=text_a.strip(),
             elt2=text_b.strip(),
             kw=keyword_b
@@ -253,7 +198,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: s
     return None
 
 
-def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_B: str | list[str], keyword_C: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
     #
     if isinstance(keyword_B, str):
         keyword_B = [keyword_B]
@@ -262,7 +207,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
         keyword_C = [keyword_C]
 
     #
-    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in command_def.keywords)
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_B)
     keywords_c_pattern = "|".join(re.escape(keyword) for keyword in keyword_C)
 
@@ -279,7 +224,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
         keyword_a, text_a, keyword_b, text_b, _, keyword_c, text_c = match.groups()
         #
         return ecc.Command_Elt_Kw_Elt_Kw_Elt(
-            command_name=command_name,
+            command_name=command_def.command_name,
             elt1=text_a,
             elt2=text_b,
             elt3=text_c,
@@ -290,9 +235,9 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
         return None
 
 #
-def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt_OKw_OElt]:
+def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_B: str | list[str], keyword_C: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt_OKw_OElt]:
     #
-    res: Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, keyword_C, return_keywords)
+    res: Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, command_def, keyword_B, keyword_C)
     #
     if res is not None:
         return ecc.Command_Elt_Kw_Elt_OKw_OElt(
@@ -304,7 +249,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input
             kw2=res.kw2
         )
     #
-    res2: Optional[ecc.Command_Elt_Kw_Elt] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, command_name, keyword_B, return_keywords)
+    res2: Optional[ecc.Command_Elt_Kw_Elt] = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, command_def, keyword_B)
     #
     if res2 is not None:
         return ecc.Command_Elt_Kw_Elt_OKw_OElt(
@@ -317,13 +262,13 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input
     return None
 
 #
-def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_opt: str | list[str], return_keyword: bool = False) -> Optional[ecc.Command_Elt_OKw_OElt]:
+def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_opt: str | list[str]) -> Optional[ecc.Command_Elt_OKw_OElt]:
     #
     if isinstance(keyword_opt, str):
         keyword_opt = [keyword_opt]
 
     #
-    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in command_def.keywords)
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_opt)
 
     # Construct the main regex pattern with optional `{}` group
@@ -341,26 +286,26 @@ def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_nam
         keyword_a, text_a, keyword_b, text_b = match.groups()
         #
         return ecc.Command_Elt_OKw_OElt(
-            command_name=command_name,
+            command_name=command_def.command_name,
             elt1=text_a.strip(),
             elt2=text_b.strip(),
             kw=keyword_b
         )
     else:
         #
-        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_name)
+        res: Optional[ecc.Command_Elt] = test_COMMAND_SOMETHING(command_input, command_def)
         #
         if res is not None:
             #
             return ecc.Command_Elt_OKw_OElt(
-                command_name=command_name,
+                command_name=command_def.command_name,
                 elt1=res.elt
             )
         #
         return None
 
 #
-def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_name: str, keyword_B: str | list[str], keyword_C: str | list[str], return_keywords: bool = False) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
+def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_B: str | list[str], keyword_C: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
     #
     if isinstance(keyword_B, str):
         keyword_B = [keyword_B]
@@ -369,7 +314,7 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
         keyword_C = [keyword_C]
 
     #
-    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in commands_keywords[command_name])
+    keywords_a_pattern = "|".join(re.escape(keyword) for keyword in command_def.keywords)
     keywords_b_pattern = "|".join(re.escape(keyword) for keyword in keyword_B)
     keywords_c_pattern = "|".join(re.escape(keyword) for keyword in keyword_C)
 
@@ -394,7 +339,7 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
         quantity = quantity if quantity else "1"  # Default to 1 if not specified
         #
         return ecc.Command_Elt_Kw_Elt_Kw_Elt(
-            command_name=command_name,
+            command_name=command_def.command_name,
             elt1=quantity,
             elt2=item,
             elt3=target,
@@ -404,12 +349,10 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
     else:
         return None
 
-#
-def parse_command(command_input: str) -> Optional[ecc.Command]:
 
-    #
-    command_input = traite_txt(command_input)
-    res: Optional[ecc.Command] = None
+
+#
+commands: list[CommandDefinition] = [
 
     ##################################
     ###### OBSERVATION COMMANDS ######
@@ -418,79 +361,102 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND LOOK AROUND
     # `(see/look around/look)`: Observe the surroundings and get a description of the current area.
 
-    res = test_COMMAND(command_input, "C_LOOKAROUND")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_LOOKAROUND",
+        keywords = ["see", "look around", "look"],
+        command_type = test_COMMAND
+    ),
 
     #### COMMAND RECAP
     # `(recap)`: Summarize recent events, clues, or interactions.
 
-    res = test_COMMAND(command_input, "C_RECAP")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_RECAP",
+        keywords = ["recap", "history"],
+        command_type=test_COMMAND
+    ),
 
     #### COMMAND BRIEF
     #  `brief [something/someone]`: Give a short description of something or someone. (ex: `brief ancient statue`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_BRIEF")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_BRIEF",
+        keywords = ["brief"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND DESCRIBE
     # `(watch/describe) [something/someone]`: Give a detailed description of an object or character. (ex: `describe mysterious painting`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_DESCRIBE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_DESCRIBE",
+        keywords = ["describe", "watch"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND EXAMINE
     # `(examine/inspect/check) [something/someone]`: Closely inspect something or someone to reveal details. (ex: `examine old diary`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_EXAMINE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_EXAMINE",
+        keywords = ["examine", "inspect", "check"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND RUMMAGE
     # `(rummage/search) [something]`: Search a container or place for hidden items. (ex: `rummage drawer`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_RUMMAGE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_RUMMAGE",
+        keywords = ["rummage", "search", "dig in"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND LISTEN
     # `(hear/listen) ?{TO} ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
 
-    res = test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input, "C_LISTEN")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_LISTEN",
+        keywords = ["hear", "listen"],
+        command_type=test_COMMAND_OPT_KEYWORD_OPT_SOMETHING
+    ),
 
     #### COMMAND TOUCH
     # `(touch/feel) [something/someone]`: Sense the texture, temperature, or state of an object or person. (ex: `feel statue`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_TOUCH")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_TOUCH",
+        keywords = ["touch", "feel"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND READ
     # `read [something] ?{page [number]}`: Read a written document, optionally specifying a page. (ex: `read journal page 2`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_READ", ["page"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_READ",
+        keywords = ["read"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={"keyword_opt": ["page"]}
+    ),
 
     #### COMMAND TASTE
     # `taste [something]`: Try tasting an object. (ex: `taste soup`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_TASTE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_TASTE",
+        keywords = ["taste"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND SMELL
     # `(smell/sniff) [something/someone]`: Identify the scent of something or someone. (ex: `sniff flower`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_SMELL")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SMELL",
+        keywords = ["smell", "sniff"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     ###################################
     ###### DISPLACEMENT COMMANDS ######
@@ -499,9 +465,11 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND GO
     # `(go/displace/walk/run/sprint) [direction]`: Move in the specified direction. (ex: `go north`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_GO")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_GO",
+        keywords = ["go", "displace", "walk", "run", "sprint"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     ##########################################
     ###### OBJECT INTERACTIONS COMMANDS ######
@@ -510,150 +478,229 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND PUT
     # `(put/move) [something] (on/into/in) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_PUT", ["on", "into", "in"], return_keyword=True)
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_PUT",
+        keywords = ["put", "move"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["on", "into", "in"]
+        }
+    ),
 
     #### COMMAND PUSH
     # `(push/press/apply force on) [something]`: Apply force to an object. (ex: `press button`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_PUSH")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_PUSH",
+        keywords = ["push", "press", "apply force on"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND PULL
     # `pull [something]`: Pull an object. (ex: `pull lever`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_PULL")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_PULL",
+        keywords = ["pull"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND ATTACH
     # `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: Attach an object to something. (ex: `attach bandit to chair with rope`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_ATTACH", ["to"], ["with"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_ATTACH",
+        keywords = ["attach", "tie"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_B": ["to"],
+            "keyword_C": ["with"]
+        }
+    ),
 
     #### COMMAND BREAK
     # `(break/destroy) [something]`: Destroy a destructible object. (ex: `break glass`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_BREAK")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_BREAK",
+        keywords = ["break", "destroy"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND THROW
     # `throw [something] on [something]`: Throw an object at another object. (ex: `throw rock on window`)
     # `throw [something] on [someone]`: Throw an object at someone. (ex: `throw rock on bandit`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_THROW", ["on", "to", "into", "in"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_THROW",
+        keywords = ["throw"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["on", "to", "into", "in"]
+        }
+    ),
 
     #### COMMAND DROP
     # `(drop/discard/get off) [something]`: Remove an object from inventory. (ex: `drop bag`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_DROP")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_DROP",
+        keywords = ["drop", "discard"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND CLEAN
     # `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Clean something. (ex: `wash painting`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_CLEAN")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_CLEAN",
+        keywords = ["clean", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND USE
     # `use [something] ?{on [something/someone]}`: Use an object, optionally on something or someone. (ex: `use key on door`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_USE", ["on", "onto"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_USE",
+        keywords = ["use", "utilise"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_opt": ["on", "onto"]
+        }
+    ),
 
     #### COMMAND CLIMB
     # `climb [something]`: Climb an object. (ex: `climb tree`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_CLIMB")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_CLIMB",
+        keywords = ["climb"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND OPEN
     # `open [something]`: Open a door, chest, or other container. (ex: `open chest`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_OPEN")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_OPEN",
+        keywords = ["open"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND CLOSE
     # `(close/shut) [something]`: Close an object. (ex: `close window`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_CLOSE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_CLOSE",
+        keywords = ["close", "shut"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND LOCK
     # `lock [something] ?{with [something]}`: Lock an object. (ex: `lock door with golden key`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_LOCK", ["with"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_LOCK",
+        keywords = ["lock"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_opt": ["with"]
+        }
+    ),
 
     #### COMMAND UNLOCK
     # `unlock [something] ?{with [something]}`: Unlock an object. (ex: `unlock chest with rusty key`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_UNLOCK", ["with"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_UNLOCK",
+        keywords = ["unlock"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_opt": ["with"]
+        }
+    ),
 
     #### COMMAND FILL
     # `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_FILL", ["with", "from"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_FILL",
+        keywords = ["fill"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["with", "from"]
+        }
+    ),
 
     #### COMMAND POUR
     # `(pour) [something] into [something]`: Pour a liquid. (ex: `pour coffee into cup`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_POUR", ["in", "    into"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_POUR",
+        keywords = ["pour"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["into", "in"]
+        }
+    ),
 
     #### COMMAND INSERT
     # `insert [something] into [something]`: Insert an item. (ex: `insert coin into vending machine`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_INSERT", ["into"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_INSERT",
+        keywords = ["insert"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["into", "in"]
+        }
+    ),
 
     #### COMMAND REMOVE
     # `remove [something] from [something]`: Take something out of another object. (ex: `remove book from shelf`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_REMOVE", ["from"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_REMOVE",
+        keywords = ["remove"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["from"]
+        }
+    ),
 
     #### COMMAND SET
     # `set [something] to [state]`: Adjust an object’s state. (ex: `set lamp to on`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_SET", ["to"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SET",
+        keywords = ["set"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["to"]
+        }
+    ),
 
     #### COMMAND SPREAD
     # `spread [something] ?{on [something/someone]}`: Apply something over a surface. (ex: `spread butter on bread`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_SPREAD", ["into", "on", "in"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SPREAD",
+        keywords = ["spread"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_opt": ["into", "on", "in"]
+        }
+    ),
 
     #### COMMAND SQUEEZE
     # `(squeeze/squash) [something]`: Press or crush an object. (ex: `squeeze lemon`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_SQUEEZE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SQUEEZE",
+        keywords = ["squeeze", "squash"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     ##############################################
     ###### CONSUMABLE INTERACTIONS COMMANDS ######
@@ -662,16 +709,20 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND EAT
     # `(consume/eat) [something]`: Eat an item. (ex: `eat apple`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_EAT")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_EAT",
+        keywords = ["eat", "consume"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND DRINK
     # `(drink/sip/swallow) [something]`: Drink a liquid. (ex: `drink potion`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_DRINK")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_DRINK",
+        keywords = ["drink", "swallow", "sip"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     ##########################################
     ###### LIVING INTERACTIONS COMMANDS ######
@@ -680,51 +731,81 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND AWAKE
     # `(awake/wake/wake up) [someone]`: Wake a sleeping person. (ex: `wake up guard`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_AWAKE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_AWAKE",
+        keywords = ["awake", "wake up", "wake"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND ATTACK
     # `(attack/smash/fight/hit/hurt/kill/murder/punch/slice/thump/torture/wreck) [someone] ?{with [something]}`: Attack someone. (ex: `attack bandit with sword`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_ATTACK", ["with"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_ATTACK",
+        keywords = ["attack", "smash", "fight", "hit", "hurt", "kill", "murder", "punch", "slice"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_opt": ["with"]
+        }
+    ),
 
     #### COMMAND BUY
     # `(buy/purchase) ?{[quantity] of} [something] to [someone]`: Buy an item. (ex: `buy 2 potions to merchant`)
 
-    res = test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input, "C_BUY", ["of"], ["to", "at"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_BUY",
+        keywords = ["buy", "purchase"],
+        command_type=test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_B": ["of"],
+            "keyword_C": ["to", "at"]
+        }
+    ),
 
     #### COMMAND SHOW
     # `(show/display/present) [something/someone] to [someone]`: Show something to someone. (ex: `show passport to guard`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_SHOW", ["to"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SHOW",
+        keywords = ["show", "display", "present"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["to"]
+        }
+    ),
 
     #### COMMAND EMBRACE
     # `(embrace/hug/kiss) [someone]`: Perform an affectionate gesture. (ex: `hug friend`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_EMBRACE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_EMBRACE",
+        keywords = ["embrace", "kiss", "hug"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND FEED
     # `(feed) [someone] with [something]`: Give food to someone. (ex: `feed dog with bone`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_FEED", ["with"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_FEED",
+        keywords = ["feed"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["with"]
+        }
+    ),
 
     #### COMMAND GIVE
     # `(give/offer) [something] to [someone]`: Alternative phrasing. (ex: `offer flower to lover`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_GIVE", ["to"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_GIVE",
+        keywords = ["give", "offer"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["to"]
+        }
+    ),
 
     ###################################
     ###### VOICE / TEXT COMMANDS ######
@@ -733,30 +814,51 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND SAY
     # `(say/tell/answer/shout) "..." to [someone/something]`: Communicate verbally with a character or object. (ex: `say "Hello" to guard`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_SAY", ["to"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SAY",
+        keywords = ["say", "tell", "answer", "shout"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_opt": ["to"]
+        }
+    ),
 
     #### COMMAND ASK
     # `ask [someone] (about/for/on) [something/someone]`: Ask someone for information. (ex: `ask merchant about potion`)
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input, "C_ASK", ["about", "on", "for"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_ASK",
+        keywords = ["ask"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_connection": ["about", "on", "for"]
+        }
+    ),
 
     #### COMMAND WRITE
     # `(write) "..." on [something] ?{with [something]}`: Write a message on an object. (ex: `write "Hello" on the old paper with pencil`) ***Note:** if there is already a writen thing on the object, and you want only the text you want to write, you can try to erase the previous text on the object.*
 
-    res = test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_WRITE", ["on"], ["with"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_WRITE",
+        keywords = ["write"],
+        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_B": ["on"],
+            "keyword_C": ["with"]
+        }
+    ),
 
     #### COMMAND ERASE
     # `(erase/efface/delete/rub out) [something] ?{with [something]}`: Erase everything that is writen on an object. (Ex: `rub out the paper with gum` or `erase the blackboard with the brush`)
 
-    res = test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input, "C_ERASE", ["with"])
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_ERASE",
+        keywords = ["erase", "efface", "rub out", "delete"],
+        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
+        kwargs={
+            "keyword_opt": ["with"]
+        }
+    ),
 
     #########################################
     ###### PLAYER INTERACTION COMMANDS ######
@@ -765,58 +867,74 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND WEAR
     # `(wear/dress) [something]`: Wear clothing or equipment. (ex: `wear helmet`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_WEAR")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_WEAR",
+        keywords = ["wear", "dress"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND UNDRESS
     # `(undress/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_UNDRESS")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_UNDRESS",
+        keywords = ["undress", "take off", "strip", "pull off", "shed"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND INVENTORY
     # `(inventory)`: List the objects in your inventory. (ex: `inv`)
 
-    res = test_COMMAND(command_input, "C_INVENTORY")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_INVENTORY",
+        keywords = ["inventory", "stock", "what's in my bag"],
+        command_type=test_COMMAND
+    ),
 
     #### COMMAND WAIT
     # `wait ?{[duration]}`: Pause and let time pass. (ex: `wait 5 minutes`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_WAIT")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_WAIT",
+        keywords = ["wait"],
+        command_type=test_COMMAND_OPT_SOMETHING
+    ),
 
     #### COMMAND SLEEP
     # `(sleep/nap)`: Rest and possibly recover. (ex: `sleep`)
 
-    res = test_COMMAND(command_input, "C_SLEEP")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SLEEP",
+        keywords = ["sleep", "nap"],
+        command_type=test_COMMAND
+    ),
 
     #### COMMAND SIT
     # `sit on [something]`: Take a seat on an object. (ex: `sit on chair`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_SIT_DOWN")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SIT_DOWN",
+        keywords = ["sit down", "sit on", "sit"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #### COMMAND LIE DOWN
     # `(lie on/lie down on) ?{[something]}`: Lie down on an object. (ex: `lie down on the bed`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_LIE_DOWN")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_LIE_DOWN",
+        keywords = ["lie down on", "lie on"],
+        command_type=test_COMMAND_OPT_SOMETHING
+    ),
 
     #### COMMAND STAND UP
     # `(stand/stand up)`: Return to a standing position. (ex: `stand up`)
 
-    res = test_COMMAND(command_input, "C_STAND_UP")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_STAND_UP",
+        keywords = ["stand up", "stand"],
+        command_type=test_COMMAND
+    ),
 
     ############################################
     ###### OBJECT INTERACTIONS COMMANDS 2 ######
@@ -825,9 +943,11 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND TAKE
     # `(take/carry/hold/pick/pick up) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
 
-    res = test_COMMAND_SOMETHING(command_input, "C_TAKE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_TAKE",
+        keywords = ["take", "carry", "hold", "pick up", "pick"],
+        command_type=test_COMMAND_SOMETHING
+    ),
 
     #############################
     ###### RANDOM COMMANDS ######
@@ -836,30 +956,38 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND DANCE
     # `dance ?{something}`: Perform a dance. (ex: `dance`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_DANCE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_DANCE",
+        keywords = ["dance"],
+        command_type=test_COMMAND_OPT_SOMETHING
+    ),
 
     #### COMMAND SING
     # `(chant/sing) ?{something}`: Sing or chant something. (ex: `sing`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_SING")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SING",
+        keywords = ["sing", "chant"],
+        command_type=test_COMMAND_OPT_SOMETHING
+    ),
 
     #### COMMAND JUMP
     # `(jump/hop)`: Jump up or forward. (ex: `jump`)
 
-    res = test_COMMAND(command_input, "C_JUMP")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_JUMP",
+        keywords = ["jump", "hop"],
+        command_type=test_COMMAND
+    ),
 
     #### COMMAND THINK
     # `(think)`: Reflect or contemplate. (ex: `think`)
 
-    res = test_COMMAND(command_input, "C_THINK")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_THINK",
+        keywords = ["think"],
+        command_type=test_COMMAND
+    ),
 
     #############################
     ###### SYSTEM COMMANDS ######
@@ -868,42 +996,75 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
     #### COMMAND QUIT
     # `(quit)`: Quit the game. (ex: `quit`)
 
-    res = test_COMMAND(command_input, "C_QUIT")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_QUIT",
+        keywords = ["quit", "exit"],
+        command_type=test_COMMAND
+    ),
 
     #### COMMAND SAVE
     # `save ?{filepath of game save}`: Save the game. (ex: `save game1.sav`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_SAVE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SAVE",
+        keywords = ["save"],
+        command_type=test_COMMAND_OPT_SOMETHING
+    ),
 
     #### COMMAND LOAD
     # `(load/restore) {filepath of game save}`: Load a saved game. (ex: `load game1.sav`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_LOAD")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_LOAD",
+        keywords = ["load", "restore"],
+        command_type=test_COMMAND_OPT_SOMETHING
+    ),
 
     #### COMMAND SCORE
     # `score`: Show current progress. (ex: `score`)
 
-    res = test_COMMAND(command_input, "C_SCORE")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_SCORE",
+        keywords = ["score"],
+        command_type=test_COMMAND
+    ),
 
     #### COMMAND HELP
     # `help ?{something}`: Show the list of commands. (ex: `help`)
 
-    res = test_COMMAND_OPT_SOMETHING(command_input, "C_HELP")
-    if res is not None:
-        return res
+    CommandDefinition(
+        command_name="C_HELP",
+        keywords = ["help"],
+        command_type = test_COMMAND_OPT_SOMETHING
+    )
+]
 
-    ##############################
-    ###### UNKNOWN COMMANDS ######
-    ##############################
 
+#
+def parse_command(command_input: str) -> Optional[ecc.Command]:
+
+    #
+    command_input = traite_txt(command_input)
+    res: Optional[ecc.Command] = None
+
+    #
+    command_def: CommandDefinition
+    for command_def in commands:
+        #
+        kwargs: dict[str, Any] = {
+            "command_input": command_input,
+            "command_def": command_def
+        }
+        #
+        if command_def.kwargs is not None:
+            k: str
+            for k in command_def.kwargs:
+                kwargs[k] = command_def.kwargs[k]
+        #
+        res = command_def.command_type(**kwargs)
+        #
+        if res is not None:
+            return res
     #
     return None  # Commande vide
 

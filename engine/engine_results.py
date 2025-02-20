@@ -400,22 +400,34 @@ class ResultOpen(Result):
 #
 class ResultClose(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing: ThingShow) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing: ThingShow = thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You close {self.thing}."
 
 
 
 #
 class ResultLock(Result):
     #
-    def __init__(self) -> None:
+    def __init__(self, thing1: ThingShow, thing2: Optional[ThingShow] = None) -> None:
         #
         super().__init__()
         #
-        pass
+        self.thing1: ThingShow = thing1
+        self.thing2: Optional[ThingShow] = thing2
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"You lock {self.thing1}{f" with {self.thing2}" if self.thing2 is not None else ""}."
+
 
 
 
@@ -910,6 +922,21 @@ class ResultErrorAccessLocked(ResultError):
         return f"Access Locked. You cannot go to the {self.direction} by {self.access_thing.thing.name}, because {self.access_thing.thing.name} is locked !\n"
 
 #
+class ResultErrorAccessClosed(ResultError):
+    #
+    def __init__(self, direction: str, access_thing: ThingShow) -> None:
+        #
+        super().__init__()
+        #
+        self.direction: str = direction
+        self.access_thing: ThingShow = access_thing
+
+    #
+    def __str__(self) -> str:
+        #
+        return f"Access is closed. You cannot go to the {self.direction} by {self.access_thing.thing.name}, because {self.access_thing.thing.name} is closed !\n"
+
+#
 class ResultErrorThingNotFound(ResultError):
     #
     def __init__(self, text_designing_thing: str) -> None:
@@ -969,27 +996,29 @@ class ResultErrorAnotherPossessThing(ResultError):
         return f"{self.possessor} possess {self.thing}. You cannot interact with possessions of other entities.\n"
 
 #
-class ResultErrorCannotUnlockThingSolo(ResultError):
+class ResultErrorCannotActionThingSolo(ResultError):
     #
-    def __init__(self, thing: ThingShow, reason: str = "") -> None:
+    def __init__(self, action: str, thing: ThingShow, reason: str = "") -> None:
         #
         super().__init__()
         #
+        self.action: str = action
         self.thing: ThingShow = thing
         self.reason: str = reason
 
     #
     def __str__(self) -> str:
         #
-        return f"Cannot unlock {self.thing}{self.reason}.\n"
+        return f"Cannot {self.action} {self.thing}{self.reason}.\n"
 
 #
-class ResultErrorCannotUnlockThingWithThing(ResultError):
+class ResultErrorCannotActionThingWithThing(ResultError):
     #
-    def __init__(self, thing1: ThingShow, thing2: ThingShow, reason: str = "") -> None:
+    def __init__(self, action: str, thing1: ThingShow, thing2: ThingShow, reason: str = "") -> None:
         #
         super().__init__()
         #
+        self.action: str = ""
         self.thing1: ThingShow = thing1
         self.thing2: ThingShow = thing2
         self.reason: str = reason
@@ -997,5 +1026,5 @@ class ResultErrorCannotUnlockThingWithThing(ResultError):
     #
     def __str__(self) -> str:
         #
-        return f"Cannot unlock {self.thing1} with {self.thing2}{self.reason}.\n"
+        return f"Cannot {self.action} {self.thing1} with {self.thing2}{self.reason}.\n"
 

@@ -300,7 +300,8 @@ class Object(Thing):
             is_open: int = 0,
             is_locked: int = 0,
             unlocks: list[str] = [],
-            contains: Optional[dict[str, int]] = None
+            contains: Optional[dict[str, int]] = None,
+            easy_to_unlock_from: list[str] = []
         ) -> None:
         #
         super().__init__(
@@ -317,6 +318,7 @@ class Object(Thing):
         self.is_locked: int = is_locked
         self.unlocks: list[str] = unlocks
         self.contains: dict[str, int] = {} if contains is None else contains
+        self.easy_to_unlock_from: list[str] = easy_to_unlock_from
 
     #
     def to_dict(self) -> dict:
@@ -736,7 +738,8 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "parts": EmptyList(),
         "part_of": None,
         "unlocks": EmptyList(),
-        "contains": EmptyDict()
+        "contains": EmptyDict(),
+        "easy_to_unlock_from": EmptyList()
     },
     "LifeSystem": {
         "max_pv": 100,

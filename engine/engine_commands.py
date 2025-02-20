@@ -660,6 +660,15 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
                 )
             )
         #
+        if "openable" in access_thing.attributes and "open" not in access_thing.attributes:
+            #
+            interaction_system.add_result(
+                result=er.ResultErrorAccessClosed(
+                    direction=choosen_access.direction,
+                    access_thing=er.ThingShow(thing=access_thing)
+                )
+            )
+        #
         else:
             #
             remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
@@ -1001,11 +1010,43 @@ def execute_C_CLOSE(game: engine.Game, interaction_system: InteractionSystem, co
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    current_player: engine.Entity = get_entity(game=game, entity_id=player_id)
+    #
+    current_room: engine.Room = get_room(game=game, room_id=current_player.room)
+    #
+    things_in_room: dict[engine.Thing, tuple[str, Any]] = get_rec_all_things_of_a_room(game=game, room=current_room)
+    #
+    designated_thing: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt, list_of_things=list(things_in_room.keys()))
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    if designated_thing is None:
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt) )
+        return game
+
+    #
+    possessor: engine.Thing | engine.Room = things_in_room[designated_thing][1]
+    if things_in_room[designated_thing][0] == "Inventory" and isinstance(possessor, engine.Thing) and possessor != current_player:
+        #
+        interaction_system.add_result(result=er.ResultErrorAnotherPossessThing(thing=er.ThingShow(designated_thing), possessor=er.ThingShow(possessor)))
+        return game
+
+    #
+    if "openable" not in designated_thing.attributes:
+        #
+        interaction_system.add_result(result=er.ResultErrorCannotActionThing(action="open", thing=er.ThingShow(designated_thing), reason=". It is not closable."))
+        return game
+
+    #
+    if "open" not in designated_thing.attributes:
+        #
+        interaction_system.add_result(result=er.ResultErrorCannotActionThing(action="open", thing=er.ThingShow(designated_thing), reason=". It is already closed."))
+        return game
+
+    #
+    designated_thing.attributes.remove("open")
+    interaction_system.add_result(result=er.ResultClose(thing=er.ThingShow(designated_thing)))
 
     #
     return game
@@ -1017,11 +1058,78 @@ def execute_C_LOCK(game: engine.Game, interaction_system: InteractionSystem, com
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    current_player: engine.Entity = get_entity(game=game, entity_id=player_id)
+    current_room: engine.Room = get_room(game=game, room_id=current_player.room)
+    #
+    all_things_in_room: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = get_rec_all_things_of_a_room(game=game, room=current_room)
+    #
+    elt_to_lock_: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt1, list_of_things=list(all_things_in_room.keys()))
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    if elt_to_lock_ is None:
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt1) )
+        return game
+
+    #
+    if not isinstance(elt_to_lock_, engine.Object):
+        #
+        interaction_system.add_result( result=er.ResultErrorCannotActionThingSolo(action="lock", thing=er.ThingShow(elt_to_lock_), reason=". It is not an object !") )
+        return game
+
+    #
+    elt_to_lock: engine.Object = elt_to_lock_
+
+    #
+    if "locked" in elt_to_lock.attributes:
+        #
+        interaction_system.add_result( result=er.ResultErrorCannotActionThingSolo(action="lock", thing=er.ThingShow(elt_to_lock), reason=". It is already locked !") )
+        return game
+
+    #
+    if "open" in elt_to_lock.attributes:
+        #
+        interaction_system.add_result( result=er.ResultErrorCannotActionThingSolo(action="lock", thing=er.ThingShow(elt_to_lock), reason=". It is still open !") )
+        return game
+
+    #
+    if command.elt2 is None:
+        #
+        if current_room.room_name not in elt_to_lock.easy_to_unlock_from:
+            #
+            interaction_system.add_result( result=er.ResultErrorCannotActionThingSolo(action="lock", thing=er.ThingShow(elt_to_lock), reason=". It is not easily lockable from this room !") )
+            return game
+        #
+        elt_to_lock.attributes.append("locked")
+        #
+        interaction_system.add_result( result=er.ResultLock(thing1=er.ThingShow(elt_to_lock)) )
+        return game
+
+    #
+    elt_that_lock: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt2, list_of_things=list(all_things_in_room.keys()))
+    #
+    if elt_that_lock is None:
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt2) )
+        return game
+
+    #
+    if not isinstance(elt_that_lock, engine.Object):
+        #
+        interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt2) )
+        return game
+
+    #
+    if elt_to_lock.id not in elt_that_lock.unlocks:
+        #
+        interaction_system.add_result( result=er.ResultErrorCannotActionThingWithThing(action="lock", thing1=er.ThingShow(elt_to_lock), thing2=er.ThingShow(elt_that_lock)) )
+        return game
+
+    #
+    elt_to_lock.attributes.append("locked")
+    #
+    interaction_system.add_result( result=er.ResultLock(thing1=er.ThingShow(elt_to_lock), thing2=er.ThingShow(elt_that_lock)) )
 
     #
     return game
@@ -1039,26 +1147,35 @@ def execute_C_UNLOCK(game: engine.Game, interaction_system: InteractionSystem, c
     #
     all_things_in_room: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = get_rec_all_things_of_a_room(game=game, room=current_room)
     #
-    elt_to_unlock: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt1, list_of_things=list(all_things_in_room.keys()))
+    elt_to_unlock_: Optional[engine.Thing] = get_thing_designed(game=game, text=command.elt1, list_of_things=list(all_things_in_room.keys()))
 
     #
-    if elt_to_unlock is None:
+    if elt_to_unlock_ is None:
         #
         interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt1) )
         return game
 
     #
+    if not isinstance(elt_to_unlock_, engine.Object):
+        #
+        interaction_system.add_result( result=er.ResultErrorCannotActionThingSolo(action="unlock", thing=er.ThingShow(elt_to_unlock_), reason=". It is not an object !") )
+        return game
+
+    #
+    elt_to_unlock: engine.Object = elt_to_unlock_
+
+    #
     if "locked" not in elt_to_unlock.attributes:
         #
-        interaction_system.add_result( result=er.ResultErrorCannotUnlockThingSolo(thing=er.ThingShow(elt_to_unlock), reason=". It is already unlocked !") )
+        interaction_system.add_result( result=er.ResultErrorCannotActionThingSolo(action="unlock", thing=er.ThingShow(elt_to_unlock), reason=". It is already unlocked !") )
         return game
 
     #
     if command.elt2 is None:
         #
-        if "easy_unlock" not in elt_to_unlock.attributes:
+        if current_room.room_name not in elt_to_unlock.easy_to_unlock_from:
             #
-            interaction_system.add_result( result=er.ResultErrorCannotUnlockThingSolo(thing=er.ThingShow(elt_to_unlock)) )
+            interaction_system.add_result( result=er.ResultErrorCannotActionThingSolo(action="unlock", thing=er.ThingShow(elt_to_unlock), reason=". It is not easily unlockable from this room !") )
             return game
         #
         elt_to_unlock.attributes.remove("locked")
@@ -1083,7 +1200,7 @@ def execute_C_UNLOCK(game: engine.Game, interaction_system: InteractionSystem, c
     #
     if elt_to_unlock.id not in elt_that_unlock.unlocks:
         #
-        interaction_system.add_result( result=er.ResultErrorCannotUnlockThingWithThing(thing1=er.ThingShow(elt_to_unlock), thing2=er.ThingShow(elt_that_unlock)) )
+        interaction_system.add_result( result=er.ResultErrorCannotActionThingWithThing(action="unlock", thing1=er.ThingShow(elt_to_unlock), thing2=er.ThingShow(elt_that_unlock)) )
         return game
 
     #

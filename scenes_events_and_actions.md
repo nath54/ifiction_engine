@@ -47,10 +47,10 @@ Jump to a label if a condition is validated.
 
 ActionConditionalJump:
     - label_name (str): name of the label to jump to
-    - variable_of_condition (str): name of the variable on which the condition will be applied
-    - condition_operator (str): the operator that will be used. One of `==`, `!=`, `>=`, `<=`, `>`, `<`
-    - condition_operand_value (str | int | float): the value that will be compared to the variable of the condition
-    - condition_operand_type (str): indicates if the condition_operand_value is a constant or a variable. One of `const`, `var`. If it is `var`, the condition_operand_value must be str and links to an existing variable.
+    - var_cond (str): name of the variable on which the condition will be applied
+    - cond_op (str): the operator that will be used. One of `==`, `!=`, `>=`, `<=`, `>`, `<`
+    - cond_operand_value (str | int | float): the value that will be compared to the variable of the condition
+    - cond_operand_type (str): indicates if the condition_operand_value is a constant or a variable. One of `const`, `var`. If it is `var`, the condition_operand_value must be str and links to an existing variable.
 
 ### Action end game
 
@@ -87,9 +87,9 @@ ActionDeleteVar:
 ActionVarBinOp:
     - var_output_name (str): name of the variable that will contains the value of the operation
     - elt1_type (str): Indicates if the 1st operand is a constant or a variable. One of `var` or `const`.
-    - elt1_value (str | int | float): Name of the variable, or constant value.
+    - elt1_value (str | int | float | bool): Name of the variable, or constant value.
     - elt2_type (str): Indicates if the 2nd operand is a constant or a variable. One of `var` or `const`.
-    - elt2_value (str | int | float): Name of the variable, or constant value.
+    - elt2_value (str | int | float | bool): Name of the variable, or constant value.
     - op (str): Operation to do on the two operands. One of `+`, `-`, `*`, `/`, `%`, `^`, `min`, `max`, `and`, `or`
 
 ### Action Unary Operation on variable
@@ -118,44 +118,91 @@ ActionEndScene:
 
 Edit an attribute (in term of raw classes, not Thing.attributes) of an object.
 
-EditAttribute:
+ActionEditAttributeOfElt:
     - elt_id (str):
     - elt_type (str):
     - elt_attribute_name (str):
-    - elt_attribute_new_value (Any):
+    - elt_attribute_new_value (str | int | float | bool):
 
 
 ### Action Append Attribute of Class
 
 Append an element to an attribute (in term of raw classes, not Thing.attributes) of an object.
 
-AppendEltAttribute:
+AppendToAttributeOfElt:
     - elt_id (str):
     - elt_type (str):
     - elt_attribute_name (str):
-    - elt_attribute_elt_to_add (Any):
+    - elt_attribute_elt_to_add (str | int | float | bool):
 
 
-### Action Remove Attribute of Class
+### Action Remove value to Attribute of Class
 
 Remove an element from an attribute (in term of raw classes, not Thing.attributes) of an object.
 
-RemoveEltAttribute:
+ActionRemoveValueToAttributeOfElt:
     - elt_id (str):
     - elt_type (str):
     - elt_attribute_name (str):
-    - elt_attribute_elt_to_remove (Any):
+    - elt_attribute_elt_to_remove (str | int | float | bool):
 
 
 ### Action Set Attribute of Class
 
 Set a key->value couple of an attribute (in term of raw classes, not Thing.attributes) of an object.
 
-SetKVAttribute:
+ActionSetKVAttributeOfElt:
     - elt_id (str):
     - elt_type (str):
     - elt_attribute_name (str):
     - elt_attribute_elt_key (str):
-    - elt_attribute_elt_value (Any):
+    - elt_attribute_elt_value (str | int | float | bool):
+
+
+## Events
+
+Events serves to trigger scenes.
+
+Another way to launch a scene is also from dialog.
+
+So their are a lot of differents events type.
+
+### Base Event Abstract Class
+
+Event:
+    - scene_id (str): Name of the scene to launch
+
+### Event Mission Done
+
+EventMissionDone(Event):
+    - mission_id (str): Id of the mission that trigger this event when finished
+
+### Event Mission Started
+
+EventMissionStarted(Event):
+    - mission_id (str): Id of the mission that trigger this event when started
+
+### Event Enter Room
+
+EventEnterRoom(Event):
+    - room_id (str): Id of the room
+    - who_enters (str | list[str]): Ids of the entities that we have to detect the room entering
+
+### Event Leave Room
+
+EventLeaveRoom(Event):
+    - room_id (str): Id of the room
+    - who_leaves (str | list[str]): Ids of the entities that we have to detect the room leaving
+
+### Event Variable Condition
+
+EventVarCond(Event):
+    - var_name (str): Name of the variable on which there is the condition
+    - cond_operator (str): Operator of the condition
+    - cond_operand_value (str | int | float | bool): Operand of the condition, can be a variable name or a constant value.
+    - cond_operand_type (str): Indicates if the operand is a variable (`var`) or a consant value (`const`)
+
+
+
 
 

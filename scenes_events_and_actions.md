@@ -200,7 +200,7 @@ EventVarCond(Event):
     - var_name (str): Name of the variable on which there is the condition
     - cond_operator (str): Operator of the condition
     - cond_operand_value (str | int | float | bool): Operand of the condition, can be a variable name or a constant value.
-    - cond_operand_type (str): Indicates if the operand is a variable (`var`) or a consant value (`const`)
+    - cond_operand_type (str): Indicates if the operand is a variable (`var`) or a constant value (`const`)
 
 
 

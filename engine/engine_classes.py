@@ -3,8 +3,11 @@ from typing import Any, Optional, Callable, Tuple
 #
 import os
 import json
+#
+from .missions import Mission
 
-# FORWARD CLASS FOR   from .engine_results import Result  (circular import else)
+
+# FORWARD CLASS FOR   from .engine_results import Result  (circular import)
 class Result:
     pass
 
@@ -416,6 +419,34 @@ class Entity(Thing):
     def __repr__(self) -> str:
         #
         return self.__str__()
+
+
+#
+class Player(Entity):
+    #
+    def __init__(
+        self,
+        id_: str,
+        name: str,
+        room: str,
+        description: str = "",
+        brief_description: str = "",
+        attributes: list[str] = [],
+        inventory: Optional[dict[str, int]] = None,
+        life_system: LifeSystem = LifeSystem(),
+        missions: Optional[dict[str, Mission]] = None
+    ) -> None:
+        #
+        super().__init__(
+            id_=id_,
+            name=name,
+            room=room,
+            description=description,
+            brief_description=brief_description,
+            attributes=attributes,
+            inventory=inventory,
+            life_system=life_system
+        )
 
 
 #

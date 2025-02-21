@@ -73,6 +73,7 @@ class EventInsideRoom(EventRoom):
         #
         super().__init__(scene_id=scene_id, room_id=room_id)
 
+
 #
 class EventVariableCondition(Event):
     #
@@ -92,6 +93,7 @@ class EventVariableCondition(Event):
         self.cond_operand_value: str | int | float | bool = cond_operand_value
         self.cond_operand_type: str = cond_operand_type
 
+
 #
 class EventActionThing(Event):
     #
@@ -104,4 +106,10 @@ class EventActionThing(Event):
     ) -> None:
         #
         super().__init__(scene_id=scene_id)
+        #
+        self.thing_id: str = thing_id
+        self.action_type: str = action_type
+        self.who: str | list[str] = who
+
+
 

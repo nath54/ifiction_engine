@@ -10,6 +10,7 @@ class Action:
         # GENERIC ABSTRACT CLASS
         pass
 
+
 #
 class ActionText(Action):
     #
@@ -19,6 +20,7 @@ class ActionText(Action):
         #
         self.text: str = text
 
+
 #
 class ActionLabel(Action):
     #
@@ -27,6 +29,7 @@ class ActionLabel(Action):
         super().__init__()
         #
         self.label_name: str = label_name
+
 
 #
 class ActionJump(Action):
@@ -66,7 +69,6 @@ class ActionEnd(Action):
         super().__init__()
 
 
-
 #
 class ActionCreateVar(Action):
     #
@@ -89,7 +91,6 @@ class ActionEditVar(Action):
         self.var_value: str | int | float | bool = var_value
 
 
-
 #
 class ActionDeleteVar(Action):
     #
@@ -98,7 +99,6 @@ class ActionDeleteVar(Action):
         super().__init__()
         #
         self.var_name: str = var_name
-
 
 
 #
@@ -151,6 +151,7 @@ class ActionChangeScene(Action):
         #
         self.scene_id: str = scene_id
 
+
 #
 class ActionEndScene(Action):
     #
@@ -171,7 +172,6 @@ class ActionChangeElt(Action):
         self.elt_attr_name: str | list[str] = elt_attr_name
 
 
-
 #
 class ActionEditAttributeOfElt(ActionChangeElt):
     #
@@ -186,7 +186,6 @@ class ActionEditAttributeOfElt(ActionChangeElt):
         super().__init__(elt_id=elt_id, elt_type=elt_type, elt_attr_name=elt_attr_name)
         #
         self.elt_attr_new_value: str | int | float | bool = elt_attr_new_value
-
 
 
 #
@@ -205,7 +204,6 @@ class ActionAppendToAttributeOfElt(ActionChangeElt):
         self.elt_attr_new_value_to_append: str | int | float | bool = elt_attr_new_value_to_append
 
 
-
 #
 class ActionRemoveValueToAttributeOfElt(ActionChangeElt):
     #
@@ -220,7 +218,6 @@ class ActionRemoveValueToAttributeOfElt(ActionChangeElt):
         super().__init__(elt_id=elt_id, elt_type=elt_type, elt_attr_name=elt_attr_name)
         #
         self.elt_attr_value_to_remove: str | int | float | bool = elt_attr_value_to_remove
-
 
 
 #

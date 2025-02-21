@@ -529,11 +529,6 @@ Nothing done.
 
 ## Code development
 
-### General
-
-Improvement of command parsing, reduce all the function that parses the command with just a for loop.
-
----
 
 ### Functionnalities to add
 

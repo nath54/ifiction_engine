@@ -346,6 +346,11 @@ class Game:
 
 
 #
+def verif_game(game: Game) -> None:
+    # TODO
+    pass
+
+#
 def fusion_games(games: list[Game]) -> Game:
     #
     if len(games) == 0:
@@ -369,7 +374,7 @@ def fusion_games(games: list[Game]) -> Game:
                 setattr(game, attr, getattr(other_game, attr))
 
         #
-        for attr in ["things", "rooms"]:
+        for attr in ["things", "rooms", "scenes", "events", "missions"]:
             #
             other_game_dict: dict = getattr(other_game, attr)
             game_dict: dict = getattr(game, attr)
@@ -395,6 +400,9 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
     #
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"Error: file not found : `{filepath}`")
+
+    #
+    is_root: bool = len(already_imported) == 0
 
     #
     with open(filepath, "r", encoding="utf-8") as f:
@@ -438,6 +446,11 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
         game = fusion_games([game] + imported_games)
 
     #
+    if is_root:
+        #
+        verif_game(game=game)
+
+    #
     return game
 
 
@@ -460,13 +473,39 @@ things_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependi
     default_value=None
 )
 
+#
+actions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
+    dict_key_value="action_type",
+    class_names_and_types={
+        "action": (act.Action, "Action")
+    },
+    default_value=None
+)
+
+#
+missions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
+    dict_key_value="mission_type",
+    class_names_and_types={
+        "mission": (mis.Mission, "Mission")
+    },
+    default_value=None
+)
+
+#
+events_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
+    dict_key_value="event_type",
+    class_names_and_types={
+        "event": (evt.Event, "Event")
+    },
+    default_value=None
+)
+
 
 #
 things_dict: DictOfClassLoadFromDictDependingOnDictValue = DictOfClassLoadFromDictDependingOnDictValue(
     clfddodv=things_classes,
     default_value=EmptyDict()
 )
-
 
 #
 rooms_dict: DictOfClassLoadFromDict = DictOfClassLoadFromDict(
@@ -487,12 +526,15 @@ scenes_dict: DictOfClassLoadFromDict = DictOfClassLoadFromDict(
 )
 
 #
-actions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
-    dict_key_value="action_type",
-    class_names_and_types={
-        "action": (act.Action, "Action")
-    },
-    default_value=None
+events_dict: DictOfClassLoadFromDictDependingOnDictValue = DictOfClassLoadFromDictDependingOnDictValue(
+    clfddodv=events_classes,
+    default_value=EmptyDict()
+)
+
+#
+missions_dict: DictOfClassLoadFromDictDependingOnDictValue = DictOfClassLoadFromDictDependingOnDictValue(
+    clfddodv=missions_classes,
+    default_value=EmptyDict()
 )
 
 
@@ -551,6 +593,8 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "rooms": rooms_dict,
         "variables": EmptyDict(),
         "scenes": scenes_dict,
+        "events": events_dict,
+        "missions": missions_dict,
         "players": EmptyList(),
         "imports": EmptyList()
     }

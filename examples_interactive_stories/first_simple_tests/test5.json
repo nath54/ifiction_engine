@@ -83,10 +83,6 @@
             }
         }
     },
-    "end": {
-        "end_type": "EndInsideRoom",
-        "room_id": "room2"
-    },
     "variables": {},
     "players": ["player1"],
     "nb_turns": 0

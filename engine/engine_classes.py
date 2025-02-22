@@ -5,11 +5,17 @@ import os
 import json
 #
 from .missions import Mission
+from .scenes import Scene
+from .events import Event
 
 
 # FORWARD CLASS FOR   from .engine_results import Result  (circular import)
 class Result:
     pass
+
+    #
+    def to_dict(self) -> dict:
+        return {}
 
 
 #
@@ -95,7 +101,7 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
         #
         if attr not in in_dict:
             #
-            if isinstance(caadv, NoDefaultValues) or isinstance(caadv, NoDefaultValueDictOfClassLoadFromDict) or isinstance(caadv, NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue):
+            if isinstance(caadv, NoDefaultValues):
                 #
                 raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\nNo default values authorized for this attribute.\n\nDictionary : {in_dict}\n\n")
             #
@@ -103,7 +109,7 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
             #
             continue
         #
-        if isinstance(caadv, NoDefaultValueDictOfClassLoadFromDict):
+        if isinstance(caadv, DictOfClassLoadFromDict):
             #
             kwargs[attr] = {}
             #
@@ -113,7 +119,7 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
                 #
                 kwargs[attr][k] = caadv.clfd.class_name(**create_kwargs(in_dict[attr][k], type_=caadv.clfd.type_))
         #
-        elif isinstance(caadv, NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue):
+        elif isinstance(caadv, DictOfClassLoadFromDictDependingOnDictValue):
             #
             kwargs[attr] = {}
             #
@@ -228,19 +234,21 @@ class ClassLoadFromDictDependingOnDictValue:
 
 
 #
-class NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue:
+class DictOfClassLoadFromDictDependingOnDictValue:
     #
-    def __init__(self, clfddodv: ClassLoadFromDictDependingOnDictValue) -> None:
+    def __init__(self, clfddodv: ClassLoadFromDictDependingOnDictValue, default_value: Optional[Any] = NoDefaultValues()) -> None:
         #
         self.clfddodv: ClassLoadFromDictDependingOnDictValue = clfddodv
+        self.default_value: Optional[Any] = default_value
 
 
 #
-class NoDefaultValueDictOfClassLoadFromDict:
+class DictOfClassLoadFromDict:
     #
-    def __init__(self, clfd: ClassLoadFromDict) -> None:
+    def __init__(self, clfd: ClassLoadFromDict, default_value: Optional[Any] = NoDefaultValues()) -> None:
         #
         self.clfd: ClassLoadFromDict = clfd
+        self.default_value: Optional[Any] = default_value
 
 
 #
@@ -523,92 +531,6 @@ class Room:
 
 
 #
-class End:
-    #
-    def to_dict(self) -> dict:
-        #
-        return {
-            "end_type_": "End"
-        }
-
-
-#
-class EndOneOf(End):
-    #
-    def __init__(self, end_type: str, lst_of_ends: list[ End ]) -> None:
-        #
-        super().__init__()
-        #
-        self.lst: list[ End ] = lst_of_ends
-
-    #
-    def to_dict(self) -> dict:
-        #
-        return {
-            "end_type_": "EndOneOf",
-            "lst": [
-                end.to_dict() for end in self.lst
-            ]
-        }
-
-
-#
-class EndAllOf(End):
-    #
-    def __init__(self, end_type: str, lst_of_ends: list[ End ]) -> None:
-        #
-        super().__init__()
-        #
-        self.lst: list[ End ] = lst_of_ends
-
-    #
-    def to_dict(self) -> dict:
-        #
-        return {
-            "end_type_": "EndAllOf",
-            "lst": [
-                end.to_dict() for end in self.lst
-            ]
-        }
-
-
-#
-class EndInsideRoom(End):
-    #
-    def __init__(self, end_type: str, room_id: str) -> None:
-        #
-        super().__init__()
-        #
-        self.room_id: str = room_id
-
-    #
-    def to_dict(self) -> dict:
-        #
-        return {
-            "end_type_": "EndInsideRoom",
-            "room_id": self.room_id
-        }
-
-
-#
-class EndEntityDead(End):
-    #
-    def __init__(self, end_type: str, entity_id: str) -> None:
-        #
-        super().__init__()
-        #
-        self.entity_id: str = entity_id
-
-    #
-    def to_dict(self) -> dict:
-        #
-        return {
-            "end_type_": "EndEntityDead",
-            "entity_id": self.entity_id
-        }
-
-
-#
 class Game:
     #
     def __init__(
@@ -619,9 +541,12 @@ class Game:
             things: dict[str, Thing],
             rooms: dict[str, Room],
             variables: dict[str, Any],
-            end: End,
+            scenes: dict[str, Scene],
+            events: dict[str, Event],
+            missions: dict[str, Mission],
             players: list[str],
-            nb_turns: int = 0
+            nb_turns: int = 0,
+            imports: list[str] = []
         ) -> None:
         #
         self.game_name: str = game_name
@@ -630,10 +555,13 @@ class Game:
         self.things: dict[str, Thing] = things
         self.rooms: dict[str, Room] = rooms
         self.variables: dict[str, Any] = variables
-        self.end: End = end
+        self.scenes: dict[str, Scene] = scenes
+        self.events: dict[str, Event] = events
+        self.missions: dict[str, Mission] = missions
         self.nb_turns: int = nb_turns
         self.players: list[str] = players
         self.nb_players: int = len(self.players)
+        self.imports: list[str] = imports
         self.current_player: int = 0
         self.history: list[Result] = []
 
@@ -656,8 +584,15 @@ class Game:
             "things": {},
             "rooms": {},
             "variables": self.variables,
-            "end": self.end.to_dict(),
-            "players": self.players
+            "scenes": {},
+            "events": {},
+            "missions": {},
+            "players": self.players,
+            "current_player": self.current_player,
+            "nb_turns": self.nb_turns,
+            "history": [
+                r.to_dict() for r in self.history
+            ]
         }
 
         #
@@ -667,6 +602,15 @@ class Game:
         #
         for k in self.rooms:
             res["rooms"][k] = self.rooms[k].to_dict()
+        #
+        for k in self.scenes:
+            res["scenes"][k] = self.scenes[k].to_dict()
+        #
+        for k in self.events:
+            res["events"][k] = self.events[k].to_dict()
+        #
+        for k in self.missions:
+            res["missions"][k] = self.missions[k].to_dict()
 
         #
         return res
@@ -688,19 +632,99 @@ class Game:
 
 
 #
-def load_interactive_fiction_model_from_file(filepath: str, game_save_format: str = "JSON") -> Game:
+def fusion_games(games: list[Game]) -> Game:
+    #
+    if len(games) == 0:
+        raise SystemError("There are no games to fusion !")
+    #
+    game: Game = games[0]
+    #
+    attr: str
+    elt_id: str
+    #
+    other_game: Game
+    i: int
+    for i in range(1, len(games)):
+        #
+        other_game = games[i]
+
+        #
+        for attr in ["game_name", "game_description", "game_author"]:
+            #
+            if getattr(game, attr) == "":
+                setattr(game, attr, getattr(other_game, attr))
+
+        #
+        for attr in ["things", "rooms"]:
+            #
+            other_game_dict: dict = getattr(other_game, attr)
+            game_dict: dict = getattr(game, attr)
+            #
+            for elt_id in other_game_dict:
+                #
+                if elt_id not in game_dict:
+                    game_dict[elt_id] = other_game_dict[elt_id]
+
+        # TODO: Add the other things to fusion
+        pass
+
+    #
+    return game
+
+
+#
+def load_interactive_fiction_model_from_file(filepath: str, game_save_format: str = "JSON", already_imported: set[str] = set()) -> Game:
+    #
+    if not os.path.isabs(filepath):
+        filepath = os.path.abspath(filepath)
+
     #
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"Error: file not found : `{filepath}`")
+
     #
     with open(filepath, "r", encoding="utf-8") as f:
         dict_: dict = json.load(f)
+
     #
-    return create_class_with_attributes_or_default_values_from_dict(
+    game: Game = create_class_with_attributes_or_default_values_from_dict(
         class_name=Game,
         in_dict=dict_,
         type_="Game"
     )
+
+    #
+    already_imported.add(filepath)
+
+    #
+    import_filepath: str
+    import_path: str
+    imported_games: list[Game] = []
+    for import_path in game.imports:
+        #
+        import_filepath = os.path.join( os.path.dirname(filepath), import_path )
+        #
+        if import_filepath in already_imported:
+            continue
+
+        #
+        already_imported.add(import_filepath)
+
+        #
+        imported_games.append(
+            load_interactive_fiction_model_from_file(
+                filepath=import_filepath,
+                game_save_format=game_save_format,
+                already_imported=already_imported
+            )
+        )
+
+    #
+    if imported_games:
+        game = fusion_games([game] + imported_games)
+
+    #
+    return game
 
 
 
@@ -710,19 +734,6 @@ def save_interactive_fiction_model_to_file(game: Game, filepath: str, game_save_
     game.save_to_filepath(filepath, game_save_format)
     #
     return game
-
-
-#
-end_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
-    dict_key_value="end_type",
-    class_names_and_types={
-        "EndAllOf": (EndAllOf, "EndAllOf"),
-        "EndOneOf": (EndOneOf, "EndOneOf"),
-        "EndInsideRoom": (EndInsideRoom, "EndInsideRoom"),
-        "EndEntityDead": (EndEntityDead, "EndEntityDead")
-    },
-    default_value=End()
-)
 
 
 #
@@ -737,17 +748,19 @@ things_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependi
 
 
 #
-things_dict: NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue = NoDefaultValueDictOfClassLoadFromDictDependingOnDictValue(
-    clfddodv=things_classes
+things_dict: DictOfClassLoadFromDictDependingOnDictValue = DictOfClassLoadFromDictDependingOnDictValue(
+    clfddodv=things_classes,
+    default_value=EmptyDict()
 )
 
 
 #
-rooms_dict: NoDefaultValueDictOfClassLoadFromDict = NoDefaultValueDictOfClassLoadFromDict(
+rooms_dict: DictOfClassLoadFromDict = DictOfClassLoadFromDict(
     clfd=ClassLoadFromDict(
         class_name=Room,
         type_="Room"
-    )
+    ),
+    default_value=EmptyDict()
 )
 
 
@@ -799,29 +812,13 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "description": ""
     },
     "Game": {
-        "game_name": NoDefaultValues(),
-        "game_description": NoDefaultValues(),
+        "game_name": "",
+        "game_description": "",
         "game_author": "",
         "things": things_dict,
         "rooms": rooms_dict,
         "variables": EmptyDict(),
-        "end": end_classes,
-        "players": NoDefaultValues()
-    },
-    "EndInsideRoom": {
-        "end_type": NoDefaultValues(),
-        "room_id": NoDefaultValues()
-    },
-    "EndEntityDead": {
-        "end_type": NoDefaultValues(),
-        "entity_id": NoDefaultValues()
-    },
-    "EndAllOf": {
-        "end_type": NoDefaultValues(),
-        "lst": EmptyList()
-    },
-    "EndAnyOf": {
-        "end_type": NoDefaultValues(),
-        "lst": EmptyList()
+        "players": EmptyList(),
+        "imports": EmptyList()
     }
 }

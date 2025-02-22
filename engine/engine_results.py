@@ -60,6 +60,13 @@ class Result:
         #
         return "[RESULT PLACEHOLDER]"
 
+    #
+    def to_dict(self) -> dict:
+        #
+        return {
+            "result_type": "Result"
+        }
+
 
 
 #

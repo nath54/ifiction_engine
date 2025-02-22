@@ -10,6 +10,13 @@ class Action:
         # GENERIC ABSTRACT CLASS
         pass
 
+    #
+    def to_dict(self) -> dict:
+        #
+        return {
+            "action_type": "action"
+        }
+
 
 #
 class ActionText(Action):

@@ -1,0 +1,16 @@
+{
+    "imports": [
+        "map1/map1.json",
+        "players.json"
+    ],
+    "game_name": "Test with imports 1",
+    "game_description": "Simple test",
+    "game_author": "Nathan Cerisara (aka github.com/nath54)",
+    "end": {
+        "end_type": "EndInsideRoom",
+        "room_id": "room2"
+    },
+    "variables": {},
+    "players": ["player1"],
+    "nb_turns": 0
+}

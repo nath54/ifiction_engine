@@ -8,5 +8,15 @@ class Scene:
         self.scene_id: str = scene_id
         self.scenes_actions: list[Action] = scenes_actions
 
+    #
+    def to_dict(self) -> dict:
+        #
+        return {
+            "scene_id": self.scene_id,
+            "scenes_actions": [
+                a.to_dict() for a in self.scenes_actions
+            ]
+        }
+
 
 

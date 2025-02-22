@@ -9,6 +9,13 @@ class Mission:
         # ABSTRACT CLASS
         self.mission_id: str = mission_id
 
+    #
+    def to_dict(self) -> dict:
+        #
+        return {
+            "mission_type": "Mission"
+        }
+
 
 #
 class MissionRoom(Mission):

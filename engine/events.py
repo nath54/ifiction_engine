@@ -9,6 +9,13 @@ class Event:
         #
         # ABSTRACT GENERIC CLASS
 
+    #
+    def to_dict(self) -> dict:
+        #
+        return {
+            "event_type": "Event"
+        }
+
 
 #
 class EventMission(Event):

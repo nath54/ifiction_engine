@@ -1,0 +1,11 @@
+{
+    "things": {
+        "player1": {
+            "type": "entity",
+            "id": "player1",
+            "name": "Player",
+            "room": "room1",
+            "inventory": {}
+        }
+    }
+}

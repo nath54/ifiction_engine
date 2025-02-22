@@ -1,0 +1,76 @@
+{
+    "game_name": "Test with imports 1",
+    "game_author": "Nathan Cerisara (aka github.com/nath54)",
+    "things": {
+        "door1": {
+            "id": "door1",
+            "name": "door",
+            "description": "a simple door",
+            "brief_description": "",
+            "attributes": [
+                "openable"
+            ],
+            "parts": [],
+            "part_of": null,
+            "is_open": 0,
+            "is_locked": 0,
+            "unlocks": [],
+            "contains": {}
+        },
+        "player1": {
+            "id": "player1",
+            "name": "Player",
+            "description": "",
+            "brief_description": "",
+            "attributes": [],
+            "room": "room1",
+            "inventory": {},
+            "life_system": {
+                "max_pv": 100,
+                "current_pv": 100,
+                "state": {}
+            }
+        }
+    },
+    "rooms": {
+        "room1": {
+            "room_name": "Room 1",
+            "accesses": [
+                {
+                    "thing_id": "door1",
+                    "direction": "east",
+                    "links_to": "room2"
+                }
+            ],
+            "description": "a simple empty room",
+            "things_inside": {
+                "door1": 1,
+                "player1": 1
+            }
+        },
+        "room2": {
+            "room_name": "Room 2",
+            "accesses": [
+                {
+                    "thing_id": "door1",
+                    "direction": "west",
+                    "links_to": "room1"
+                }
+            ],
+            "description": "a simple empty room",
+            "things_inside": {
+                "door1": 1
+            }
+        }
+    },
+    "variables": {},
+    "scenes": {},
+    "events": {},
+    "missions": {},
+    "players": [
+        "player1"
+    ],
+    "current_player": 0,
+    "nb_turns": 0,
+    "history": []
+}

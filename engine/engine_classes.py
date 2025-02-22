@@ -98,6 +98,33 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
                 #
                 raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\nNo default values authorized for this attribute.\n\nDictionary : {in_dict}\n\n")
             #
+            elif isinstance(caadv, DictOfClassLoadFromDictDependingOnDictValue):
+                #
+                if isinstance(caadv.default_value, NoDefaultValues):
+                    #
+                    raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\nNo default values authorized for this attribute.\n\nDictionary : {in_dict}\n\n")
+                else:
+                    kwargs[attr] = create_default_value(default_value=caadv.default_value, attr=attr, in_dict=in_dict, type_=type_)
+                    continue
+            #
+            elif isinstance(caadv, DictOfClassLoadFromDict):
+                #
+                if isinstance(caadv.default_value, NoDefaultValues):
+                    #
+                    raise KeyError(f"The attribute `{attr}` not in the dictionary for the type_ {type_} !\nNo default values authorized for this attribute.\n\nDictionary : {in_dict}\n\n")
+                else:
+                    kwargs[attr] = create_default_value(default_value=caadv.default_value, attr=attr, in_dict=in_dict, type_=type_)
+                    continue
+            #
+            elif isinstance(caadv, ClassLoadFromDict):
+                #
+                kwargs[attr] = create_class_with_attributes_or_default_values_from_dict(
+                    class_name=caadv.class_name,
+                    type_=caadv.type_,
+                    in_dict=None
+                )
+                continue
+            #
             kwargs[attr] = create_default_value(default_value=caadv, attr=attr, in_dict=in_dict, type_=type_)
             #
             continue
@@ -161,9 +188,14 @@ def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict, type_: s
 
 
 #
-def create_class_with_attributes_or_default_values_from_dict(class_name: Callable, in_dict: dict, type_: str) -> Any:
+def create_class_with_attributes_or_default_values_from_dict(class_name: Callable, in_dict: Optional[dict], type_: str) -> Any:
+    #
+    if in_dict is None:
+        in_dict = {}
     #
     kwargs: dict = create_kwargs(in_dict=in_dict, type_=type_)
+    #
+    print(f"DEBUG | create_class_with_attributes_or_default_values_from_dict\n\t- class_name: {class_name}\n\t- type_: {type_}\n\t- in_dict: {in_dict}\n\t- kwargs = {kwargs}")
     #
     return class_name(**kwargs)
 
@@ -414,6 +446,9 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
         in_dict=dict_,
         type_="Game"
     )
+
+    #
+    print(f"DEBUG | game = {game}")
 
     #
     already_imported.add(filepath)

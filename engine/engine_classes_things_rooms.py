@@ -18,7 +18,8 @@ class Thing:
             name: str,
             description: str = "",
             brief_description: str = "",
-            attributes: list[str] = []
+            attributes: list[str] = [],
+            presets: list[str] = []
         ) -> None:
         #
         self.id: str = id_
@@ -26,6 +27,7 @@ class Thing:
         self.description: str = description
         self.brief_description: str = brief_description
         self.attributes: list[str] = attributes
+        self.presets: list[str] = presets
 
     #
     def to_dict(self) -> dict:

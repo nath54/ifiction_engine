@@ -483,6 +483,38 @@ def verif_game(game: Game) -> None:
     # TODO
     pass
 
+
+#
+def apply_presets(game: Game) -> Game:
+
+    #
+    preset: Thing
+    preset_id: str
+    thing: Thing
+    thing_id: str
+    for thing_id in game.things:
+
+        #
+        thing = game.things[thing_id]
+
+        #
+        for preset_id in thing.presets:
+
+            #
+            if preset_id not in game.things:
+                #
+                raise IndexError(f"Preset not found in game.things : `{preset_id}` !")
+
+            #
+            preset = game.things[preset_id]
+
+            # TODO
+            pass
+
+    #
+    return game
+
+
 #
 def fusion_games(games: list[Game]) -> Game:
     #
@@ -584,6 +616,8 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
     #
     if is_root:
         #
+        game = apply_presets(game=game)
+        #
         verif_game(game=game)
 
     #
@@ -681,7 +715,8 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "name": NoDefaultValues(),
         "description": "",
         "brief_description": "",
-        "attributes": EmptyList()
+        "attributes": EmptyList(),
+        "presets": EmptyList()
     },
     "Object": {
         "id": NoDefaultValues(),

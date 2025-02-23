@@ -11,7 +11,9 @@ class Mission:
 ALL_ATTRIBUTES: list[str] = [
     "openable",         # The object can be open or close
     "closed",           # Indicates the object is closed, must be openable, if not indicated, it means the object is open
-    "locked"            # Indicates the object is locked, must be openable, if not indicated, it means the object is not locked
+    "locked",           # Indicates the object is locked, must be openable, if not indicated, it means the object is not locked
+    "item",             # Indicates the object can be taken by a player
+    "container",        # Indicates the object can contain other objects
 ]
 
 #

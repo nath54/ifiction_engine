@@ -10,6 +10,8 @@ from . import scenes as scn
 from . import actions as act
 from . import events as evt
 from . import engine_results as er
+#
+from .lib_direction import parse_directions
 
 #
 def verify_keys_in_dict(dictionary: dict, keys: list[str], type_: str) -> None:
@@ -379,6 +381,105 @@ class Game:
 
 #
 def verif_game(game: Game) -> None:
+
+    #
+    ids_to_verify: list[tuple[str, dict]] = []
+
+    # Trucs à vérifier:
+    #    - les ids des trucs désignés, il faut vérifier que les ids pointent vers des choses existantes
+
+    #
+    thing: Thing
+    thing_id: str
+    for thing_id in game.things:
+
+        #
+        thing = game.things[thing_id]
+
+        # TODO: Vérifier les pointages des unlock, parts, part_of, contains, inventory, missions, ...
+        pass
+
+        #
+        if isinstance(thing, Object):
+            #
+            pass
+
+        #
+        elif isinstance(thing, Entity):
+            #
+            pass
+
+            #
+            if isinstance(thing, Player):
+                #
+                pass
+
+    #
+    room: Room
+    room_id: str
+    direct: Optional[str]
+    for room_id in game.rooms:
+
+        #
+        room = game.rooms[room_id]
+
+        # TODO: Vérifier les pointages des accès, et le world-direction
+        pass
+
+        #
+        access: Access
+        for access in room.accesses:
+            #
+            ids_to_verify.append( (access.links_to, game.rooms) )
+            ids_to_verify.append( (access.thing_id, game.things) )
+            #
+            direct = parse_directions(access.direction)
+            #
+            if direct is None:
+                #
+                raise SyntaxError(f"Access direction is not a direction : `{access.direction}` from access : {access} from room : {room}")
+
+    #
+    scene: scn.Scene
+    scene_id: str
+    for scene_id in game.scenes:
+
+        #
+        scene = game.scenes[scene_id]
+
+        # TODO: Selon les types d'evenements, vérifier les pointages
+        pass
+
+    #
+    event: evt.Event
+    event_id: str
+    for event_id in game.events:
+
+        #
+        event = game.events[event_id]
+
+        # TODO: Selon les types d'evenements, vérifier les pointages
+        pass
+
+    #
+    mission: mis.Mission
+    mission_id: str
+    for mission_id in game.missions:
+
+        #
+        mission = game.missions[mission_id]
+
+        # TODO: Selon le type des missions, vérifier les pointages
+        pass
+
+    #
+    player_id: str
+    for player_id in game.players:
+        #
+
+        # TODO: Vérifier que l'id existe et que c'est bien un type Player
+        pass
+
     # TODO
     pass
 

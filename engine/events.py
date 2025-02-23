@@ -114,7 +114,7 @@ class EventActionThing(Event):
         #
         super().__init__(scene_id=scene_id)
         #
-        self.thing_id: str = thing_id
+        self.thing_id: str | list[str] = thing_id
         self.action_type: str = action_type
         self.who: str | list[str] = who
 

@@ -7,7 +7,12 @@ from typing import Optional, Any
 class Mission:
     pass
 
-
+#
+ALL_ATTRIBUTES: list[str] = [
+    "openable",         # The object can be open or close
+    "closed",           # Indicates the object is closed, must be openable, if not indicated, it means the object is open
+    "locked"            # Indicates the object is locked, must be openable, if not indicated, it means the object is not locked
+]
 
 #
 class Thing:

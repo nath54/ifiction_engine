@@ -4,7 +4,7 @@ from typing import Any, Optional, Callable, Tuple
 import os
 import json
 #
-from .engine_classes_things_rooms import Thing, Object, LifeSystem, Entity, Player, Access, Room
+from .engine_classes_things_rooms import Thing, Object, LifeSystem, Entity, Player, Access, Room, ALL_ATTRIBUTES
 from . import missions as mis
 from . import scenes as scn
 from . import actions as act
@@ -380,14 +380,48 @@ class Game:
 
 
 #
-def verif_game(game: Game) -> None:
-
+def verif_id(elt_id: str, d: dict[str, Any]) -> Any:
     #
-    ids_to_verify: list[tuple[str, dict]] = []
+    if elt_id not in d:
+        #
+        raise KeyError(f"Error: Id `{elt_id}` points out toward unknown object !")
+    #
+    return d[elt_id]
+
+#
+def verif_list_ids(elt_ids: str | list[str], d: dict[str, Any]) -> None:
+    #
+    if isinstance(elt_ids, str):
+        #
+        elt_ids = [elt_ids]
+    #
+    elt_id: str
+    for elt_id in elt_ids:
+        verif_id(elt_id=elt_id, d=d)
+
+
+#
+def verif_scene_action_label_exists(scene: scn.Scene, label_name: str) -> None:
+    #
+    action: act.Action
+    #
+    for action in scene.scenes_actions:
+        #
+        if isinstance(action, act.ActionLabel) and action.label_name == label_name:
+            #
+            return
+    #
+    raise KeyError(f"Error : ActionLabel with label_name `{label_name}` not found in scene's actions of scene `{scene.scene_id}` !")
+
+
+#
+def verif_game(game: Game) -> None:
 
     # Trucs à vérifier:
     #    - les ids des trucs désignés, il faut vérifier que les ids pointent vers des choses existantes
 
+    #
+    attr: str
     #
     thing: Thing
     thing_id: str
@@ -396,23 +430,46 @@ def verif_game(game: Game) -> None:
         #
         thing = game.things[thing_id]
 
+        #
+        if thing.id != thing_id:
+            #
+            raise IndexError(f"Error : Thing has different id that indexed from ! thing.id = `{thing.id}` != thing_id = {thing_id}")
+
         # TODO: Vérifier les pointages des unlock, parts, part_of, contains, inventory, missions, ...
-        pass
+
+        #
+        verif_list_ids(thing.presets, game.things)
+
+        # Verif attributes
+        for attr in thing.attributes:
+            #
+            if attr not in ALL_ATTRIBUTES:
+                #
+                raise AttributeError(f"Error, unknown attribute `{attr}` for thing of id `{thing.id}`, the list of known attributes are : {ALL_ATTRIBUTES} ")
 
         #
         if isinstance(thing, Object):
+
             #
-            pass
+            verif_list_ids(thing.parts, game.things)
+            verif_list_ids(thing.unlocks, game.things)
+            verif_list_ids(list(thing.contains.keys()), game.things)
+            verif_list_ids(thing.easy_to_unlock_from, game.rooms)
+
+            #
+            if thing.part_of is not None:
+                #
+                verif_id(thing.part_of, game.things)
 
         #
         elif isinstance(thing, Entity):
             #
-            pass
+            verif_list_ids(list(thing.inventory.keys()), game.things)
 
             #
             if isinstance(thing, Player):
                 #
-                pass
+                verif_list_ids(thing.missions, game.missions)
 
     #
     room: Room
@@ -423,15 +480,14 @@ def verif_game(game: Game) -> None:
         #
         room = game.rooms[room_id]
 
-        # TODO: Vérifier les pointages des accès, et le world-direction
-        pass
+        # DONE: Vérifier les pointages des accès, et le world-direction
 
         #
         access: Access
         for access in room.accesses:
             #
-            ids_to_verify.append( (access.links_to, game.rooms) )
-            ids_to_verify.append( (access.thing_id, game.things) )
+            verif_id(access.links_to, game.rooms)
+            verif_id(access.thing_id, game.things)
             #
             direct = parse_directions(access.direction)
             #
@@ -440,6 +496,8 @@ def verif_game(game: Game) -> None:
                 raise SyntaxError(f"Access direction is not a direction : `{access.direction}` from access : {access} from room : {room}")
 
     #
+    action: act.Action
+    #
     scene: scn.Scene
     scene_id: str
     for scene_id in game.scenes:
@@ -447,8 +505,39 @@ def verif_game(game: Game) -> None:
         #
         scene = game.scenes[scene_id]
 
-        # TODO: Selon les types d'evenements, vérifier les pointages
-        pass
+        #
+        if scene.scene_id != scene_id:
+            #
+            raise IndexError(f"Error : Scene has different id that indexed from ! scene.scene_id = `{scene.scene_id}` != scene_id = {scene_id}")
+
+        #
+        for action in scene.scenes_actions:
+
+            #
+            if isinstance(action, act.ActionJump) or isinstance(action, act.ActionConditionalJump):
+                #
+                verif_scene_action_label_exists(scene=scene, label_name=action.label_name)
+            #
+            elif isinstance(action, act.ActionChangeScene):
+                #
+                verif_id(action.scene_id, game.scenes)
+            #
+            elif isinstance(action, act.ActionChangeElt):
+                #
+                if action.elt_type in ["thing", "entity", "object", "player"]:
+                    verif_id(action.elt_id, game.things)
+                #
+                elif action.elt_type == "room":
+                    verif_id(action.elt_id, game.rooms)
+                #
+                elif action.elt_type == "scene":
+                    verif_id(action.elt_id, game.scenes)
+                #
+                elif action.elt_type == "events":
+                    verif_id(action.elt_id, game.events)
+                #
+                elif action.elt_type == "missions":
+                    verif_id(action.elt_id, game.missions)
 
     #
     event: evt.Event
@@ -458,8 +547,20 @@ def verif_game(game: Game) -> None:
         #
         event = game.events[event_id]
 
-        # TODO: Selon les types d'evenements, vérifier les pointages
-        pass
+        # DONE: Selon les types d'evenements, vérifier les pointages
+
+        if isinstance(event, evt.EventMission):
+            #
+            verif_list_ids(event.mission_id, game.missions)
+        #
+        elif isinstance(event, evt.EventRoom):
+            #
+            verif_list_ids(event.room_id, game.rooms)
+        #
+        elif isinstance(event, evt.EventActionThing):
+            #
+            verif_list_ids(event.thing_id, game.things)
+            verif_list_ids(event.who, game.things)
 
     #
     mission: mis.Mission
@@ -469,19 +570,39 @@ def verif_game(game: Game) -> None:
         #
         mission = game.missions[mission_id]
 
-        # TODO: Selon le type des missions, vérifier les pointages
-        pass
+        # DONE: Selon le type des missions, vérifier les pointages
+
+        #
+        if isinstance(mission, mis.MissionRoom):
+            #
+            verif_list_ids(mission.room_id, game.rooms)
+
+        #
+        elif isinstance(mission, mis.MissionKillEntity):
+            #
+            verif_list_ids(mission.entity_id, game.things)
+
+
+    # DONE: vérifier qu'il y a au moins 1 joueur
+    if not game.players:
+        #
+        raise ValueError("Error: Empty player list !")
 
     #
+    res: Any
     player_id: str
     for player_id in game.players:
         #
 
-        # TODO: Vérifier que l'id existe et que c'est bien un type Player
-        pass
+        # DONE: Vérifier que l'id existe et que c'est bien un type Player
 
-    # TODO
-    pass
+        #
+        res = verif_id(player_id, game.things)
+        #
+        if not isinstance(res, Player):
+            #
+            raise TypeError(f"Error: thing with id `{player_id}`, marked as player, is not of type Player !")
+
 
 
 #

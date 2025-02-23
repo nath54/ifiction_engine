@@ -12,6 +12,8 @@ from . import events as evt
 from . import engine_results as er
 #
 from .lib_direction import parse_directions
+from . import lib_class_fusions as lcf
+
 
 #
 def verify_keys_in_dict(dictionary: dict, keys: list[str], type_: str) -> None:
@@ -508,8 +510,62 @@ def apply_presets(game: Game) -> Game:
             #
             preset = game.things[preset_id]
 
-            # TODO
-            pass
+            #
+            lcf.fusion_elts_str_or_None(
+                obj_A=thing,
+                obj_B=preset,
+                lst_attr=["name", "description", "brief_description"]
+            )
+
+            #
+            lcf.fusion_lists_str(
+                obj_A=thing,
+                obj_B=preset,
+                lst_attr=["attributes"]
+            )
+
+            #
+            if isinstance(thing, Object) and isinstance(preset, Object):
+
+                #
+                lcf.fusion_lists_str(
+                    obj_A=thing,
+                    obj_B=preset,
+                    lst_attr=["parts", "unlocks", "easy_to_unlock_from"]
+                )
+
+                #
+                lcf.fusion_dict_str(
+                    obj_A=thing,
+                    obj_B=preset,
+                    lst_attr=["contains"]
+                )
+
+            #
+            elif isinstance(thing, Entity) and isinstance(preset, Entity):
+
+                #
+                lcf.fusion_elts_str_or_None(
+                    obj_A=thing,
+                    obj_B=preset,
+                    lst_attr=["room"]
+                )
+
+                #
+                lcf.fusion_dict_str(
+                    obj_A=thing,
+                    obj_B=preset,
+                    lst_attr=["inventory"]
+                )
+
+                if isinstance(thing, Player) and isinstance(preset, Player):
+
+                    #
+                    lcf.fusion_dict_str(
+                        obj_A=thing,
+                        obj_B=preset,
+                        lst_attr=["missions"]
+                    )
 
     #
     return game
@@ -533,21 +589,18 @@ def fusion_games(games: list[Game]) -> Game:
         other_game = games[i]
 
         #
-        for attr in ["game_name", "game_description", "game_author"]:
-            #
-            if getattr(game, attr) == "":
-                setattr(game, attr, getattr(other_game, attr))
+        lcf.fusion_elts_str_or_None(
+            obj_A=game,
+            obj_B=other_game,
+            lst_attr=["game_name", "game_description", "game_author"]
+        )
 
         #
-        for attr in ["things", "rooms", "scenes", "events", "missions"]:
-            #
-            other_game_dict: dict = getattr(other_game, attr)
-            game_dict: dict = getattr(game, attr)
-            #
-            for elt_id in other_game_dict:
-                #
-                if elt_id not in game_dict:
-                    game_dict[elt_id] = other_game_dict[elt_id]
+        lcf.fusion_dict_str(
+            obj_A=game,
+            obj_B=other_game,
+            lst_attr=["things", "rooms", "scenes", "events", "missions"]
+        )
 
         # TODO: Add the other things to fusion
         pass

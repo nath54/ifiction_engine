@@ -215,6 +215,8 @@ class Player(Entity):
             inventory=inventory,
             life_system=life_system
         )
+        #
+        self.missions: dict[str, Mission] = {} if missions is None else missions
 
 
 #

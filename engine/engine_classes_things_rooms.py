@@ -202,7 +202,7 @@ class Player(Entity):
         attributes: list[str] = [],
         inventory: Optional[dict[str, int]] = None,
         life_system: LifeSystem = LifeSystem(),
-        missions: Optional[dict[str, Mission]] = None
+        missions: list[str] = []
     ) -> None:
         #
         super().__init__(
@@ -216,7 +216,7 @@ class Player(Entity):
             life_system=life_system
         )
         #
-        self.missions: dict[str, Mission] = {} if missions is None else missions
+        self.missions: list[str] = []
 
 
 #

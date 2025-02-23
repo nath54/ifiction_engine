@@ -199,8 +199,6 @@ def create_class_with_attributes_or_default_values_from_dict(class_name: Callabl
     #
     kwargs: dict = create_kwargs(in_dict=in_dict, type_=type_)
     #
-    print(f"DEBUG | create_class_with_attributes_or_default_values_from_dict\n\t- class_name: {class_name}\n\t- type_: {type_}\n\t- in_dict: {in_dict}\n\t- kwargs = {kwargs}")
-    #
     return class_name(**kwargs)
 
 
@@ -579,9 +577,6 @@ def fusion_games(games: list[Game]) -> Game:
     #
     game: Game = games[0]
     #
-    attr: str
-    elt_id: str
-    #
     other_game: Game
     i: int
     for i in range(1, len(games)):
@@ -632,9 +627,6 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
         in_dict=dict_,
         type_="Game"
     )
-
-    #
-    print(f"DEBUG | game = {game}")
 
     #
     already_imported.add(filepath)
@@ -691,7 +683,8 @@ things_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependi
     dict_key_value="type",
     class_names_and_types={
         "entity": (Entity, "Entity"),
-        "object": (Object, "Object")
+        "object": (Object, "Object"),
+        "player": (Player, "Player")
     },
     default_value=None
 )
@@ -797,6 +790,17 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
         "room": NoDefaultValues(),
         "inventory": EmptyDict(),
         "life_system": ClassLoadFromDict(class_name=LifeSystem, type_="LifeSystem")
+    },
+    "Player": {
+        "id": NoDefaultValues(),
+        "name": NoDefaultValues(),
+        "description": "",
+        "brief_description": "",
+        "attributes": EmptyList(),
+        "room": NoDefaultValues(),
+        "inventory": EmptyDict(),
+        "life_system": ClassLoadFromDict(class_name=LifeSystem, type_="LifeSystem"),
+        "missions": EmptyList()
     },
     "Access": {
         "thing_id": NoDefaultValues(),

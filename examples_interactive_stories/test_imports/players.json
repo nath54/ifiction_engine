@@ -1,11 +1,12 @@
 {
     "things": {
         "player1": {
-            "type": "entity",
+            "type": "player",
             "id": "player1",
             "name": "Player",
             "room": "room1",
-            "inventory": {}
+            "inventory": {},
+            "missions": []
         }
     }
 }

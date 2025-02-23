@@ -4,11 +4,12 @@
     "game_author": "Nathan Cerisara (aka github.com/nath54)",
     "things": {
         "player1": {
-            "type": "entity",
+            "type": "player",
             "id": "player1",
             "name": "Player",
             "room": "room1",
-            "inventory": {}
+            "inventory": {},
+            "missions": []
         },
         "door1": {
             "type": "object",

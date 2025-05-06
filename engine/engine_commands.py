@@ -1841,11 +1841,10 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
-
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+    with open("command_list.md", "r", encoding="utf-8") as f:
+        #
+        interaction_system.write_to_output(txt=f"\nCommand list:\n{f.read()}\n\n")
 
     #
     return game

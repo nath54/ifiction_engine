@@ -13,8 +13,25 @@ MODEL_CONFIGS: dict[str, dict] = {
         # "n_gpu_layers": -1, # Uncomment to use GPU acceleration
         # "seed": 1337, # Uncomment to set a specific seed
         "n_ctx": 4096, # Uncomment to increase the context window - keeping the original size as a default
-    }
+    },
 
+    "gemma3": {
+        "repo_id": "google/gemma-3-4b-it-qat-q4_0-gguf",
+        "filename": "*q4_0.gguf", # Using q4_0 quantization as suggested by the ollama library page example
+        "verbose": False,
+        # "n_gpu_layers": -1, # Uncomment to use GPU acceleration
+        # "seed": 1337, # Uncomment to set a specific seed
+        "n_ctx": 4096, # Uncomment to increase the context window - keeping the original size as a default
+    },
+
+    "qwen3": {
+        "repo_id": "unsloth/Qwen3-4B-GGUF",
+        "filename": "Qwen3-4B-Q4_0.gguf", # Using q4_0 quantization as suggested by the ollama library page example
+        "verbose": False,
+        # "n_gpu_layers": -1, # Uncomment to use GPU acceleration
+        # "seed": 1337, # Uncomment to set a specific seed
+        "n_ctx": 4096, # Uncomment to increase the context window - keeping the original size as a default
+    }
 }
 
 
@@ -22,13 +39,13 @@ MODEL_CONFIGS: dict[str, dict] = {
 class LLMGenerate:
 
     #
-    def __init__(self, model_type: str = "phi3_mini_instruct") -> None:
+    def __init__(self, model_type: str = "gemma3", system_prompt: str = "You are an helpful assistant.") -> None:
 
         #
         self.llm: Llama = Llama.from_pretrained(**MODEL_CONFIGS[model_type])
 
         #
-        system_prompt: str = "You are a helpful assistant that provides meaningful analysis and useful comments on the given data."
+        system_prompt: str = system_prompt
 
     #
     def generate(self, user_prompt: str) -> str:

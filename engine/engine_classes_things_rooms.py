@@ -75,8 +75,6 @@ class Object(Thing):
             attributes: list[str] = [],
             parts: list[str] = [],
             part_of: Optional[str] = None,
-            is_open: int = 0,
-            is_locked: int = 0,
             unlocks: list[str] = [],
             contains: Optional[dict[str, int]] = None,
             easy_to_unlock_from: list[str] = []
@@ -92,8 +90,6 @@ class Object(Thing):
         #
         self.parts: list[str] = parts
         self.part_of: Optional[str] = part_of
-        self.is_open: int = is_open
-        self.is_locked: int = is_locked
         self.unlocks: list[str] = unlocks
         self.contains: dict[str, int] = {} if contains is None else contains
         self.easy_to_unlock_from: list[str] = easy_to_unlock_from
@@ -105,8 +101,6 @@ class Object(Thing):
         #
         res["parts"] = self.parts
         res["part_of"] = self.part_of
-        res["is_open"] = self.is_open
-        res["is_locked"] = self.is_locked
         res["unlocks"] = self.unlocks
         res["contains"] = self.contains
         #

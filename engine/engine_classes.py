@@ -5,10 +5,10 @@ import os
 import json
 #
 from .engine_classes_things_rooms import Thing, Object, LifeSystem, Entity, Player, Access, Room, ALL_ATTRIBUTES
-from . import missions as mis
-from . import scenes as scn
-from . import actions as act
-from . import events as evt
+from . import engine_classes_missions as mis
+from . import engine_classes_scenes as scn
+from . import engine_classes_actions as act
+from . import engine_classes_events as evt
 from . import engine_results as er
 #
 from .lib_direction import parse_directions

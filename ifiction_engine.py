@@ -59,7 +59,7 @@ if __name__ == "__main__":
         parsed_command: Optional[ecc.Command] = parse_command(command_input=command_input)
 
         #
-        if not parsed_command or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:
+        if parsed_command is None or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:
             #
             interaction_system.write_to_output(txt="Unkown Command\n")
             continue

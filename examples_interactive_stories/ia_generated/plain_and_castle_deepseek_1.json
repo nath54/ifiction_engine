@@ -1,0 +1,202 @@
+{
+    "game_name": "The Valley of Eldermere",
+    "game_description": "A mysterious valley with ancient secrets",
+    "game_author": "AI Assistant",
+    "things": {
+        "player": {
+            "type": "player",
+            "id": "player",
+            "name": "Adventurer",
+            "room": "eldermere_plains",
+            "inventory": {},
+            "life_system": {
+                "max_pv": 100,
+                "current_pv": 100
+            }
+        },
+
+        "manor_key": {
+            "type": "object",
+            "id": "manor_key",
+            "name": "ornate silver key",
+            "description": "An intricate key with vine engravings, slightly warm to the touch",
+            "attributes": ["item"],
+            "unlocks": ["manor_gate"]
+        },
+        "castle_key": {
+            "type": "object",
+            "id": "castle_key",
+            "name": "heavy iron key",
+            "description": "A large, blackened key that smells of oil and smoke",
+            "attributes": ["item"],
+            "unlocks": ["castle_gate"]
+        },
+
+        "old_oak": {
+            "type": "object",
+            "id": "old_oak",
+            "name": "ancient oak tree",
+            "description": "A gnarled oak that has stood for centuries. Its bark forms strange patterns that almost look like faces.",
+            "attributes": ["climbable"]
+        },
+        "stone_marker": {
+            "type": "object",
+            "id": "stone_marker",
+            "name": "weathered stone marker",
+            "description": "A moss-covered standing stone with faint runes. One side has been worn smooth by time.",
+            "attributes": ["readable"]
+        },
+
+        "mushroom_circle": {
+            "type": "object",
+            "id": "mushroom_circle",
+            "name": "fairy ring",
+            "description": "A perfect circle of glowing blue mushrooms. The air hums with energy when you stand near them.",
+            "attributes": ["magical"]
+        },
+        "hidden_cache": {
+            "type": "object",
+            "id": "hidden_cache",
+            "name": "hidden hollow",
+            "description": "A cleverly concealed space beneath tree roots, barely noticeable unless you're searching for it.",
+            "attributes": ["container", "hidden"],
+            "contains": {
+                "manor_key": 1
+            }
+        },
+
+        "castle_gate": {
+            "type": "object",
+            "id": "castle_gate",
+            "name": "castle gate",
+            "description": "A massive iron-bound gate with a complex locking mechanism. The metal is cold to the touch.",
+            "attributes": ["openable", "locked"]
+        },
+        "tapestry": {
+            "type": "object",
+            "id": "tapestry",
+            "name": "ancient tapestry",
+            "description": "A faded tapestry depicting the valley's history. Parts have been eaten by moths, leaving gaps in the story.",
+            "attributes": ["movable"]
+        },
+
+        "manor_gate": {
+            "type": "object",
+            "id": "manor_gate",
+            "name": "manor gate",
+            "description": "An elegant wrought-iron gate covered in vine motifs. It's slightly ajar but won't budge further.",
+            "attributes": ["openable", "locked"]
+        },
+        "dusty_journal": {
+            "type": "object",
+            "id": "dusty_journal",
+            "name": "dusty journal",
+            "description": "A leather-bound journal with yellowed pages. The handwriting is elegant but hurried.",
+            "attributes": ["readable"]
+        }
+    },
+    "rooms": {
+        "eldermere_plains": {
+            "room_name": "Eldermere Plains",
+            "description": "Rolling golden plains stretch in every direction, dotted with wildflowers. To the north lies a dark forest, while to the east a crumbling castle stands on a hill. The wind carries the scent of earth and distant rain.",
+            "things_inside": {
+                "old_oak": 1,
+                "stone_marker": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "path_to_forest",
+                    "direction": "north",
+                    "links_to": "whispering_forest"
+                },
+                {
+                    "thing_id": "path_to_castle",
+                    "direction": "east",
+                    "links_to": "castle_approach"
+                }
+            ]
+        },
+        "whispering_forest": {
+            "room_name": "Whispering Forest",
+            "description": "Ancient trees tower overhead, their leaves filtering the sunlight into a green haze. Strange whispers seem to come from the very air itself. A narrow path winds deeper into the woods, while the plains are visible to the south.",
+            "things_inside": {
+                "mushroom_circle": 1,
+                "hidden_cache": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "path_to_plains",
+                    "direction": "south",
+                    "links_to": "eldermere_plains"
+                },
+                {
+                    "thing_id": "overgrown_path",
+                    "direction": "west",
+                    "links_to": "hidden_manor_gate"
+                }
+            ]
+        },
+        "hidden_manor_gate": {
+            "room_name": "Hidden Manor Gate",
+            "description": "The trees suddenly part to reveal an overgrown courtyard before an elegant but neglected manor. The iron gate stands as the only barrier between you and whatever secrets lie within.",
+            "things_inside": {
+                "manor_gate": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "path_to_forest",
+                    "direction": "east",
+                    "links_to": "whispering_forest"
+                }
+            ]
+        },
+        "castle_approach": {
+            "room_name": "Castle Approach",
+            "description": "The path climbs steeply toward the castle gates. Up close, the stonework is more weathered than it appeared from afar, with cracks running through the ancient masonry. The plains stretch west below you.",
+            "things_inside": {
+                "castle_gate": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "path_to_plains",
+                    "direction": "west",
+                    "links_to": "eldermere_plains"
+                }
+            ]
+        },
+        "castle_courtyard": {
+            "room_name": "Castle Courtyard",
+            "description": "Beyond the gate lies a surprisingly intact courtyard. Tattered banners flutter in the wind, and the remains of market stalls suggest this place was once full of life.",
+            "things_inside": {
+                "tapestry": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "castle_gate",
+                    "direction": "south",
+                    "links_to": "castle_approach"
+                }
+            ]
+        },
+        "manor_garden": {
+            "room_name": "Manor Gardens",
+            "description": "The once-manicured gardens have gone wild, with roses climbing over statues and ivy covering the stone paths. The manor's entrance stands to the north, while the gate lies south.",
+            "things_inside": {
+                "dusty_journal": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "manor_gate",
+                    "direction": "south",
+                    "links_to": "hidden_manor_gate"
+                }
+            ]
+        }
+    },
+    "variables": {
+        "forest_whispers": false,
+        "castle_secret_found": false
+    },
+    "players": ["player"],
+    "nb_turns": 0
+}

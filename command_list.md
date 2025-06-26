@@ -92,7 +92,7 @@ Directions:
 ## Interaction with yourself
 
 - `(wear/dress) [something]`: Wear clothing or equipment. (ex: `wear helmet`)
-- `(undress/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `remove jacket`)
+- `(undress/take off/strip/pull off/shed) [something]`: Take off clothing or equipment. (ex: `take off jacket`)
 - `(inventory/stock)`: List the objects in your inventory. (ex: `inv`)
 - `wait ?{[duration]}`: Pause and let time pass. (ex: `wait 5 minutes`)
 - `(sleep/nap)`: Rest and possibly recover. (ex: `sleep`)

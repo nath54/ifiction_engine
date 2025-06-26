@@ -1,6 +1,10 @@
+#
+from typing import Any
+#
 from .engine_classes_actions import Action
 
 
+#
 class Scene:
     #
     def __init__(self, scene_id: str, scenes_actions: list[Action]) -> None:
@@ -9,7 +13,7 @@ class Scene:
         self.scenes_actions: list[Action] = scenes_actions
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "scene_id": self.scene_id,

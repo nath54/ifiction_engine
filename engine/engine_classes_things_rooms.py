@@ -13,7 +13,31 @@ ALL_ATTRIBUTES: list[str] = [
     "closed",           # Indicates the object is closed, must be openable, if not indicated, it means the object is open
     "locked",           # Indicates the object is locked, must be openable, if not indicated, it means the object is not locked
     "item",             # Indicates the object can be taken by a player
-    "container",        # Indicates the object can contain other objects
+    "container",        # Indicates the object can contain other objects,
+    "wearable",         # IA GENERATED GROK
+    "consumable",       # IA GENERATED GROK
+    "readable",         # IA GENERATED DEEPSEEK
+    "weapon",           # IA GENERATED DEEPSEEK
+    "lightable",        # IA GENERATED DEEPSEEK
+    "hidden",           # IA GENERATED DEEPSEEK
+    "movable",          # IA GENERATED DEEPSEEK
+    "magically_locked", # IA GENERATED DEEPSEEK
+    "climbable",        # IA GENERATED DEEPSEEK
+    "magical",          # IA GENERATED DEEPSEEK
+    "scenery",          # IA GENERATED GEMINI
+    "inspectable",      # IA GENERATED GEMINI
+    "concealing",       # IA GENERATED GEMINI
+    "blocking",         # IA GENERATED GEMINI
+    "breakable",        # IA GENERATED GEMINI
+    "interactable",     # IA GENERATED GEMINI
+    "hearable",         # IA GENERATED GEMINI
+    "pushable",         # IA GENERAETD GEMINI
+    "fixture",          # IA GENERATED GEMINI
+    "flammable",        # IA GENERATED GEMINI
+    "hostile",          # IA GENERATED GEMINI
+    "light_source",     # IA GENERATED GEMINI
+    "pullable",         # IA GENERATED GEMINI
+    "searchable",       # IA GENERATED GEMINI
 ]
 
 #
@@ -37,7 +61,7 @@ class Thing:
         self.presets: list[str] = presets
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "id": self.id,
@@ -95,9 +119,9 @@ class Object(Thing):
         self.easy_to_unlock_from: list[str] = easy_to_unlock_from
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
-        res: dict = super().to_dict()
+        res: dict[str, Any] = super().to_dict()
         #
         res["parts"] = self.parts
         res["part_of"] = self.part_of
@@ -122,7 +146,7 @@ class LifeSystem:
         self.state: dict[str, Any] = state if isinstance(state, dict) else {}
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "max_pv": self.max_pv,
@@ -169,9 +193,9 @@ class Entity(Thing):
         self.life_system: LifeSystem = life_system
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
-        res: dict = super().to_dict()
+        res: dict[str, Any] = super().to_dict()
         #
         res["room"] = self.room
         res["inventory"] = self.inventory
@@ -235,7 +259,7 @@ class Access:
         self.links_to: str = links_to
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "thing_id": self.thing_id,
@@ -271,7 +295,7 @@ class Room:
         self.things_inside: dict[str, int] = {} if things_inside is None else things_inside
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "room_name": self.room_name,

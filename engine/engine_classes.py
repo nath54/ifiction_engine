@@ -16,7 +16,7 @@ from . import lib_class_fusions as lcf
 
 
 #
-def verify_keys_in_dict(dictionary: dict, keys: list[str], type_: str) -> None:
+def verify_keys_in_dict(dictionary: dict[str, Any], keys: list[str], type_: str) -> None:
     #
     k: str
     for k in keys:
@@ -25,7 +25,7 @@ def verify_keys_in_dict(dictionary: dict, keys: list[str], type_: str) -> None:
 
 
 #
-def create_default_value(default_value: Any, attr: str, in_dict: dict, type_: str) -> Any:
+def create_default_value(default_value: Any, attr: str, in_dict: dict[str, Any], type_: str) -> Any:
     #
     if isinstance(default_value, EmptyDict):
         #
@@ -47,7 +47,7 @@ def create_default_value(default_value: Any, attr: str, in_dict: dict, type_: st
 
 
 #
-def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDependingOnDictValue", in_dict: dict, attr: str, type_: str) -> Any:
+def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDependingOnDictValue", in_dict: dict[str, Any], attr: str, type_: str) -> Any:
     #
     if attr not in in_dict:
         #
@@ -72,9 +72,9 @@ def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDep
     )
 
 #
-def create_kwargs(in_dict: dict, type_: str) -> dict:
+def create_kwargs(in_dict: dict[str, Any], type_: str) -> dict[str, Any]:
     #
-    kwargs: dict = {}
+    kwargs: dict[str, Any] = {}
     #
     if type_ not in CLASS_ATTRIBUTES_AND_DEFAULT_VALUES:
         raise UserWarning(f"Error: Unkown type: `{type_}`")
@@ -181,9 +181,9 @@ def create_kwargs(in_dict: dict, type_: str) -> dict:
 
 
 #
-def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict, type_: str) -> None:
+def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict[str, Any], type_: str) -> None:
     #
-    kwargs: dict = create_kwargs(in_dict=in_dict, type_=type_)
+    kwargs: dict[str, Any] = create_kwargs(in_dict=in_dict, type_=type_)
     #
     attr: str
     #
@@ -192,12 +192,12 @@ def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict, type_: s
 
 
 #
-def create_class_with_attributes_or_default_values_from_dict(class_name: Callable, in_dict: Optional[dict], type_: str) -> Any:
+def create_class_with_attributes_or_default_values_from_dict(class_name: Callable[..., Any], in_dict: Optional[dict[str, Any]], type_: str) -> Any:
     #
     if in_dict is None:
         in_dict = {}
     #
-    kwargs: dict = create_kwargs(in_dict=in_dict, type_=type_)
+    kwargs: dict[str, Any] = create_kwargs(in_dict=in_dict, type_=type_)
     #
     return class_name(**kwargs)
 
@@ -205,9 +205,9 @@ def create_class_with_attributes_or_default_values_from_dict(class_name: Callabl
 #
 class NoDefaultValues:
     #
-    def __init__(self, have_type_: Optional[str] = None, class_name: Optional[Callable] = None, type_: Optional[str] = None) -> None:
+    def __init__(self, have_type_: Optional[str] = None, class_name: Optional[Callable[..., Any]] = None, type_: Optional[str] = None) -> None:
         self.have_type_: Optional[str] = have_type_
-        self.class_name: Optional[Callable] = class_name
+        self.class_name: Optional[Callable[..., Any]] = class_name
         self.type_: Optional[str] = type_
 
 
@@ -236,9 +236,9 @@ class EmptyList:
 #
 class ClassLoadFromDict:
     #
-    def __init__(self, class_name: Callable, type_: str) -> None:
+    def __init__(self, class_name: Callable[..., Any], type_: str) -> None:
         #
-        self.class_name: Callable = class_name
+        self.class_name: Callable[..., Any] = class_name
         self.type_: str = type_
 
 
@@ -253,10 +253,10 @@ class NoDefaultValueListOfClassLoadFromDict:
 #
 class ClassLoadFromDictDependingOnDictValue:
     #
-    def __init__(self, dict_key_value: str, class_names_and_types: dict[str, Tuple[Callable, str]], default_value: Any) -> None:
+    def __init__(self, dict_key_value: str, class_names_and_types: dict[str, Tuple[Callable[..., Any], str]], default_value: Any) -> None:
         #
         self.dict_key_value: str = dict_key_value
-        self.class_names_and_types: dict[str, Tuple[Callable, str]] = class_names_and_types
+        self.class_names_and_types: dict[str, Tuple[Callable[..., Any], str]] = class_names_and_types
         self.default_value: Any = default_value
 
 
@@ -324,9 +324,9 @@ class Game:
         return self.__str__()
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
-        res: dict = {
+        res: dict[str, Any] = {
             "game_name": self.game_name,
             "game_author": self.game_author,
             "things": {},
@@ -369,7 +369,7 @@ class Game:
         #
         if game_save_format == "JSON":
             #
-            game_dict: dict = self.to_dict()
+            game_dict: dict[str, Any] = self.to_dict()
 
             #
             with open(filepath, "w", encoding="utf-8") as f:
@@ -381,6 +381,10 @@ class Game:
 
 #
 def verif_id(elt_id: str, d: dict[str, Any]) -> Any:
+    #
+    if elt_id == "none":
+        #
+        return None
     #
     if elt_id not in d:
         #
@@ -740,7 +744,7 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
 
     #
     with open(filepath, "r", encoding="utf-8") as f:
-        dict_: dict = json.load(f)
+        dict_: dict[str, Any] = json.load(f)
 
     #
     game: Game = create_class_with_attributes_or_default_values_from_dict(
@@ -876,7 +880,7 @@ missions_dict: DictOfClassLoadFromDictDependingOnDictValue = DictOfClassLoadFrom
 
 
 #
-CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict = {
+CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
     "Thing": {
         "id": NoDefaultValues(),
         "name": NoDefaultValues(),

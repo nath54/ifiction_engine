@@ -11,7 +11,7 @@ class Action:
         pass
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "action_type": "action"

@@ -1,5 +1,5 @@
 #
-from typing import Optional, cast
+from typing import Optional, Any, cast
 from dataclasses import dataclass
 from . import engine_classes_things_rooms as engine
 
@@ -59,7 +59,7 @@ class Result:
         return "[RESULT PLACEHOLDER]"
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "result_type": "Result"

@@ -1,3 +1,5 @@
+#
+from typing import Any
 
 
 #
@@ -10,7 +12,7 @@ class Event:
         # ABSTRACT GENERIC CLASS
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "event_type": "Event"

@@ -51,68 +51,79 @@ A game file has the following structure:
 
 ## Thing class
 
-Thing:
-    * id: str (unique)
-    * name: str
-    + description: str = ""
-    + brief_description: str = ""
-    + attributes: list[ str ] / list[ Attributes ]= []
+### Class Thing
 
-Object(Thing):
-    + parts: list[ ThingId ] = []
-    + part_of: Optional[ ThingId ] = None
-    + unlocks: list[ str ] / list[ ThingId ] = []
+- **[\*]** **id**: `str` (unique)
+- **[\*]** **name**: `str`
+- **(\+)** **description**: `str` = `""`
+- **(\+)** **brief_description**: `str` = `""`
+- **(\+)** **attributes**: *list[ str ] / list[ Attributes ]* = `[]`
+
+### Class Object(Thing)
+
+- **(\+)** **parts**: `list[ ThingId ]` = `[]`
+- **(\+)** **part_of**: `Optional[ ThingId ]` = `None`
+- **(\+)** **unlocks**: `list[ str ] / list[ ThingId ]` = `[]`
 
 ## Entity class
 
-LifeSystem:
-    + max_pv: int = 100
-    + current_pv: int = max_pv
-    + state: dict[ str, Any ] / dict[ StateName, StateParameters ] = {}
+### Class LifeSystem
 
-Entity(Thing):
-    * room: str / RoomId
-    + inventory: dict[ str, int ] / dict[ ThingId, Quantity ] = {}
-    + life_system: LifeSystem = LifeSystem()
+- **(\+)** **max_pv**: `int` = `100`
+- **(\+)** **current_pv**: `int` = `max_pv`
+- **(\+)** **state**: `dict[ str, Any ] / dict[ StateName, StateParameters ]` = `{}`
+
+### Class Entity(Thing)
+
+- **[\*]** **room**: `str / RoomId`
+- **(\+)** **inventory**: `dict[ str, int ] / dict[ ThingId, Quantity ]` = `{}`
+- **(\+)** **life_system**: `LifeSystem` = `LifeSystem()`
 
 ## Rooms class
 
-Room:
-    * room_name: str (unique)
-    * accesses: list[ Access ]
-    + description: str = ""
+### Class Room
 
-Access:
-    * thing_id: str / ThingId
-    * world_direction: str / Direction
-    * links_to: str / RoomId
+- **[\*]** **room_name**: `str` (unique)
+- **[\*]** **accesses**: `list[ Access ]`
+- **(\+)** **description**: `str` = `""`
+
+### Class Access
+
+- **[\*]** **thing_id**: `str / ThingId`
+- **[\*]** **world_direction**: `str / Direction`
+- **[\*]** **links_to**: `str / RoomId`
 
 ## End classes
 
-End:
-    general abstract class
+### Class End
 
-EndOneOf(End):
-    * lst: list[ End ]
+*General abstract class with no attributes.*
 
-EndAllOf(End):
-    * lst: list[ End ]
+### Class EndOneOf(End)
 
-EndInsideRoom(End):
-    * room_id: str / RoomId
+- **[\*]** **lst**: `list[ End ]`
 
-EndEntityDead(End):
-    * entity_id: str / EntityId
+### Class EndAllOf(End)
+
+- **[\*]** **lst**: `list[ End ]`
+
+### Class EndInsideRoom(End)
+
+- **[\*]** **room_id**: `str / RoomId`
+
+### Class EndEntityDead(End)
+
+- **[\*]** **entity_id**: `str / EntityId`
 
 ## Game class (Global Structure)
 
-Game:
-    * game_name: str
-    * game_description: str
-    * game_author: str
-    * things: dict[ str, Thing ] / dict[ ThingId, Thing ]
-    * rooms: dict[ str, Room ] / dict[ RoomId, Room ]
-    * variables: dict[ str, Any ] / dict[ VariableName, VariableValue ]
-    * end: End
-    * players: list[ str ] / list[ EntityId ]
+### Class Game
 
+- **[\*]** **game_name**: `str`
+- **[\*]** **game_description**: `str`
+- **[\*]** **game_author**: `str`
+- **[\*]** **things**: `dict[ str, Thing ] / dict[ ThingId, Thing ]`
+- **[\*]** **rooms**: `dict[ str, Room ] / dict[ RoomId, Room ]`
+- **[\*]** **variables**: `dict[ str, Any ] / dict[ VariableName, VariableValue ]`
+- **[\*]** **end**: `End`
+- **[\*]** **players**: `list[ str ] / list[ EntityId ]`

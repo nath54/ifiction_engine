@@ -1,9 +1,7 @@
 
 # TODOLIST for the project
 
-
 ---
-
 
 ## Commands
 
@@ -523,37 +521,34 @@ Nothing done.
 Nothing done.
 </b>
 
-
 ---
-
 
 ## Code development
 
-
 ### Functionnalities to add
 
-- Animations (trains, bus, vehicles, moving people, ...)
-- events / reactions
-- missions / objectives
-- dialogues
-    - base choice based dialog system with support from variables
-    - merchant / shop / negociation dialog
-    - free typing text dialog (sentence analysis / semantic model / agent llm with function calling), not the priority here
-- relation system / sentiment / habits system for NPC
-- Command state ( game command / inside dialog /  )
-- import data from other json files
-- a tool to compress a lot of differents various json files into one large one to export after
-
-
+- [ ] Animations (trains, bus, vehicles, moving people, ...)
+- [ ] A lot of currently unimplemented commands can be represented by `action`, `action on something`, `action something on something` or something like that. So I think it will be better to parse directly this structure and get the action, and for objects or entities, have a dictionaries of events in reactions of actions if supported, and to have just a list of basic default responses and error messages.
+- [ ] events / reactions
+- [ ] missions / objectives
+- [ ] dialogues
+  - [ ] base choice based dialog system with support from variables
+  - [ ] merchant / shop / negociation dialog
+  - [ ] free typing text dialog (sentence analysis / semantic model / agent llm with function calling), **not the priority here**
+- [ ] relation system / sentiment / habits system for NPC
+- [ ] Command state ( game command / inside dialog /  )
+- [x] import data from other json files
+- [ ] a tool to compress a lot of differents various json files into one large one to export after
+  - [ ] Command line tool to directly do that
+  - [x] You can kinda do that by loading a game and saving it, but it is less direct and less practical
 
 ---
-
 
 ## Examples / Tests / Stories
 
 ---
 
-#### General
+### General
 
 More tests needs to be done.
 There are a lot of commands that has no utilities in here.
@@ -565,6 +560,5 @@ There are a lot of commands that has no utilities in here.
 <b style="color:red">
 Need to be fix since the change of getting classes out of command parser instead of list of string.
 </b>
-
 
 ---

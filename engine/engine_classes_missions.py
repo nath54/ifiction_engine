@@ -1,4 +1,5 @@
-
+#
+from typing import Any
 
 
 #
@@ -10,7 +11,7 @@ class Mission:
         self.mission_id: str = mission_id
 
     #
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         #
         return {
             "mission_type": "Mission"

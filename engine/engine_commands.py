@@ -608,27 +608,32 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     #
     if choosen_access is not None:
         #
-        access_thing: engine.Thing = get_thing(game=game, thing_id=choosen_access.thing_id)
-        #
-        if "locked" in access_thing.attributes:
+        if choosen_access.thing_id != "none":
+
             #
-            interaction_system.add_result(
-                result=er.ResultErrorAccessLocked(
-                    direction=choosen_access.direction,
-                    access_thing=er.ThingShow(thing=access_thing)
-                )
-            )
-        #
-        if "openable" in access_thing.attributes and "open" not in access_thing.attributes:
+            access_thing: engine.Thing = get_thing(game=game, thing_id=choosen_access.thing_id)
             #
-            interaction_system.add_result(
-                result=er.ResultErrorAccessClosed(
-                    direction=choosen_access.direction,
-                    access_thing=er.ThingShow(thing=access_thing)
+            if "locked" in access_thing.attributes:
+                #
+                interaction_system.add_result(
+                    result=er.ResultErrorAccessLocked(
+                        direction=choosen_access.direction,
+                        access_thing=er.ThingShow(thing=access_thing)
+                    )
                 )
-            )
-        #
-        else:
+                #
+                return game
+            #
+            if "openable" in access_thing.attributes and "open" not in access_thing.attributes:
+                #
+                interaction_system.add_result(
+                    result=er.ResultErrorAccessClosed(
+                        direction=choosen_access.direction,
+                        access_thing=er.ThingShow(thing=access_thing)
+                    )
+                )
+                #
+                return game
             #
             remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
             #
@@ -1790,7 +1795,7 @@ def execute_C_SAVE(game: engine.Game, interaction_system: InteractionSystem, com
         savegame_filepath = get_next_available_auto_savegame_filepath(game=game)
 
     #
-    game_dict: dict = game.to_dict()
+    game_dict: dict[str, Any] = game.to_dict()
 
     #
     with open(savegame_filepath, "w", encoding="utf-8") as f:
@@ -1862,13 +1867,13 @@ def introduce_game(game: engine.Game, interaction_system: InteractionSystem) -> 
         #
         print(f"""
 
-  ############################################################
-  #                                                          #
-  #  {game.game_name} {(54 - len(game.game_name)) * ' '} #
-  #                                                          #
-  #  by {game.game_author} {(51 - len(game.game_author)) * ' '} #
-  #                                                          #
-  ############################################################
+    ############################################################
+    #                                                          #
+    #  {game.game_name} {(54 - len(game.game_name)) * ' '} #
+    #                                                          #
+    #  by {game.game_author} {(51 - len(game.game_author)) * ' '} #
+    #                                                          #
+    ############################################################
 
         """)
 

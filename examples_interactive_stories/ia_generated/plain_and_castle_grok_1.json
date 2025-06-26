@@ -1,0 +1,246 @@
+{
+    "game_name": "The Realm of Eldoria",
+    "game_description": "An adventure through a mystical land with sprawling plains, dense forests, a grand castle, and a secretive manor hidden deep within the wilderness.",
+    "game_author": "Grok",
+    "nb_turns": 0,
+    "things": {
+        "player1": {
+            "type": "player",
+            "id": "player1",
+            "name": "Wanderer",
+            "description": "A brave adventurer with a curious heart, clad in sturdy leather armor.",
+            "room": "plain_center",
+            "inventory": {},
+            "life_system": {
+                "max_pv": 100,
+                "current_pv": 100,
+                "state": {}
+            }
+        },
+        "rusted_sword": {
+            "type": "object",
+            "id": "rusted_sword",
+            "name": "rusted sword",
+            "description": "An old sword with a chipped blade, still sharp enough to be useful.",
+            "attributes": ["item", "weapon"]
+        },
+        "wooden_chest": {
+            "type": "object",
+            "id": "wooden_chest",
+            "name": "wooden chest",
+            "description": "A sturdy chest made of oak, with intricate carvings of vines.",
+            "attributes": ["openable", "container", "locked"],
+            "contains": {
+                "golden_amulet": 1
+            }
+        },
+        "golden_amulet": {
+            "type": "object",
+            "id": "golden_amulet",
+            "name": "golden amulet",
+            "description": "A shimmering amulet with a glowing emerald, said to hold protective powers.",
+            "attributes": ["item"]
+        },
+        "iron_key": {
+            "type": "object",
+            "id": "iron_key",
+            "name": "iron key",
+            "description": "A heavy iron key with ornate engravings, likely for an important lock.",
+            "attributes": ["item"],
+            "unlocks": ["castle_gate"]
+        },
+        "castle_gate": {
+            "type": "object",
+            "id": "castle_gate",
+            "name": "castle gate",
+            "description": "A massive iron gate with intricate filigree, barring entry to the castle.",
+            "attributes": ["openable", "locked"]
+        },
+        "oak_door": {
+            "type": "object",
+            "id": "oak_door",
+            "name": "oak door",
+            "description": "A heavy oak door with a brass handle, leading to the manor.",
+            "attributes": ["openable"]
+        },
+        "silver_dagger": {
+            "type": "object",
+            "id": "silver_dagger",
+            "name": "silver dagger",
+            "description": "A finely crafted dagger with a silver blade, gleaming faintly in the light.",
+            "attributes": ["item", "weapon"]
+        },
+        "old_book": {
+            "type": "object",
+            "id": "old_book",
+            "name": "old book",
+            "description": "A dusty tome bound in leather, filled with cryptic runes.",
+            "attributes": ["item", "readable"]
+        },
+        "stone_statue": {
+            "type": "object",
+            "id": "stone_statue",
+            "name": "stone statue",
+            "description": "A weathered statue of a knight, standing vigil with a stern gaze.",
+            "attributes": []
+        },
+        "vine_covered_trapdoor": {
+            "type": "object",
+            "id": "vine_covered_trapdoor",
+            "name": "vine-covered trapdoor",
+            "description": "A wooden trapdoor hidden beneath thick vines, barely noticeable.",
+            "attributes": ["openable"],
+            "unlocks": []
+        },
+        "crystal_orb": {
+            "type": "object",
+            "id": "crystal_orb",
+            "name": "crystal orb",
+            "description": "A glowing orb that pulses with a faint blue light, warm to the touch.",
+            "attributes": ["item"]
+        }
+    },
+    "rooms": {
+        "plain_center": {
+            "room_name": "Central Plain",
+            "description": "A vast, open plain stretches in all directions, dotted with wildflowers swaying in the gentle breeze. To the north, a dense forest looms, while a towering castle stands proudly to the west. A faint path winds eastward, hinting at something hidden beyond the horizon.",
+            "things_inside": {
+                "rusted_sword": 1,
+                "stone_statue": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "none",
+                    "direction": "north",
+                    "links_to": "forest_edge"
+                },
+                {
+                    "thing_id": "castle_gate",
+                    "direction": "west",
+                    "links_to": "castle_courtyard"
+                },
+                {
+                    "thing_id": "none",
+                    "direction": "east",
+                    "links_to": "hidden_path"
+                }
+            ]
+        },
+        "forest_edge": {
+            "room_name": "Forest Edge",
+            "description": "The edge of a dense forest, where tall pines cast long shadows over a carpet of moss. The air is thick with the scent of sap and earth. A narrow trail leads deeper into the forest to the north, while the open plain lies to the south.",
+            "things_inside": {
+                "wooden_chest": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "none",
+                    "direction": "south",
+                    "links_to": "plain_center"
+                },
+                {
+                    "thing_id": "none",
+                    "direction": "north",
+                    "links_to": "forest_heart"
+                }
+            ]
+        },
+        "forest_heart": {
+            "room_name": "Heart of the Forest",
+            "description": "A secluded clearing in the forest, where sunlight filters through the canopy, illuminating a circle of ancient stones. The air hums with quiet energy. A hidden trapdoor lies beneath tangled vines to the east, and a path leads back south.",
+            "things_inside": {
+                "vine_covered_trapdoor": 1,
+                "silver_dagger": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "none",
+                    "direction": "south",
+                    "links_to": "forest_edge"
+                },
+                {
+                    "thing_id": "vine_covered_trapdoor",
+                    "direction": "east",
+                    "links_to": "manor_entrance"
+                }
+            ]
+        },
+        "castle_courtyard": {
+            "room_name": "Castle Courtyard",
+            "description": "A grand courtyard paved with cobblestones, surrounded by towering stone walls adorned with ivy. A massive gate guards the entrance to the east, and a sturdy door leads into the castle’s great hall to the north.",
+            "things_inside": {
+                "castle_gate": 1,
+                "iron_key": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "castle_gate",
+                    "direction": "east",
+                    "links_to": "plain_center"
+                },
+                {
+                    "thing_id": "none",
+                    "direction": "north",
+                    "links_to": "castle_hall"
+                }
+            ]
+        },
+        "castle_hall": {
+            "room_name": "Great Hall",
+            "description": "A magnificent hall with soaring ceilings and stained-glass windows depicting ancient battles. Long tables are covered in dust, and a chandelier hangs precariously above. The courtyard lies to the south.",
+            "things_inside": {
+                "old_book": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "none",
+                    "direction": "south",
+                    "links_to": "castle_courtyard"
+                }
+            ]
+        },
+        "hidden_path": {
+            "room_name": "Hidden Path",
+            "description": "A narrow, winding path overgrown with brambles and wildflowers. It seems rarely traveled, leading deeper into a secluded part of the plain. The main plain lies to the west, and a faint outline of a manor appears to the north.",
+            "things_inside": {},
+            "accesses": [
+                {
+                    "thing_id": "none",
+                    "direction": "west",
+                    "links_to": "plain_center"
+                },
+                {
+                    "thing_id": "oak_door",
+                    "direction": "north",
+                    "links_to": "manor_entrance"
+                }
+            ]
+        },
+        "manor_entrance": {
+            "room_name": "Manor Entrance",
+            "description": "The entrance to a crumbling manor, its stone facade overtaken by ivy and moss. An oak door stands slightly ajar, creaking in the wind. The hidden path lies to the south, and a secret trapdoor leads back to the forest heart to the west.",
+            "things_inside": {
+                "oak_door": 1,
+                "crystal_orb": 1
+            },
+            "accesses": [
+                {
+                    "thing_id": "oak_door",
+                    "direction": "south",
+                    "links_to": "hidden_path"
+                },
+                {
+                    "thing_id": "vine_covered_trapdoor",
+                    "direction": "west",
+                    "links_to": "forest_heart"
+                }
+            ]
+        }
+    },
+    "variables": {},
+    "players": ["player1"],
+    "end": {
+        "type": "EndInsideRoom",
+        "room_id": "manor_entrance"
+    }
+}

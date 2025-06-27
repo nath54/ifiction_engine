@@ -608,10 +608,12 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
     #
     if choosen_access is not None:
         #
+        access_thing: engine.Thing
+        #
         if choosen_access.thing_id != "none":
 
             #
-            access_thing: engine.Thing = get_thing(game=game, thing_id=choosen_access.thing_id)
+            access_thing = get_thing(game=game, thing_id=choosen_access.thing_id)
             #
             if "locked" in access_thing.attributes:
                 #
@@ -634,23 +636,27 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
                 )
                 #
                 return game
+        #
+        else:
             #
-            remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
-            #
-            add_thing_to_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
-            #
-            player: engine.Entity = get_entity(game=game, entity_id=player_id)
-            #
-            player.room = choosen_access.links_to
-            #
-            interaction_system.add_result(
-                result=er.ResultGo(
-                    direction=choosen_access.direction,
-                    access_thing=er.ThingShow(thing=access_thing)
-                )
+            access_thing = engine.Thing(id_="none", name="none")
+        #
+        remove_thing_from_room(game=game, thing_id=player_id, room=current_player_room)
+        #
+        add_thing_to_room(game=game, thing_id=player_id, room=get_room(game=game, room_id=choosen_access.links_to))
+        #
+        player: engine.Entity = get_entity(game=game, entity_id=player_id)
+        #
+        player.room = choosen_access.links_to
+        #
+        interaction_system.add_result(
+            result=er.ResultGo(
+                direction=choosen_access.direction,
+                access_thing=er.ThingShow(thing=access_thing)
             )
-            #
-            return execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUDN"), player_id=player_id, copy_game=copy_game)
+        )
+        #
+        return execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUDN"), player_id=player_id, copy_game=copy_game)
     #
     else:
         #

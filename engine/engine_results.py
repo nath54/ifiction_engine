@@ -266,6 +266,10 @@ class ResultGo(Result):
     #
     def __str__(self) -> str:
         #
+        if self.access_thing.thing.id == "none" or self.access_thing.thing.name == "none":
+            #
+            return f"You move toward {self.direction}"
+        #
         return f"You move toward {self.direction} by {self.access_thing.thing.name}"
 
 

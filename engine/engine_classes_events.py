@@ -3,6 +3,8 @@ from typing import Any
 
 
 #
+### ABSTRACT MAIN PARENT CLASS EVENT. ###
+#
 class Event:
     #
     def __init__(self, scene_id: str) -> None:
@@ -20,6 +22,8 @@ class Event:
 
 
 #
+### EVENT MISSION ABSTRACT CLASS. ###
+#
 class EventMission(Event):
     #
     def __init__(self, scene_id: str, mission_id: str | list[str]) -> None:
@@ -30,13 +34,7 @@ class EventMission(Event):
 
 
 #
-class EventMissionDone(EventMission):
-    #
-    def __init__(self, scene_id: str, mission_id: str | list[str]) -> None:
-        #
-        super().__init__(scene_id=scene_id, mission_id=mission_id)
-
-
+## Event that trigger when a mission is obtained by a player. ##
 #
 class EventMissionGot(EventMission):
     #
@@ -44,6 +42,9 @@ class EventMissionGot(EventMission):
         #
         super().__init__(scene_id=scene_id, mission_id=mission_id)
 
+
+#
+## Event that trigger when a mission is in progress (at each beginning of the turn of the player that has this mission). ##
 #
 class EventMissionInProgress(EventMission):
     #
@@ -53,6 +54,18 @@ class EventMissionInProgress(EventMission):
 
 
 #
+## Event that trigger when a player finishes a mission. ##
+#
+class EventMissionDone(EventMission):
+    #
+    def __init__(self, scene_id: str, mission_id: str | list[str]) -> None:
+        #
+        super().__init__(scene_id=scene_id, mission_id=mission_id)
+
+
+#
+### EVENT ROOM ABSTRACT CLASS. ###
+#
 class EventRoom(Event):
     #
     def __init__(self, scene_id: str, room_id: str | list[str]) -> None:
@@ -61,6 +74,9 @@ class EventRoom(Event):
         #
         self.room_id: str | list[str] = room_id
 
+
+#
+## Event that trigger when an entity enters a room. ##
 #
 class EventEnterRoom(EventRoom):
     #
@@ -68,6 +84,9 @@ class EventEnterRoom(EventRoom):
         #
         super().__init__(scene_id=scene_id, room_id=room_id)
 
+
+#
+## Event that trigger when an entity leaves a room. ##
 #
 class EventLeaveRoom(EventRoom):
     #
@@ -75,6 +94,9 @@ class EventLeaveRoom(EventRoom):
         #
         super().__init__(scene_id=scene_id, room_id=room_id)
 
+
+#
+## Event that trigger at the beggining of each entity turn. ##
 #
 class EventInsideRoom(EventRoom):
     #
@@ -83,6 +105,8 @@ class EventInsideRoom(EventRoom):
         super().__init__(scene_id=scene_id, room_id=room_id)
 
 
+#
+### Event that trigger at each beggining of a global turn when a variable condition is triggered. ###
 #
 class EventVariableCondition(Event):
     #
@@ -103,6 +127,8 @@ class EventVariableCondition(Event):
         self.cond_operand_type: str = cond_operand_type
 
 
+#
+### Event that trigger when an entity does a specific action. ###
 #
 class EventActionThing(Event):
     #

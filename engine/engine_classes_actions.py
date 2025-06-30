@@ -2,10 +2,25 @@
 from typing import Any
 
 
+#                                                                                                #
+###                                                                                            ###
+#####                                                                                        #####
+##################################################################################################
+#####                                      BASE ACTIONS                                      #####
+##################################################################################################
+#####                                                                                        #####
+###                                                                                            ###
+#                                                                                                #
+
+
+#
+### ABSTRACT ACTION CLASS ###
 #
 class Action:
     #
-    def __init__(self) -> None:
+    def __init__(
+            self
+        ) -> None:
 
         # GENERIC ABSTRACT CLASS
         pass
@@ -19,9 +34,14 @@ class Action:
 
 
 #
+### Action that display text to the players. ###
+#
 class ActionText(Action):
     #
-    def __init__(self, text: str) -> None:
+    def __init__(
+            self,
+            text: str
+        ) -> None:
         #
         super().__init__()
         #
@@ -29,9 +49,14 @@ class ActionText(Action):
 
 
 #
+### Action that act as a guide for ActionJump and And ActionConditionalJump to know where to jump ###
+#
 class ActionLabel(Action):
     #
-    def __init__(self, label_name: str) -> None:
+    def __init__(
+            self,
+            label_name: str
+        ) -> None:
         #
         super().__init__()
         #
@@ -39,15 +64,22 @@ class ActionLabel(Action):
 
 
 #
+### Action that jumps to the next action after the specified label name. ###
+#
 class ActionJump(Action):
     #
-    def __init__(self, label_name: str) -> None:
+    def __init__(
+            self,
+            label_name: str
+        ) -> None:
         #
         super().__init__()
         #
         self.label_name: str = label_name
 
 
+#
+### Action that jumps to the next action after the specified label name IF the condition is respected. ###
 #
 class ActionConditionalJump(ActionJump):
     #
@@ -69,17 +101,68 @@ class ActionConditionalJump(ActionJump):
 
 
 #
-class ActionEnd(Action):
+### Action that change the current scene and jump to the first action of the new scene. ###
+#
+class ActionChangeScene(Action):
     #
-    def __init__(self) -> None:
+    def __init__(
+            self,
+            scene_id: str
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.scene_id: str = scene_id
+
+
+#
+### Action that ends the scene and get back to the game. ###
+#
+class ActionEndScene(Action):
+    #
+    def __init__(
+            self
+        ) -> None:
         #
         super().__init__()
 
 
 #
+### Action that ends the game. ###
+#
+class ActionEndGame(Action):
+    #
+    def __init__(
+            self,
+            final_score: int = 0
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.final_score: int = 0
+
+
+#                                                                                                #
+###                                                                                            ###
+#####                                                                                        #####
+##################################################################################################
+#####                                VARIABLE RELATED ACTIONS                                #####
+##################################################################################################
+#####                                                                                        #####
+###                                                                                            ###
+#                                                                                                #
+
+
+#
+### Action that create a variable in the global variable space (GVS). ###
+#
 class ActionCreateVar(Action):
     #
-    def __init__(self, var_name: str, var_value: str | int | float | bool) -> None:
+    def __init__(
+            self,
+            var_name: str,
+            var_value: str | int | float | bool
+        ) -> None:
         #
         super().__init__()
         #
@@ -87,6 +170,8 @@ class ActionCreateVar(Action):
         self.var_value: str | int | float | bool = var_value
 
 
+#
+### Action that update the value of a variable in the global variable space (GVS). ###
 #
 class ActionEditVar(Action):
     #
@@ -99,6 +184,8 @@ class ActionEditVar(Action):
 
 
 #
+### Action that delete a variable in the global variable space (GVS). ###
+#
 class ActionDeleteVar(Action):
     #
     def __init__(self, var_name: str) -> None:
@@ -108,6 +195,8 @@ class ActionDeleteVar(Action):
         self.var_name: str = var_name
 
 
+#
+### Action that create or update a variable (the ouput one) with the result value of the specified operation. ###
 #
 class ActionBinaryOp(Action):
     #
@@ -128,8 +217,11 @@ class ActionBinaryOp(Action):
         self.elt1_value: str | int | float | bool = elt1_value
         self.elt2_type: str = elt2_type
         self.elt2_value: str | int | float | bool = elt2_value
+        self.op: str = op
 
 
+#
+### Action that create or update a variable (the ouput one) with the result value of the specified operation. ###
 #
 class ActionUnaryOp(Action):
     #
@@ -149,24 +241,19 @@ class ActionUnaryOp(Action):
         self.op: str = op
 
 
-#
-class ActionChangeScene(Action):
-    #
-    def __init__(self, scene_id: str) -> None:
-        #
-        super().__init__()
-        #
-        self.scene_id: str = scene_id
+#                                                                                                #
+###                                                                                            ###
+#####                                                                                        #####
+##################################################################################################
+#####                       ELEMENTS ATTRIBUTE EDITION RELATED ACTIONS                       #####
+##################################################################################################
+#####                                                                                        #####
+###                                                                                            ###
+#                                                                                                #
 
 
 #
-class ActionEndScene(Action):
-    #
-    def __init__(self) -> None:
-        #
-        super().__init__()
-
-
+### ABSTRACT Action class for actions that changes the elements. ###
 #
 class ActionChangeElt(Action):
     #
@@ -179,6 +266,8 @@ class ActionChangeElt(Action):
         self.elt_attr_name: str | list[str] = elt_attr_name
 
 
+#
+### Action that edit the value of an attribute. WARNING: thus only works on scalar / string attributes. ###
 #
 class ActionEditAttributeOfElt(ActionChangeElt):
     #
@@ -196,6 +285,8 @@ class ActionEditAttributeOfElt(ActionChangeElt):
 
 
 #
+### Action that append a value to an attribute that is a list. WARNING: thus only works on attributes with list type. ###
+#
 class ActionAppendToAttributeOfElt(ActionChangeElt):
     #
     def __init__(
@@ -211,6 +302,9 @@ class ActionAppendToAttributeOfElt(ActionChangeElt):
         self.elt_attr_new_value_to_append: str | int | float | bool = elt_attr_new_value_to_append
 
 
+
+#
+### Action that append a value to an attribute that is a container. WARNING: thus only works on attributes with list or dictionnary type. ###
 #
 class ActionRemoveValueToAttributeOfElt(ActionChangeElt):
     #
@@ -228,6 +322,8 @@ class ActionRemoveValueToAttributeOfElt(ActionChangeElt):
 
 
 #
+### Action that set a value to an attribute that is a dict. WARNING: thus only works on attributes with dictionnary type. ###
+#
 class ActionSetKVAttributeOfElt(ActionChangeElt):
     #
     def __init__(
@@ -243,4 +339,144 @@ class ActionSetKVAttributeOfElt(ActionChangeElt):
         #
         self.elt_attr_key: str = elt_attr_key
         self.elt_attr_value: str | int | float | bool = elt_attr_value
+
+
+#                                                                                                #
+###                                                                                            ###
+#####                                                                                        #####
+##################################################################################################
+#####                                 THINGS RELATED ACTIONS                                 #####
+##################################################################################################
+#####                                                                                        #####
+###                                                                                            ###
+#                                                                                                #
+
+
+"""
+Note:
+
+In the following classes, when speaking of place_type, the possible values are:
+
+- "room", then the `place_id` designs the `room_id`, and the things will be added to / removed from the room.
+- "container", then the `place_id` designs the `thing_id`, and the things will be added to / removed from the thing container space.
+- "entity", then the `place_id` designs the `entity_id`, and the things will be added to / removed from the entities inventory.
+
+"""
+
+
+#
+### Action that duplicates a thing. I.E. creating a new thing with exactly the same attributes than the previous, but only a different thing_id ###
+#
+class ActionThingDuplicate(Action):
+
+    #
+    def __init__(
+            self,
+            src_elt_id: str,
+            dst_elt_id: str
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.src_elt_id: str = src_elt_id
+        self.dst_elt_id: str = dst_elt_id
+
+
+#
+### Action that displace a certain quantity of things from a place to another place ###
+#
+class ActionThingDisplace(Action):
+
+    #
+    def __init__(
+            self,
+            thing_id: str,
+            src_place_type: str,
+            src_place_id: str,
+            dst_place_type: str,
+            dst_place_id: str,
+            quantity: int = 1
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.thing_id: str = thing_id
+        self.src_place_type: str = src_place_type
+        self.src_place_id: str = src_place_id
+        self.dst_place_type: str = dst_place_type
+        self.dst_place_id: str = dst_place_id
+        self.quantity: int = quantity
+
+
+#
+### Action that add a certain quantity of things to a place ###
+#
+class ActionThingAddToPlace(Action):
+
+    #
+    def __init__(
+            self,
+            thing_id: str,
+            place_type: str,
+            place_id: str,
+            quantity: int = 1
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.thing_id: str = thing_id
+        self.place_type: str = place_type
+        self.place_id: str = place_id
+        self.quantity: int = quantity
+
+
+#
+### Action that remove a certain quantity of things to a place ###
+#
+class ActionThingRemoveFromPlace(Action):
+
+    #
+    def __init__(
+            self,
+            thing_id: str,
+            place_type: str,
+            place_id: str,
+            quantity: int = 1
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.thing_id: str = thing_id
+        self.place_type: str = place_type
+        self.place_id: str = place_id
+        self.quantity: int = quantity
+
+
+#                                                                                                #
+###                                                                                            ###
+#####                                                                                        #####
+##################################################################################################
+#####                                 PLAYER RELATED ACTIONS                                 #####
+##################################################################################################
+#####                                                                                        #####
+###                                                                                            ###
+#                                                                                                #
+
+
+#
+### Action that assigns a mission to a player ###
+#
+class ActionPlayerAssignMission(Action):
+
+    #
+    def __init__(
+            self,
+            player_id: str,
+            mission_id: str
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.player_id: str = player_id
+        self.mission_id: str = mission_id
 

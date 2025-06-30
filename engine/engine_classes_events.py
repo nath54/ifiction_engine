@@ -146,5 +146,3 @@ class EventActionThing(Event):
         self.action_type: str = action_type
         self.who: str | list[str] = who
 
-
-

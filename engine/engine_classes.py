@@ -9,6 +9,7 @@ from . import engine_classes_missions as mis
 from . import engine_classes_scenes as scn
 from . import engine_classes_actions as act
 from . import engine_classes_events as evt
+from . import engine_classes_conditions as ecc
 from . import engine_results as er
 #
 from .lib_direction import parse_directions
@@ -841,6 +842,14 @@ events_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependi
     default_value=None
 )
 
+#
+condition_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
+    dict_key_value="condition_type",
+    class_names_and_types={
+        "ConditionVariable": (ecc.ConditionVariable, "ConditionVariable")
+    },
+    default_value=None
+)
 
 #
 things_dict: DictOfClassLoadFromDictDependingOnDictValue = DictOfClassLoadFromDictDependingOnDictValue(
@@ -950,5 +959,25 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
         "missions": missions_dict,
         "players": EmptyList(),
         "imports": EmptyList()
+    },
+
+
+    "EventMissionGot": {
+        "scene_id": NoDefaultValues(),
+        "mission_id": NoDefaultValues(),
+        "event_condition": condition_classes
+    },
+    "EventMissionInProgress": {
+        "scene_id": NoDefaultValues(),
+        "mission_id": NoDefaultValues(),
+        "event_condition": condition_classes
+    },
+    "EventMissionDone": {
+        "scene_id": NoDefaultValues(),
+        "mission_id": NoDefaultValues(),
+        "event_condition": condition_classes
     }
+
+    # TODO: define all the Event, Mission, Actions, and Condition classes
+
 }

@@ -1,36 +1,67 @@
 #
-from typing import Any
-
+from typing import Any, Optional
+#
+from engine_classes_conditions import Condition
 
 #
 ### ABSTRACT MAIN PARENT CLASS EVENT. ###
 #
 class Event:
     #
-    def __init__(self, scene_id: str) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
         self.scene_id: str = scene_id
+        #
+        self.event_condition: Optional[Condition] = event_condition
         #
         # ABSTRACT GENERIC CLASS
 
     #
     def to_dict(self) -> dict[str, Any]:
         #
-        return {
+        res: dict[str, Any] = {
             "event_type": "Event"
         }
 
+        #
+        if self.event_condition is not None:
+            #
+            res["event_condition"] = self.event_condition.to_dict()
+
+        #
+        return res
 
 #
 ### EVENT MISSION ABSTRACT CLASS. ###
 #
 class EventMission(Event):
     #
-    def __init__(self, scene_id: str, mission_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            mission_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id)
+        super().__init__(scene_id=scene_id, event_condition=event_condition)
         #
         self.mission_id: str | list[str] = mission_id
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventMission"
+        res["mission_id"] = self.mission_id
+
+        #
+        return res
 
 
 #
@@ -38,9 +69,25 @@ class EventMission(Event):
 #
 class EventMissionGot(EventMission):
     #
-    def __init__(self, scene_id: str, mission_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            mission_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id, mission_id=mission_id)
+        super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventMissionGot"
+
+        #
+        return res
 
 
 #
@@ -48,9 +95,25 @@ class EventMissionGot(EventMission):
 #
 class EventMissionInProgress(EventMission):
     #
-    def __init__(self, scene_id: str, mission_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            mission_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id, mission_id=mission_id)
+        super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventMissionInProgress"
+
+        #
+        return res
 
 
 #
@@ -58,9 +121,25 @@ class EventMissionInProgress(EventMission):
 #
 class EventMissionDone(EventMission):
     #
-    def __init__(self, scene_id: str, mission_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            mission_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id, mission_id=mission_id)
+        super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventMissionDone"
+
+        #
+        return res
 
 
 #
@@ -68,11 +147,28 @@ class EventMissionDone(EventMission):
 #
 class EventRoom(Event):
     #
-    def __init__(self, scene_id: str, room_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            room_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id)
+        super().__init__(scene_id=scene_id, event_condition=event_condition)
         #
         self.room_id: str | list[str] = room_id
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventRoom"
+        res["room_id"] = self.room_id
+
+        #
+        return res
 
 
 #
@@ -80,9 +176,25 @@ class EventRoom(Event):
 #
 class EventEnterRoom(EventRoom):
     #
-    def __init__(self, scene_id: str, room_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            room_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id, room_id=room_id)
+        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventEnterRoom"
+
+        #
+        return res
 
 
 #
@@ -90,9 +202,25 @@ class EventEnterRoom(EventRoom):
 #
 class EventLeaveRoom(EventRoom):
     #
-    def __init__(self, scene_id: str, room_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            room_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id, room_id=room_id)
+        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventLeaveRoom"
+
+        #
+        return res
 
 
 #
@@ -100,9 +228,25 @@ class EventLeaveRoom(EventRoom):
 #
 class EventInsideRoom(EventRoom):
     #
-    def __init__(self, scene_id: str, room_id: str | list[str]) -> None:
+    def __init__(
+            self,
+            scene_id: str,
+            room_id: str | list[str],
+            event_condition: Optional[Condition] = None
+        ) -> None:
         #
-        super().__init__(scene_id=scene_id, room_id=room_id)
+        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventInsideRoom"
+
+        #
+        return res
 
 
 #
@@ -113,18 +257,21 @@ class EventVariableCondition(Event):
     def __init__(
         self,
         scene_id: str,
-        var_name: str,
-        cond_op: str,
-        cond_operand_value: str | int | float | bool,
-        cond_operand_type: str
+        event_condition: Optional[Condition] = None
     ) -> None:
         #
-        super().__init__(scene_id=scene_id)
+        super().__init__(scene_id=scene_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
         #
-        self.var_name: str = var_name
-        self.cond_op: str = cond_op
-        self.cond_operand_value: str | int | float | bool = cond_operand_value
-        self.cond_operand_type: str = cond_operand_type
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventVariableCondition"
+
+        #
+        return res
 
 
 #
@@ -137,12 +284,53 @@ class EventActionThing(Event):
         scene_id: str,
         thing_id: str,
         action_type: str,
-        who: str | list[str]
+        who: str | list[str],
+        event_condition: Optional[Condition] = None
     ) -> None:
         #
-        super().__init__(scene_id=scene_id)
+        super().__init__(scene_id=scene_id, event_condition=event_condition)
         #
         self.thing_id: str | list[str] = thing_id
         self.action_type: str = action_type
         self.who: str | list[str] = who
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventActionThing"
+        res["scene_id"] = self.scene_id
+        res["thing_id"] = self.thing_id
+        res["action_type"] = self.action_type
+        res["who"] = self.who
+
+        #
+        return res
+
+#
+### Event that trigger at the end of each time unit. ###
+#
+class EventAlways(Event):
+    #
+    def __init__(
+            self,
+            scene_id: str,
+        event_condition: Optional[Condition] = None
+    ) -> None:
+        #
+        super().__init__(scene_id=scene_id, event_condition=event_condition)
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        res: dict[str, Any] = super().to_dict()
+
+        #
+        res["event_type"] = "EventAlways"
+
+        #
+        return res
+
 

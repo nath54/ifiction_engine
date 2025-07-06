@@ -1,7 +1,7 @@
 #
 from typing import Any, Optional
 #
-from engine_classes_conditions import Condition
+from . import engine_classes_conditions as eccond
 
 #
 ### ABSTRACT MAIN PARENT CLASS EVENT. ###
@@ -11,12 +11,12 @@ class Event:
     def __init__(
             self,
             scene_id: str,
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         self.scene_id: str = scene_id
         #
-        self.event_condition: Optional[Condition] = event_condition
+        self.event_condition: Optional[eccond.Condition] = event_condition
         #
         # ABSTRACT GENERIC CLASS
 
@@ -44,7 +44,7 @@ class EventMission(Event):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, event_condition=event_condition)
@@ -73,7 +73,7 @@ class EventMissionGot(EventMission):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
@@ -99,7 +99,7 @@ class EventMissionInProgress(EventMission):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
@@ -125,7 +125,7 @@ class EventMissionDone(EventMission):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
@@ -151,7 +151,7 @@ class EventRoom(Event):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, event_condition=event_condition)
@@ -180,7 +180,7 @@ class EventEnterRoom(EventRoom):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
@@ -206,7 +206,7 @@ class EventLeaveRoom(EventRoom):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
@@ -232,7 +232,7 @@ class EventInsideRoom(EventRoom):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[Condition] = None
+            event_condition: Optional[eccond.Condition] = None
         ) -> None:
         #
         super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
@@ -250,14 +250,14 @@ class EventInsideRoom(EventRoom):
 
 
 #
-### Event that trigger at each beggining of a global turn when a variable condition is triggered. ###
+### Event that trigger at each beggining of a global turn when a variable eccond.Condition is triggered. ###
 #
 class EventVariableCondition(Event):
     #
     def __init__(
         self,
         scene_id: str,
-        event_condition: Optional[Condition] = None
+        event_condition: Optional[eccond.Condition] = None
     ) -> None:
         #
         super().__init__(scene_id=scene_id, event_condition=event_condition)
@@ -282,17 +282,17 @@ class EventActionThing(Event):
     def __init__(
         self,
         scene_id: str,
-        thing_id: str,
-        action_type: str,
-        who: str | list[str],
-        event_condition: Optional[Condition] = None
+        thing_id: str | list[str],
+        action_type: str | list[str],
+        entity_id: str | list[str],
+        event_condition: Optional[eccond.Condition] = None
     ) -> None:
         #
         super().__init__(scene_id=scene_id, event_condition=event_condition)
         #
         self.thing_id: str | list[str] = thing_id
-        self.action_type: str = action_type
-        self.who: str | list[str] = who
+        self.action_type: str | list[str] = action_type
+        self.entity_id: str | list[str] = entity_id
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -304,7 +304,7 @@ class EventActionThing(Event):
         res["scene_id"] = self.scene_id
         res["thing_id"] = self.thing_id
         res["action_type"] = self.action_type
-        res["who"] = self.who
+        res["entity_id"] = self.entity_id
 
         #
         return res
@@ -315,9 +315,9 @@ class EventActionThing(Event):
 class EventAlways(Event):
     #
     def __init__(
-            self,
-            scene_id: str,
-        event_condition: Optional[Condition] = None
+        self,
+        scene_id: str,
+        event_condition: Optional[eccond.Condition] = None
     ) -> None:
         #
         super().__init__(scene_id=scene_id, event_condition=event_condition)

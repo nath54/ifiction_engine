@@ -1,6 +1,7 @@
 
-
-
+#
+### Function to convert a string from a str(list) to a JSON compatible version. ###
+#
 def str_list_to_json(txt: str) -> str:
     #
     replacements: dict[str, str] = {
@@ -15,5 +16,3 @@ def str_list_to_json(txt: str) -> str:
         txt = txt.replace(r, v)
     #
     return txt
-
-

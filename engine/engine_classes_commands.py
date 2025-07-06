@@ -1,73 +1,143 @@
 #
 from typing import Optional
-#
-from dataclasses import dataclass
 
 #
-@dataclass
 class Command:
-    command_name: str
+
+    #
+    def __init__(self, command_name: str) -> None:
+        #
+        self.command_name: str = command_name
 
 #
-@dataclass
 class Command_Elt(Command):
-    elt: str
+
+    #
+    def __init__(self, command_name: str, elt: str) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt: str = elt
 
 #
-@dataclass
 class Command_OElt(Command):
-    elt: Optional[str] = None
+
+    #
+    def __init__(self, command_name: str, elt: Optional[str] = None) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt: Optional[str] = elt
 
 #
-@dataclass
 class Command_OKw_Elt(Command):
-    elt: str
-    kw: Optional[str] = None
+
+    #
+    def __init__(self, command_name: str, elt: str, kw: Optional[str] = None) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt: str = elt
+        self.kw: Optional[str] = kw
 
 #
-@dataclass
 class Command_OKw_OElt(Command):
-    elt: Optional[str] = None
-    kw: Optional[str] = None
+
+    #
+    def __init__(self, command_name: str, elt: Optional[str] = None, kw: Optional[str] = None) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt: Optional[str] = elt
+        self.kw: Optional[str] = kw
 
 #
-@dataclass
 class Command_Elt_Kw_Elt(Command):
-    elt1: str
-    elt2: str
-    kw: Optional[str] = None
+
+    #
+    def __init__(self, command_name: str, elt1: str, elt2: str, kw: Optional[str] = None) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt1: str = elt1
+        self.elt2: str = elt2
+        self.kw: Optional[str] = kw
 
 #
-@dataclass
 class Command_Elt_OKw_OElt(Command):
-    elt1: str
-    elt2: Optional[str] = None
-    kw: Optional[str] = None
+
+    #
+    def __init__(self, command_name: str, elt1: str, elt2: Optional[str] = None, kw: Optional[str] = None) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt1: str = elt1
+        self.elt2: Optional[str] = elt2
+        self.kw: Optional[str] = kw
 
 #
-@dataclass
 class Command_Elt_Kw_Elt_Kw_Elt(Command):
-    elt1: str
-    elt2: str
-    elt3: str
-    kw1: Optional[str] = None
-    kw2: Optional[str] = None
+
+    #
+    def __init__(
+        self,
+        command_name: str,
+        elt1: str,
+        elt2: str,
+        elt3: str,
+        kw1: Optional[str] = None,
+        kw2: Optional[str] = None
+    ) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt1: str = elt1
+        self.elt2: str = elt2
+        self.elt3: str = elt3
+        self.kw1: Optional[str] = kw1
+        self.kw2: Optional[str] = kw2
 
 #
-@dataclass
 class Command_Elt_Kw_Elt_OKw_OElt(Command):
-    elt1: str
-    elt2: str
-    elt3: Optional[str] = None
-    kw1: Optional[str] = None
-    kw2: Optional[str] = None
+
+    #
+    def __init__(
+        self,
+        command_name: str,
+        elt1: str,
+        elt2: str,
+        elt3: Optional[str] = None,
+        kw1: Optional[str] = None,
+        kw2: Optional[str] = None
+    ) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt1: str = elt1
+        self.elt2: str = elt2
+        self.elt3: Optional[str] = elt3
+        self.kw1: Optional[str] = kw1
+        self.kw2: Optional[str] = kw2
 
 #
-@dataclass
 class Command_OElt_Kw_Elt_Kw_Elt(Command):
-    elt2: str
-    elt3: str
-    elt1: Optional[str] = None
-    kw1: Optional[str] = None
-    kw2: Optional[str] = None
+
+    #
+    def __init__(
+        self,
+        command_name: str,
+        elt2: str,
+        elt3: str,
+        elt1: Optional[str] = None,
+        kw1: Optional[str] = None,
+        kw2: Optional[str] = None
+    ) -> None:
+        #
+        super().__init__(command_name=command_name)
+        #
+        self.elt2: str = elt2
+        self.elt3: str = elt3
+        self.elt1: Optional[str] = elt1
+        self.kw1: Optional[str] = kw1
+        self.kw2: Optional[str] = kw2
 

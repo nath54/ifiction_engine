@@ -1,7 +1,7 @@
 #
 from typing import Any, Optional
 #
-from engine_classes_conditions import Condition
+from . import engine_classes_conditions as eccond
 
 
 #
@@ -14,7 +14,7 @@ class Mission:
             mission_id: str,
             scene_mission_success: str = "",
             scene_mission_failure: str = "",
-            failure_condition: Optional[Condition] = None,
+            failure_condition: Optional[eccond.Condition] = None,
         ) -> None:
 
         # ABSTRACT CLASS
@@ -24,7 +24,7 @@ class Mission:
         self.scene_mission_success: str = scene_mission_success
         self.scene_mission_failure: str = scene_mission_failure
         #
-        self.failure_condition: Optional[Condition] = failure_condition
+        self.failure_condition: Optional[eccond.Condition] = failure_condition
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -55,7 +55,7 @@ class MissionRoom(Mission):
             room_id: str | list[str],
             scene_mission_success: str = "",
             scene_mission_failure: str = "",
-            failure_condition: Optional[Condition] = None,
+            failure_condition: Optional[eccond.Condition] = None,
         ) -> None:
 
         # ABSTRACT CLASS
@@ -92,7 +92,7 @@ class MissionEnterRoom(MissionRoom):
             room_id: str | list[str],
             scene_mission_success: str = "",
             scene_mission_failure: str = "",
-            failure_condition: Optional[Condition] = None,
+            failure_condition: Optional[eccond.Condition] = None,
         ) -> None:
         #
         super().__init__(
@@ -126,7 +126,7 @@ class MissionLeaveRoom(MissionRoom):
             room_id: str | list[str],
             scene_mission_success: str = "",
             scene_mission_failure: str = "",
-            failure_condition: Optional[Condition] = None,
+            failure_condition: Optional[eccond.Condition] = None,
         ) -> None:
         #
         super().__init__(
@@ -157,10 +157,10 @@ class MissionVariableCondition(Mission):
     def __init__(
             self,
             mission_id: str,
-            condition: Condition,
+            condition: eccond.Condition,
             scene_mission_success: str = "",
             scene_mission_failure: str = "",
-            failure_condition: Optional[Condition] = None,
+            failure_condition: Optional[eccond.Condition] = None,
     ) -> None:
         #
         super().__init__(
@@ -170,7 +170,7 @@ class MissionVariableCondition(Mission):
             failure_condition = failure_condition
         )
         #
-        self.condition: Condition = condition
+        self.condition: eccond.Condition = condition
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -196,7 +196,7 @@ class MissionKillEntity(Mission):
             entity_id: str | list[str],
             scene_mission_success: str = "",
             scene_mission_failure: str = "",
-            failure_condition: Optional[Condition] = None,
+            failure_condition: Optional[eccond.Condition] = None,
         ) -> None:
         #
         super().__init__(

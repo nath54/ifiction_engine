@@ -4,7 +4,7 @@ from typing import Any, Optional, Callable, Tuple
 import os
 import json
 #
-from .engine_classes_things_rooms import Thing, Object, LifeSystem, Entity, Player, Access, Room, ALL_ATTRIBUTES
+from .engine_classes_things_rooms import Thing, Object, Entity, LifeSystem, Player, Access, Room, ALL_ATTRIBUTES
 from . import engine_classes_missions as mis
 from . import engine_classes_scenes as scn
 from . import engine_classes_actions as act
@@ -565,7 +565,7 @@ def verif_game(game: Game) -> None:
         elif isinstance(event, evt.EventActionThing):
             #
             verif_list_ids(event.thing_id, game.things)
-            verif_list_ids(event.who, game.things)
+            verif_list_ids(event.entity_id, game.things)
 
     #
     mission: mis.Mission
@@ -961,21 +961,167 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
         "imports": EmptyList()
     },
 
+    "ConditionVariable": {
+        "variable_name": NoDefaultValues(),
+        "cond_op": NoDefaultValues(),
+        "operand_type": NoDefaultValues(),
+        "operand_value": NoDefaultValues()
+    },
+    "ConditionAnd": {
+        "conditions": NoDefaultValues()
+    },
+    "ConditionOr": {
+        "conditions": NoDefaultValues()
+    },
 
     "EventMissionGot": {
         "scene_id": NoDefaultValues(),
-        "mission_id": NoDefaultValues(),
-        "event_condition": condition_classes
+        "event_condition": condition_classes,
+        "mission_id": NoDefaultValues()
     },
     "EventMissionInProgress": {
         "scene_id": NoDefaultValues(),
-        "mission_id": NoDefaultValues(),
-        "event_condition": condition_classes
+        "event_condition": condition_classes,
+        "mission_id": NoDefaultValues()
     },
     "EventMissionDone": {
         "scene_id": NoDefaultValues(),
-        "mission_id": NoDefaultValues(),
+        "event_condition": condition_classes,
+        "mission_id": NoDefaultValues()
+    },
+    "EventEnterRoom": {
+        "scene_id": NoDefaultValues(),
+        "event_condition": condition_classes,
+        "room_id": NoDefaultValues()
+    },
+    "EventLeaveRoom": {
+        "scene_id": NoDefaultValues(),
+        "event_condition": condition_classes,
+        "room_id": NoDefaultValues()
+    },
+    "EventInsideRoom": {
+        "scene_id": NoDefaultValues(),
+        "event_condition": condition_classes,
+        "room_id": NoDefaultValues()
+    },
+    "EventInsideRoom": {
+        "scene_id": NoDefaultValues(),
         "event_condition": condition_classes
+    },
+    "EventActionThing": {
+        "scene_id": NoDefaultValues(),
+        "event_condition": condition_classes,
+        "thing_id": NoDefaultValues(),
+        "action_type": NoDefaultValues(),
+        "entity_id": NoDefaultValues()
+    },
+    "EventAlways": {
+        "scene_id": NoDefaultValues(),
+        "event_condition": condition_classes
+    },
+
+    "ActionText": {
+        "text": NoDefaultValues()
+    },
+    "ActionLabel": {
+        "label_name": NoDefaultValues()
+    },
+    "ActionJump": {
+        "label_name": NoDefaultValues()
+    },
+    "ActionConditionalJump": {
+        "label_name": NoDefaultValues(),
+        "condition": condition_classes
+    },
+    "ActionChangeScene": {
+        "scene_id": NoDefaultValues()
+    },
+    "ActionEndScene": {},
+    "ActionEndGame": {
+        "final_score": NoDefaultValues()
+    },
+    "ActionCreateVar": {
+        "var_name": NoDefaultValues(),
+        "var_value": NoDefaultValues()
+    },
+    "ActionEditVar": {
+        "var_name": NoDefaultValues(),
+        "var_value": NoDefaultValues()
+    },
+    "ActionDeleteVar": {
+        "var_name": NoDefaultValues()
+    },
+    "ActionBinaryOp": {
+        "var_output_name": NoDefaultValues(),
+        "elt1_type": NoDefaultValues(),
+        "elt1_value": NoDefaultValues(),
+        "elt2_type": NoDefaultValues(),
+        "elt2_value": NoDefaultValues(),
+        "op": NoDefaultValues()
+    },
+    "ActionUnaryOp": {
+        "var_output_name": NoDefaultValues(),
+        "elt_type": NoDefaultValues(),
+        "elt_value": NoDefaultValues(),
+        "op": NoDefaultValues()
+    },
+    "ActionChangeElt": {
+        "elt_id": NoDefaultValues(),
+        "elt_type": NoDefaultValues(),
+        "elt_attr_name": NoDefaultValues()
+    },
+    "ActionEditAttributeOfElt": {
+        "elt_id": NoDefaultValues(),
+        "elt_type": NoDefaultValues(),
+        "elt_attr_name": NoDefaultValues(),
+        "elt_attr_new_value": NoDefaultValues()
+    },
+    "ActionAppendToAttributeOfElt": {
+        "elt_id": NoDefaultValues(),
+        "elt_type": NoDefaultValues(),
+        "elt_attr_name": NoDefaultValues(),
+        "elt_attr_new_value_to_append": NoDefaultValues()
+    },
+    "ActionRemoveValueToAttributeOfElt": {
+        "elt_id": NoDefaultValues(),
+        "elt_type": NoDefaultValues(),
+        "elt_attr_name": NoDefaultValues(),
+        "elt_attr_value_to_remove": NoDefaultValues()
+    },
+    "ActionSetKVAttributeOfElt": {
+        "elt_id": NoDefaultValues(),
+        "elt_type": NoDefaultValues(),
+        "elt_attr_name": NoDefaultValues(),
+        "elt_attr_key": NoDefaultValues(),
+        "elt_attr_value": NoDefaultValues()
+    },
+    "ActionThingDuplicate": {
+        "src_elt_id": NoDefaultValues(),
+        "dst_elt_id": NoDefaultValues()
+    },
+    "ActionThingDisplace": {
+        "thing_id": NoDefaultValues(),
+        "src_place_type": NoDefaultValues(),
+        "src_place_id": NoDefaultValues(),
+        "dst_place_type": NoDefaultValues(),
+        "dst_place_id": NoDefaultValues(),
+        "quantity": 1
+    },
+    "ActionThingAddToPlace": {
+        "thing_id": NoDefaultValues(),
+        "place_type": NoDefaultValues(),
+        "place_id": NoDefaultValues(),
+        "quantity": 1
+    },
+    "ActionThingRemoveFromPlace": {
+        "thing_id": NoDefaultValues(),
+        "place_type": NoDefaultValues(),
+        "place_id": NoDefaultValues(),
+        "quantity": 1
+    },
+    "ActionPlayerAssignMission": {
+        "player_id": NoDefaultValues(),
+        "mission_id": NoDefaultValues()
     }
 
     # TODO: define all the Event, Mission, Actions, and Condition classes

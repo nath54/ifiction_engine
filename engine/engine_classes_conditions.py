@@ -3,7 +3,7 @@ from typing import Any
 #
 import json
 #
-from lib_utils import str_list_to_json
+from . import lib_utils as lu
 
 
 #                                                                                                #
@@ -79,7 +79,7 @@ class ConditionVariable(Condition):
         #
         elif self.operand_type == "constant_list":
             #
-            self.operand_value = json.loads( str_list_to_json( str(operand_value) ) )
+            self.operand_value = json.loads( lu.str_list_to_json( str(operand_value) ) )
         #
         else:
             #
@@ -158,7 +158,76 @@ class ConditionVariable(Condition):
         return True
 
 
-# TODO: ConditionOr
-# TODO: ConditionAnd
-# TODO: ConditionAny
-# TODO: ConditionAll
+#
+class ConditionOr(Condition):
+
+    #
+    def __init__(self, conditions: list[Condition]) -> None:
+
+        #
+        super().__init__()
+
+        #
+        self.conditions: list[Condition] = conditions
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "condition_type": "ConditionOr",
+            "conditions": [
+                c.to_dict() for c in self.conditions
+            ]
+        }
+
+    #
+    def verify(self, variables_space: dict[str, Any]) -> bool:
+
+        #
+        for c in self.conditions:
+
+            #
+            if c.verify( variables_space=variables_space ):
+                #
+                return True
+
+        #
+        return False
+
+
+#
+class ConditionAnd(Condition):
+
+    #
+    def __init__(self, conditions: list[Condition]) -> None:
+
+        #
+        super().__init__()
+
+        #
+        self.conditions: list[Condition] = conditions
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "condition_type": "ConditionAnd",
+            "conditions": [
+                c.to_dict() for c in self.conditions
+            ]
+        }
+
+    #
+    def verify(self, variables_space: dict[str, Any]) -> bool:
+
+        #
+        for c in self.conditions:
+
+            #
+            if not c.verify( variables_space=variables_space ):
+                #
+                return False
+
+        #
+        return True
+

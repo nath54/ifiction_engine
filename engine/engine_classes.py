@@ -10,10 +10,11 @@ from . import engine_classes_scenes as scn
 from . import engine_classes_actions as act
 from . import engine_classes_events as evt
 from . import engine_classes_conditions as ecc
-from . import engine_results as er
+from . import engine_classes_game as ecg
 #
 from .lib_direction import parse_directions
 from . import lib_class_fusions as lcf
+
 
 
 #
@@ -279,106 +280,6 @@ class DictOfClassLoadFromDict:
         self.default_value: Optional[Any] = default_value
 
 
-#
-class Game:
-    #
-    def __init__(
-            self,
-            game_name: str,
-            game_description: str,
-            game_author: str,
-            things: dict[str, Thing],
-            rooms: dict[str, Room],
-            variables: dict[str, Any],
-            scenes: dict[str, scn.Scene],
-            events: dict[str, evt.Event],
-            missions: dict[str, mis.Mission],
-            players: list[str],
-            nb_turns: int = 0,
-            imports: list[str] = []
-        ) -> None:
-        #
-        self.game_name: str = game_name
-        self.game_description: str = game_description
-        self.game_author: str = game_author
-        self.things: dict[str, Thing] = things
-        self.rooms: dict[str, Room] = rooms
-        self.variables: dict[str, Any] = variables
-        self.scenes: dict[str, scn.Scene] = scenes
-        self.events: dict[str, evt.Event] = events
-        self.missions: dict[str, mis.Mission] = missions
-        self.nb_turns: int = nb_turns
-        self.players: list[str] = players
-        self.nb_players: int = len(self.players)
-        self.imports: list[str] = imports
-        self.current_player: int = 0
-        self.history: list[er.Result] = []
-
-    #
-    def __str__(self) -> str:
-        #
-        return f"Game:\n\t-game name = {self.game_name}\n\t-game author = {self.game_author}\n\n*Things:\n\n{'\n\n'.join(t.__str__() for t in self.things.values())}\n\n*Rooms:\n\n{'\n\n'.join(t.__str__() for t in self.rooms.values())}\n\n*variables : {self.variables}\n\n*players : {self.players}\n\n*nb turns : {self.nb_turns}"
-
-    #
-    def __repr__(self) -> str:
-        #
-        return self.__str__()
-
-    #
-    def to_dict(self) -> dict[str, Any]:
-        #
-        res: dict[str, Any] = {
-            "game_name": self.game_name,
-            "game_author": self.game_author,
-            "things": {},
-            "rooms": {},
-            "variables": self.variables,
-            "scenes": {},
-            "events": {},
-            "missions": {},
-            "players": self.players,
-            "current_player": self.current_player,
-            "nb_turns": self.nb_turns,
-            "history": [
-                r.to_dict() for r in self.history
-            ]
-        }
-
-        #
-        k: str
-        for k in self.things:
-            res["things"][k] = self.things[k].to_dict()
-        #
-        for k in self.rooms:
-            res["rooms"][k] = self.rooms[k].to_dict()
-        #
-        for k in self.scenes:
-            res["scenes"][k] = self.scenes[k].to_dict()
-        #
-        for k in self.events:
-            res["events"][k] = self.events[k].to_dict()
-        #
-        for k in self.missions:
-            res["missions"][k] = self.missions[k].to_dict()
-
-        #
-        return res
-
-
-    #
-    def save_to_filepath(self, filepath: str, game_save_format: str = "JSON") -> None:
-        #
-        if game_save_format == "JSON":
-            #
-            game_dict: dict[str, Any] = self.to_dict()
-
-            #
-            with open(filepath, "w", encoding="utf-8") as f:
-                json.dump(game_dict, f)
-        #
-        else:
-            raise UserWarning(f"ERROR: Unkown IFICTION game save format : `{game_save_format}`")
-
 
 #
 def verif_id(elt_id: str, d: dict[str, Any]) -> Any:
@@ -420,7 +321,7 @@ def verif_scene_action_label_exists(scene: scn.Scene, label_name: str) -> None:
 
 
 #
-def verif_game(game: Game) -> None:
+def verif_game(game: ecg.Game) -> None:
 
     # Trucs à vérifier:
     #    - les ids des trucs désignés, il faut vérifier que les ids pointent vers des choses existantes
@@ -611,7 +512,7 @@ def verif_game(game: Game) -> None:
 
 
 #
-def apply_presets(game: Game) -> Game:
+def apply_presets(game: ecg.Game) -> ecg.Game:
 
     #
     preset: Thing
@@ -696,14 +597,14 @@ def apply_presets(game: Game) -> Game:
 
 
 #
-def fusion_games(games: list[Game]) -> Game:
+def fusion_games(games: list[ecg.Game]) -> ecg.Game:
     #
     if len(games) == 0:
         raise SystemError("There are no games to fusion !")
     #
-    game: Game = games[0]
+    game: ecg.Game = games[0]
     #
-    other_game: Game
+    other_game: ecg.Game
     i: int
     for i in range(1, len(games)):
         #
@@ -731,7 +632,7 @@ def fusion_games(games: list[Game]) -> Game:
 
 
 #
-def load_interactive_fiction_model_from_file(filepath: str, game_save_format: str = "JSON", already_imported: set[str] = set()) -> Game:
+def load_interactive_fiction_model_from_file(filepath: str, game_save_format: str = "JSON", already_imported: set[str] = set()) -> ecg.Game:
     #
     if not os.path.isabs(filepath):
         filepath = os.path.abspath(filepath)
@@ -748,10 +649,10 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
         dict_: dict[str, Any] = json.load(f)
 
     #
-    game: Game = create_class_with_attributes_or_default_values_from_dict(
-        class_name=Game,
+    game: ecg.Game = create_class_with_attributes_or_default_values_from_dict(
+        class_name=ecg.Game,
         in_dict=dict_,
-        type_="Game"
+        type_="ecg.Game"
     )
 
     #
@@ -760,7 +661,7 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
     #
     import_filepath: str
     import_path: str
-    imported_games: list[Game] = []
+    imported_games: list[ecg.Game] = []
     for import_path in game.imports:
         #
         import_filepath = os.path.join( os.path.dirname(filepath), import_path )
@@ -792,12 +693,15 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
         verif_game(game=game)
 
     #
+    game.prepare_events_quick_access()
+
+    #
     return game
 
 
 
 #
-def save_interactive_fiction_model_to_file(game: Game, filepath: str, game_save_format: str = "JSON") -> Game:
+def save_interactive_fiction_model_to_file(game: ecg.Game, filepath: str, game_save_format: str = "JSON") -> ecg.Game:
     #
     game.save_to_filepath(filepath, game_save_format)
     #
@@ -819,7 +723,29 @@ things_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependi
 actions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
     dict_key_value="action_type",
     class_names_and_types={
-        "action": (act.Action, "Action")
+        "Action": (act.Action, "Action"),
+        "ActionText": (act.ActionText, "ActionText"),
+        "ActionLabel": (act.ActionLabel, "ActionLabel"),
+        "ActionJump": (act.ActionJump, "ActionJump"),
+        "ActionConditionalJump": (act.ActionConditionalJump, "ActionConditionalJump"),
+        "ActionChangeScene": (act.ActionChangeScene, "ActionChangeScene"),
+        "ActionEndScene": (act.ActionEndScene, "ActionEndScene"),
+        "ActionEndGame": (act.ActionEndGame, "ActionEndGame"),
+        "ActionCreateVar": (act.ActionCreateVar, "ActionCreateVar"),
+        "ActionEditVar": (act.ActionEditVar, "ActionEditVar"),
+        "ActionDeleteVar": (act.ActionDeleteVar, "ActionDeleteVar"),
+        "ActionBinaryOp": (act.ActionBinaryOp, "ActionBinaryOp"),
+        "ActionUnaryOp": (act.ActionUnaryOp, "ActionUnaryOp"),
+        "ActionChangeElt": (act.ActionChangeElt, "ActionChangeElt"),
+        "ActionEditAttributeOfElt": (act.ActionEditAttributeOfElt, "ActionEditAttributeOfElt"),
+        "ActionAppendToAttributeOfElt": (act.ActionAppendToAttributeOfElt, "ActionAppendToAttributeOfElt"),
+        "ActionRemoveValueToAttributeOfElt": (act.ActionRemoveValueToAttributeOfElt, "ActionRemoveValueToAttributeOfElt"),
+        "ActionSetKVAttributeOfElt": (act.ActionSetKVAttributeOfElt, "ActionSetKVAttributeOfElt"),
+        "ActionThingDuplicate": (act.ActionThingDuplicate, "ActionThingDuplicate"),
+        "ActionThingDisplace": (act.ActionThingDisplace, "ActionThingDisplace"),
+        "ActionThingAddToPlace": (act.ActionThingAddToPlace, "ActionThingAddToPlace"),
+        "ActionThingRemoveFromPlace": (act.ActionThingRemoveFromPlace, "ActionThingRemoveFromPlace"),
+        "ActionPlayerAssignMission": (act.ActionPlayerAssignMission, "ActionPlayerAssignMission")
     },
     default_value=None
 )
@@ -828,7 +754,11 @@ actions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDepend
 missions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
     dict_key_value="mission_type",
     class_names_and_types={
-        "mission": (mis.Mission, "Mission")
+        "Mission": (mis.Mission, "Mission"),
+        "MissionEnterRoom": (mis.MissionEnterRoom, "MissionEnterRoom"),
+        "MissionLeaveRoom": (mis.MissionLeaveRoom, "MissionLeaveRoom"),
+        "MissionVariableCondition": (mis.MissionVariableCondition, "MissionVariableCondition"),
+        "MissionKillEntity": (mis.MissionKillEntity, "MissionKillEntity")
     },
     default_value=None
 )
@@ -837,7 +767,16 @@ missions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDepen
 events_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
     dict_key_value="event_type",
     class_names_and_types={
-        "event": (evt.Event, "Event")
+        "Event": (evt.Event, "Event"),
+        "EventMissionGot": (evt.EventMissionGot, "EventMissionGot"),
+        "EventMissionInProgress": (evt.EventMissionInProgress, "EventMissionInProgress"),
+        "EventMissionDone": (evt.EventMissionDone, "EventMissionDone"),
+        "EventEnterRoom": (evt.EventEnterRoom, "EventEnterRoom"),
+        "EventLeaveRoom": (evt.EventLeaveRoom, "EventLeaveRoom"),
+        "EventInsideRoom": (evt.EventInsideRoom, "EventInsideRoom"),
+        "EventVariableCondition": (evt.EventVariableCondition, "EventVariableCondition"),
+        "EventActionThing": (evt.EventActionThing, "EventActionThing"),
+        "EventAlways": (evt.EventAlways, "EventAlways")
     },
     default_value=None
 )
@@ -846,7 +785,9 @@ events_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependi
 condition_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
     dict_key_value="condition_type",
     class_names_and_types={
-        "ConditionVariable": (ecc.ConditionVariable, "ConditionVariable")
+        "ConditionVariable": (ecc.ConditionVariable, "ConditionVariable"),
+        "ConditionAnd": (ecc.ConditionAnd, "ConditionAnd"),
+        "ConditionOr": (ecc.ConditionOr, "ConditionOr")
     },
     default_value=None
 )
@@ -947,7 +888,7 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
         "things_inside": EmptyDict(),
         "description": ""
     },
-    "Game": {
+    "ecg.Game": {
         "game_name": "",
         "game_description": "",
         "game_author": "",
@@ -1122,8 +1063,35 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
     "ActionPlayerAssignMission": {
         "player_id": NoDefaultValues(),
         "mission_id": NoDefaultValues()
-    }
+    },
 
-    # TODO: define all the Event, Mission, Actions, and Condition classes
+    "MissionEnterRoom": {
+        "mission_id": NoDefaultValues(),
+        "room_id": NoDefaultValues(),
+        "scene_mission_success": "",
+        "scene_mission_failure": "",
+        "failure_condition": condition_classes
+    },
+    "MissionLeaveRoom": {
+        "mission_id": NoDefaultValues(),
+        "room_id": NoDefaultValues(),
+        "scene_mission_success": "",
+        "scene_mission_failure": "",
+        "failure_condition": condition_classes
+    },
+    "MissionVariableCondition": {
+        "mission_id": NoDefaultValues(),
+        "condition": condition_classes,
+        "scene_mission_success": "",
+        "scene_mission_failure": "",
+        "failure_condition": condition_classes
+    },
+    "MissionKillEntity": {
+        "mission_id": NoDefaultValues(),
+        "entity_id": NoDefaultValues(),
+        "scene_mission_success": "",
+        "scene_mission_failure": "",
+        "failure_condition": condition_classes
+    }
 
 }

@@ -4,7 +4,8 @@ from typing import Optional
 import sys
 #
 from engine.interaction_system import BasicTerminalInteractionSystem
-from engine.engine_classes import load_interactive_fiction_model_from_file, Game, Room
+from engine.engine_classes import load_interactive_fiction_model_from_file, Room
+from engine.engine_classes_game import Game
 from engine.command_parsing import parse_command
 import engine.engine_classes_commands as ecc
 from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn, execute_C_LOOKAROUND, get_room_of_player
@@ -59,13 +60,13 @@ if __name__ == "__main__":
         parsed_command: Optional[ecc.Command] = parse_command(command_input=command_input)
 
         #
-        if parsed_command is None or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:
+        if parsed_command is None or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:  # type: ignore
             #
             interaction_system.write_to_output(txt="Unkown Command\n")
             continue
 
         #
-        ALL_COMMANDS_FUNCTIONS[parsed_command.command_name](game, interaction_system, parsed_command, game.players[game.current_player], False)
+        ALL_COMMANDS_FUNCTIONS[parsed_command.command_name](game, interaction_system, parsed_command, game.players[game.current_player], False)  # type: ignore
 
         #
         if parsed_command.command_name == "C_QUIT":
@@ -91,4 +92,4 @@ if __name__ == "__main__":
     interaction_system.write_to_output(txt="\nSystem Exit\nGoodbye.")
     #
     if hasattr(interaction_system, "flush_output"):
-        interaction_system.flush_output()
+        interaction_system.flush_output()  # type: ignore

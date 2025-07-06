@@ -31,7 +31,7 @@ class Action:
     def to_dict(self) -> dict[str, Any]:
         #
         return {
-            "action_type": "action"
+            "action_type": "Action"
         }
 
 
@@ -49,6 +49,14 @@ class ActionText(Action):
         #
         self.text: str = text
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionText",
+            "text": self.text
+        }
+
 
 #
 ### Action that act as a guide for ActionJump and And ActionConditionalJump to know where to jump ###
@@ -64,6 +72,14 @@ class ActionLabel(Action):
         #
         self.label_name: str = label_name
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionLabel",
+            "label_name": self.label_name
+        }
+
 
 #
 ### Action that jumps to the next action after the specified label name. ###
@@ -78,6 +94,14 @@ class ActionJump(Action):
         super().__init__()
         #
         self.label_name: str = label_name
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionJump",
+            "label_name": self.label_name
+        }
 
 
 #
@@ -95,6 +119,14 @@ class ActionConditionalJump(ActionJump):
         #
         self.condition: eccond.Condition = condition
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionConditionalJump",
+            "condition": self.condition.to_dict()
+        }
+
 
 #
 ### Action that change the current scene and jump to the first action of the new scene. ###
@@ -110,6 +142,14 @@ class ActionChangeScene(Action):
         #
         self.scene_id: str = scene_id
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionChangeScene",
+            "scene_id": self.scene_id
+        }
+
 
 #
 ### Action that ends the scene and get back to the game. ###
@@ -121,6 +161,13 @@ class ActionEndScene(Action):
         ) -> None:
         #
         super().__init__()
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionEndScene"
+        }
 
 
 #
@@ -136,6 +183,14 @@ class ActionEndGame(Action):
         super().__init__()
         #
         self.final_score: int = 0
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionEndScene",
+            "final_score": self.final_score
+        }
 
 
 #                                                                                                #
@@ -157,13 +212,22 @@ class ActionCreateVar(Action):
     def __init__(
             self,
             var_name: str,
-            var_value: str | int | float | bool
+            var_value: Any
         ) -> None:
         #
         super().__init__()
         #
         self.var_name: str = var_name
-        self.var_value: str | int | float | bool = var_value
+        self.var_value: Any = var_value
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionCreateVar",
+            "var_name": self.var_name,
+            "var_value": self.var_value
+        }
 
 
 #
@@ -171,12 +235,21 @@ class ActionCreateVar(Action):
 #
 class ActionEditVar(Action):
     #
-    def __init__(self, var_name: str, var_value: str | int | float | bool) -> None:
+    def __init__(self, var_name: str, var_value: Any) -> None:
         #
         super().__init__()
         #
         self.var_name: str = var_name
-        self.var_value: str | int | float | bool = var_value
+        self.var_value: Any = var_value
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionEditVar",
+            "var_name": self.var_name,
+            "var_value": self.var_value
+        }
 
 
 #
@@ -189,6 +262,14 @@ class ActionDeleteVar(Action):
         super().__init__()
         #
         self.var_name: str = var_name
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionDeleteVar",
+            "var_name": self.var_name
+        }
 
 
 #
@@ -215,6 +296,19 @@ class ActionBinaryOp(Action):
         self.elt2_value: Any = elt2_value
         self.op: str = op
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionBinaryOp",
+            "var_output_name": self.var_output_name,
+            "elt1_type": self.elt1_type,
+            "elt1_value": self.elt1_value,
+            "elt2_type": self.elt2_type,
+            "elt2_value": self.elt2_value,
+            "op": self.op
+        }
+
 
 #
 ### Action that create or update a variable (the ouput one) with the result value of the specified operation. ###
@@ -235,6 +329,17 @@ class ActionUnaryOp(Action):
         self.elt_type: str = elt_type
         self.elt_value: Any = elt_value
         self.op: str = op
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionUnaryOp",
+            "var_output_name": self.var_output_name,
+            "elt_type": self.elt_type,
+            "elt_value": self.elt_value,
+            "op": self.op
+        }
 
 
 #                                                                                                #
@@ -266,6 +371,16 @@ class ActionChangeElt(Action):
         self.elt_type: str = elt_type
         self.elt_attr_name: str | list[str] = elt_attr_name
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionChangeElt",
+            "elt_id": self.elt_id,
+            "elt_type": self.elt_type,
+            "elt_attr_name": self.elt_attr_name
+        }
+
 
 #
 ### Action that edit the value of an attribute. WARNING: thus only works on scalar / string attributes. ###
@@ -284,6 +399,17 @@ class ActionEditAttributeOfElt(ActionChangeElt):
         #
         self.elt_attr_new_value: Any = elt_attr_new_value
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionEditAttributeOfElt",
+            "elt_id": self.elt_id,
+            "elt_type": self.elt_type,
+            "elt_attr_name": self.elt_attr_name,
+            "elt_attr_new_value": self.elt_attr_new_value
+        }
+
 
 #
 ### Action that append a value to an attribute that is a list. WARNING: thus only works on attributes with list type. ###
@@ -301,6 +427,17 @@ class ActionAppendToAttributeOfElt(ActionChangeElt):
         super().__init__(elt_id=elt_id, elt_type=elt_type, elt_attr_name=elt_attr_name)
         #
         self.elt_attr_new_value_to_append: Any = elt_attr_new_value_to_append
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionAppendToAttributeOfElt",
+            "elt_id": self.elt_id,
+            "elt_type": self.elt_type,
+            "elt_attr_name": self.elt_attr_name,
+            "elt_attr_new_value_to_append": self.elt_attr_new_value_to_append
+        }
 
 
 
@@ -321,6 +458,17 @@ class ActionRemoveValueToAttributeOfElt(ActionChangeElt):
         #
         self.elt_attr_value_to_remove: Any = elt_attr_value_to_remove
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionRemoveValueToAttributeOfElt",
+            "elt_id": self.elt_id,
+            "elt_type": self.elt_type,
+            "elt_attr_name": self.elt_attr_name,
+            "elt_attr_value_to_remove": self.elt_attr_value_to_remove
+        }
+
 
 #
 ### Action that set a value to an attribute that is a dict. WARNING: thus only works on attributes with dictionnary type. ###
@@ -340,6 +488,18 @@ class ActionSetKVAttributeOfElt(ActionChangeElt):
         #
         self.elt_attr_key: str = elt_attr_key
         self.elt_attr_value: Any = elt_attr_value
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionSetKVAttributeOfElt",
+            "elt_id": self.elt_id,
+            "elt_type": self.elt_type,
+            "elt_attr_name": self.elt_attr_name,
+            "elt_attr_key": self.elt_attr_key,
+            "elt_attr_value": self.elt_attr_value
+        }
 
 
 #                                                                                                #
@@ -382,6 +542,15 @@ class ActionThingDuplicate(Action):
         self.src_elt_id: str = src_elt_id
         self.dst_elt_id: str = dst_elt_id
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionThingDuplicate",
+            "src_elt_id": self.src_elt_id,
+            "dst_elt_id": self.dst_elt_id
+        }
+
 
 #
 ### Action that displace a certain quantity of things from a place to another place ###
@@ -408,6 +577,19 @@ class ActionThingDisplace(Action):
         self.dst_place_id: str = dst_place_id
         self.quantity: int = quantity
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionThingDisplace",
+            "thing_id": self.thing_id,
+            "src_place_type": self.src_place_type,
+            "src_place_id": self.src_place_id,
+            "dst_place_type": self.dst_place_type,
+            "dst_place_id": self.dst_place_id,
+            "quantity": self.quantity
+        }
+
 
 #
 ### Action that add a certain quantity of things to a place ###
@@ -430,6 +612,17 @@ class ActionThingAddToPlace(Action):
         self.place_id: str = place_id
         self.quantity: int = quantity
 
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionThingAddToPlace",
+            "thing_id": self.thing_id,
+            "place_type": self.place_type,
+            "place_id": self.place_id,
+            "quantity": self.quantity
+        }
+
 
 #
 ### Action that remove a certain quantity of things to a place ###
@@ -451,6 +644,17 @@ class ActionThingRemoveFromPlace(Action):
         self.place_type: str = place_type
         self.place_id: str = place_id
         self.quantity: int = quantity
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionThingRemoveFromPlace",
+            "thing_id": self.thing_id,
+            "place_type": self.place_type,
+            "place_id": self.place_id,
+            "quantity": self.quantity
+        }
 
 
 #                                                                                                #
@@ -480,4 +684,13 @@ class ActionPlayerAssignMission(Action):
         #
         self.player_id: str = player_id
         self.mission_id: str = mission_id
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionPlayerAssignMission",
+            "player_id": self.player_id,
+            "mission_id": self.mission_id
+        }
 

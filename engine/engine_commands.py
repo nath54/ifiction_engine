@@ -8,6 +8,7 @@ from datetime import datetime
 from copy import deepcopy
 #
 from . import engine_classes as engine
+from . import engine_classes_game as ecg
 from . import engine_results as er
 from . import engine_classes_commands as ecc
 from .interaction_system import InteractionSystem
@@ -42,7 +43,7 @@ def traite_txt_for_filepaths(txt: str) -> str:
 
 
 #
-def get_game_savedir(game: engine.Game) -> str:
+def get_game_savedir(game: ecg.Game) -> str:
     #
     if not os.path.exists(FOLDER_SAVE_GAMES):
         #
@@ -66,7 +67,7 @@ def get_game_savedir(game: engine.Game) -> str:
 
 
 #
-def get_next_available_auto_savegame_filepath(game: engine.Game) -> str:
+def get_next_available_auto_savegame_filepath(game: ecg.Game) -> str:
     #
     game_savedir: str = get_game_savedir(game=game)
     #
@@ -92,7 +93,7 @@ def get_next_available_auto_savegame_filepath(game: engine.Game) -> str:
 #################################################################################
 
 #
-def get_opt_thing(game: engine.Game, thing_id: str) -> Optional[engine.Thing]:
+def get_opt_thing(game: ecg.Game, thing_id: str) -> Optional[engine.Thing]:
     #
     if thing_id in game.things:
         return game.things[thing_id]
@@ -100,7 +101,7 @@ def get_opt_thing(game: engine.Game, thing_id: str) -> Optional[engine.Thing]:
     return None
 
 #
-def get_thing(game: engine.Game, thing_id: str) -> engine.Thing:
+def get_thing(game: ecg.Game, thing_id: str) -> engine.Thing:
     #
     if thing_id in game.things:
         return game.things[thing_id]
@@ -108,7 +109,7 @@ def get_thing(game: engine.Game, thing_id: str) -> engine.Thing:
     raise RuntimeError(f"Error: There are no thing with id `{thing_id}` in the current ifiction game: {game.game_name}.")
 
 #
-def get_entity(game: engine.Game, entity_id: str) -> engine.Entity:
+def get_entity(game: ecg.Game, entity_id: str) -> engine.Entity:
     #
     if entity_id in game.things:
         thing: engine.Thing = game.things[entity_id]
@@ -121,7 +122,7 @@ def get_entity(game: engine.Game, entity_id: str) -> engine.Entity:
     raise RuntimeError(f"Error: There are no thing with id `{entity_id}` in the current ifiction game: {game.game_name}.")
 
 #
-def get_opt_room(game: engine.Game, room_id: str) -> Optional[engine.Room]:
+def get_opt_room(game: ecg.Game, room_id: str) -> Optional[engine.Room]:
     #
     if room_id in game.rooms:
         return game.rooms[room_id]
@@ -129,7 +130,7 @@ def get_opt_room(game: engine.Game, room_id: str) -> Optional[engine.Room]:
     return None
 
 #
-def get_room(game: engine.Game, room_id: str) -> engine.Room:
+def get_room(game: ecg.Game, room_id: str) -> engine.Room:
     #
     if room_id in game.rooms:
         return game.rooms[room_id]
@@ -137,7 +138,7 @@ def get_room(game: engine.Game, room_id: str) -> engine.Room:
     raise RuntimeError(f"Engine error: There are no room with id `{room_id}` in the current ifiction game: {game.game_name}.")
 
 #
-def get_room_of_player(game: engine.Game, player_id: str) -> engine.Room:
+def get_room_of_player(game: ecg.Game, player_id: str) -> engine.Room:
     #
     player_thing: engine.Thing = get_thing(game=game, thing_id=player_id)
     #
@@ -158,7 +159,7 @@ def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, engine.Thing | eng
     return res1
 
 #
-def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res_tuple_keyword: str, res_tuple_value: engine.Thing | engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
+def add_subthing_to_rec_res(game: ecg.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res_tuple_keyword: str, res_tuple_value: engine.Thing | engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
     subthing = get_thing(game=game, thing_id=subthing_id)
     #
@@ -178,7 +179,7 @@ def add_subthing_to_rec_res(game: engine.Game, subthing_id: str, res: dict[engin
     return res
 
 #
-def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
+def get_rec_all_things_of_a_thing(game: ecg.Game, thing: engine.Thing) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
     res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = {}
     #
@@ -203,7 +204,7 @@ def get_rec_all_things_of_a_thing(game: engine.Game, thing: engine.Thing) -> dic
     return res
 
 #
-def get_rec_all_things_of_a_room(game: engine.Game, room: engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
+def get_rec_all_things_of_a_room(game: ecg.Game, room: engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
     res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = {}
     #
@@ -215,12 +216,12 @@ def get_rec_all_things_of_a_room(game: engine.Game, room: engine.Room) -> dict[e
     return res
 
 #
-def get_all_thing_of_a_room(game: engine.Game, room: engine.Room) -> list[engine.Thing]:
+def get_all_thing_of_a_room(game: ecg.Game, room: engine.Room) -> list[engine.Thing]:
     #
     return [get_thing(game=game, thing_id=thing_id) for thing_id in room.things_inside]
 
 #
-def describe_room(game: engine.Game, room: engine.Room, player_id: str = "") -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
+def describe_room(game: ecg.Game, room: engine.Room, player_id: str = "") -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
     things_in_room: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]] = get_rec_all_things_of_a_room(game=game, room=room)
     #
@@ -249,7 +250,7 @@ def is_designing_thing(text: str, thing: engine.Thing) -> bool:
     return False
 
 #
-def get_designed_thing(game: engine.Game, text: str, player_id: str) -> Optional[engine.Thing]:
+def get_designed_thing(game: ecg.Game, text: str, player_id: str) -> Optional[engine.Thing]:
     #
     current_player_room: engine.Room = get_room_of_player(game=game, player_id=player_id)
 
@@ -267,7 +268,7 @@ def get_designed_thing(game: engine.Game, text: str, player_id: str) -> Optional
     return None
 
 #
-def remove_thing_from_thing(game: engine.Game, thing_to_remove_id: str, thing: engine.Thing, quantity: int = 1) -> None:
+def remove_thing_from_thing(game: ecg.Game, thing_to_remove_id: str, thing: engine.Thing, quantity: int = 1) -> None:
     #
     if isinstance(thing, engine.Object):
         #
@@ -292,7 +293,7 @@ def remove_thing_from_thing(game: engine.Game, thing_to_remove_id: str, thing: e
             del thing.inventory[thing_to_remove_id]
 
 #
-def add_thing_to_thing(game: engine.Game, thing_to_add_id: str, thing: engine.Thing, quantity: int = 1) -> None:
+def add_thing_to_thing(game: ecg.Game, thing_to_add_id: str, thing: engine.Thing, quantity: int = 1) -> None:
     #
     if isinstance(thing, engine.Object):
         #
@@ -311,13 +312,13 @@ def add_thing_to_thing(game: engine.Game, thing_to_add_id: str, thing: engine.Th
         thing.inventory[thing_to_add_id] += quantity
 
 #
-def move_thing_from_thing_to_thing(game: engine.Game, thing_id: str, thing_from: engine.Thing, thing_to: engine.Thing, quantity: int = 1) -> None:
+def move_thing_from_thing_to_thing(game: ecg.Game, thing_id: str, thing_from: engine.Thing, thing_to: engine.Thing, quantity: int = 1) -> None:
     #
     remove_thing_from_thing(game=game, thing_to_remove_id=thing_id, thing=thing_from, quantity=quantity)
     add_thing_to_thing(game=game, thing_to_add_id=thing_id, thing=thing_to, quantity=quantity)
 
 #
-def remove_thing_from_room(game: engine.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
+def remove_thing_from_room(game: ecg.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
     #
     if thing_id not in room.things_inside:
         return
@@ -329,7 +330,7 @@ def remove_thing_from_room(game: engine.Game, thing_id: str, room: engine.Room, 
         del room.things_inside[thing_id]
 
 #
-def add_thing_to_room(game: engine.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
+def add_thing_to_room(game: ecg.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
     #
     if thing_id not in room.things_inside:
         room.things_inside[thing_id] = quantity
@@ -338,7 +339,7 @@ def add_thing_to_room(game: engine.Game, thing_id: str, room: engine.Room, quant
     room.things_inside[thing_id] += quantity
 
 #
-def remove_thing_from_inventory(game: engine.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
+def remove_thing_from_inventory(game: ecg.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
     #
     if thing_id not in entity.inventory:
         return
@@ -350,7 +351,7 @@ def remove_thing_from_inventory(game: engine.Game, thing_id: str, entity: engine
         del entity.inventory[thing_id]
 
 #
-def add_thing_to_inventory(game: engine.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
+def add_thing_to_inventory(game: ecg.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
     #
     if thing_id not in entity.inventory:
         entity.inventory[thing_id] = quantity
@@ -359,13 +360,13 @@ def add_thing_to_inventory(game: engine.Game, thing_id: str, entity: engine.Enti
     entity.inventory[thing_id] += quantity
 
 #
-def move_thing_from_room_to_room(game: engine.Game, thing_id: str, room_from: engine.Room, room_to: engine.Room, quantity: int = 1) -> None:
+def move_thing_from_room_to_room(game: ecg.Game, thing_id: str, room_from: engine.Room, room_to: engine.Room, quantity: int = 1) -> None:
     #
     remove_thing_from_room(game=game, thing_id=thing_id, room=room_from, quantity=quantity)
     add_thing_to_room(game=game, thing_id=thing_id, room=room_to, quantity=quantity)
 
 #
-def get_thing_designed(game: engine.Game, text: str, list_of_things: list[engine.Thing]) -> Optional[engine.Thing]:
+def get_thing_designed(game: ecg.Game, text: str, list_of_things: list[engine.Thing]) -> Optional[engine.Thing]:
     #
     thing: engine.Thing
     #
@@ -382,7 +383,7 @@ def get_thing_designed(game: engine.Game, text: str, list_of_things: list[engine
 ############################################################################
 
 #
-def execute_C_LOOKAROUND(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_LOOKAROUND(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -403,7 +404,7 @@ def execute_C_LOOKAROUND(game: engine.Game, interaction_system: InteractionSyste
 
 
 #
-def execute_C_RECAP(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_RECAP(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -419,7 +420,7 @@ def execute_C_RECAP(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_BRIEF(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_BRIEF(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -440,7 +441,7 @@ def execute_C_BRIEF(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_DESCRIBE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_DESCRIBE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -462,7 +463,7 @@ def execute_C_DESCRIBE(game: engine.Game, interaction_system: InteractionSystem,
 
 
 #
-def execute_C_EXAMINE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_EXAMINE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -483,7 +484,7 @@ def execute_C_EXAMINE(game: engine.Game, interaction_system: InteractionSystem, 
 
 
 #
-def execute_C_RUMMAGE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_RUMMAGE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -499,7 +500,7 @@ def execute_C_RUMMAGE(game: engine.Game, interaction_system: InteractionSystem, 
 
 
 #
-def execute_C_LISTEN(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_LISTEN(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -515,7 +516,7 @@ def execute_C_LISTEN(game: engine.Game, interaction_system: InteractionSystem, c
 
 
 #
-def execute_C_TOUCH(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_TOUCH(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -531,7 +532,7 @@ def execute_C_TOUCH(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_READ(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_READ(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -547,7 +548,7 @@ def execute_C_READ(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_TASTE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_TASTE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -563,7 +564,7 @@ def execute_C_TASTE(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_SMELL(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SMELL(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -579,7 +580,7 @@ def execute_C_SMELL(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_GO(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -666,7 +667,7 @@ def execute_C_GO(game: engine.Game, interaction_system: InteractionSystem, comma
 
 
 #
-def execute_C_PUT(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_PUT(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -682,7 +683,7 @@ def execute_C_PUT(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_PUSH(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_PUSH(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -698,7 +699,7 @@ def execute_C_PUSH(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_PULL(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_PULL(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -714,7 +715,7 @@ def execute_C_PULL(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_ATTACH(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_ATTACH(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -730,7 +731,7 @@ def execute_C_ATTACH(game: engine.Game, interaction_system: InteractionSystem, c
 
 
 #
-def execute_C_BREAK(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_BREAK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -746,7 +747,7 @@ def execute_C_BREAK(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_THROW(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_THROW(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -762,7 +763,7 @@ def execute_C_THROW(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_DROP(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_DROP(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -798,7 +799,7 @@ def execute_C_DROP(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_CLEAN(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_CLEAN(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -814,7 +815,7 @@ def execute_C_CLEAN(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_USE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_USE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -913,7 +914,7 @@ def execute_C_USE(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_CLIMB(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_CLIMB(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -929,7 +930,7 @@ def execute_C_CLIMB(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_OPEN(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_OPEN(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -983,7 +984,7 @@ def execute_C_OPEN(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_CLOSE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_CLOSE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1031,7 +1032,7 @@ def execute_C_CLOSE(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_LOCK(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_LOCK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1114,7 +1115,7 @@ def execute_C_LOCK(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_UNLOCK(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_UNLOCK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1191,7 +1192,7 @@ def execute_C_UNLOCK(game: engine.Game, interaction_system: InteractionSystem, c
 
 
 #
-def execute_C_FILL(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_FILL(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1207,7 +1208,7 @@ def execute_C_FILL(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_POUR(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_POUR(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1223,7 +1224,7 @@ def execute_C_POUR(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_INSERT(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_INSERT(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1239,7 +1240,7 @@ def execute_C_INSERT(game: engine.Game, interaction_system: InteractionSystem, c
 
 
 #
-def execute_C_REMOVE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_REMOVE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1255,7 +1256,7 @@ def execute_C_REMOVE(game: engine.Game, interaction_system: InteractionSystem, c
 
 
 #
-def execute_C_SET(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SET(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1271,7 +1272,7 @@ def execute_C_SET(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_SPREAD(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SPREAD(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1287,7 +1288,7 @@ def execute_C_SPREAD(game: engine.Game, interaction_system: InteractionSystem, c
 
 
 #
-def execute_C_SQUEEZE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SQUEEZE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1303,7 +1304,7 @@ def execute_C_SQUEEZE(game: engine.Game, interaction_system: InteractionSystem, 
 
 
 #
-def execute_C_EAT(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_EAT(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1319,7 +1320,7 @@ def execute_C_EAT(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_DRINK(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_DRINK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1335,7 +1336,7 @@ def execute_C_DRINK(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_AWAKE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_AWAKE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1351,7 +1352,7 @@ def execute_C_AWAKE(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_ATTACK(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_ATTACK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1367,7 +1368,7 @@ def execute_C_ATTACK(game: engine.Game, interaction_system: InteractionSystem, c
 
 
 #
-def execute_C_BUY(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_BUY(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1383,7 +1384,7 @@ def execute_C_BUY(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_SHOW(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SHOW(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1399,7 +1400,7 @@ def execute_C_SHOW(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_EMBRACE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_EMBRACE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1415,7 +1416,7 @@ def execute_C_EMBRACE(game: engine.Game, interaction_system: InteractionSystem, 
 
 
 #
-def execute_C_FEED(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_FEED(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1431,7 +1432,7 @@ def execute_C_FEED(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_GIVE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_GIVE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1447,7 +1448,7 @@ def execute_C_GIVE(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_SAY(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SAY(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1463,7 +1464,7 @@ def execute_C_SAY(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_ASK(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_ASK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1479,7 +1480,7 @@ def execute_C_ASK(game: engine.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_WRITE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_WRITE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1495,7 +1496,7 @@ def execute_C_WRITE(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_ERASE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_ERASE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1511,7 +1512,7 @@ def execute_C_ERASE(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_WEAR(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_WEAR(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1527,7 +1528,7 @@ def execute_C_WEAR(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_UNDRESS(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_UNDRESS(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1543,7 +1544,7 @@ def execute_C_UNDRESS(game: engine.Game, interaction_system: InteractionSystem, 
 
 
 #
-def execute_C_INVENTORY(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_INVENTORY(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1565,7 +1566,7 @@ def execute_C_INVENTORY(game: engine.Game, interaction_system: InteractionSystem
 
 
 #
-def execute_C_WAIT(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_WAIT(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1581,7 +1582,7 @@ def execute_C_WAIT(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_SLEEP(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SLEEP(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1597,7 +1598,7 @@ def execute_C_SLEEP(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_SIT_DOWN(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SIT_DOWN(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1613,7 +1614,7 @@ def execute_C_SIT_DOWN(game: engine.Game, interaction_system: InteractionSystem,
 
 
 #
-def execute_C_LIE_DOWN(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_LIE_DOWN(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1629,7 +1630,7 @@ def execute_C_LIE_DOWN(game: engine.Game, interaction_system: InteractionSystem,
 
 
 #
-def execute_C_STAND_UP(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_STAND_UP(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1645,7 +1646,7 @@ def execute_C_STAND_UP(game: engine.Game, interaction_system: InteractionSystem,
 
 
 #
-def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_TAKE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1700,7 +1701,7 @@ def execute_C_TAKE(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_DANCE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_DANCE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1716,7 +1717,7 @@ def execute_C_DANCE(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_SING(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SING(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1732,7 +1733,7 @@ def execute_C_SING(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_JUMP(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_JUMP(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1748,7 +1749,7 @@ def execute_C_JUMP(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_THINK(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_THINK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1764,7 +1765,7 @@ def execute_C_THINK(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_QUIT(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_QUIT(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1774,7 +1775,7 @@ def execute_C_QUIT(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_SAVE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SAVE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1815,7 +1816,7 @@ def execute_C_SAVE(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_LOAD(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_LOAD(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1831,7 +1832,7 @@ def execute_C_LOAD(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_SCORE(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_SCORE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1847,7 +1848,7 @@ def execute_C_SCORE(game: engine.Game, interaction_system: InteractionSystem, co
 
 
 #
-def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, command: ecc.Command_OElt, player_id: str, copy_game: bool = False) -> engine.Game:
+def execute_C_HELP(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1867,7 +1868,7 @@ def execute_C_HELP(game: engine.Game, interaction_system: InteractionSystem, com
 
 
 #
-def introduce_game(game: engine.Game, interaction_system: InteractionSystem) -> None:
+def introduce_game(game: ecg.Game, interaction_system: InteractionSystem) -> None:
     #
     if game.nb_turns == 0:
         #
@@ -1885,13 +1886,13 @@ def introduce_game(game: engine.Game, interaction_system: InteractionSystem) -> 
 
 
 #
-def after_each_player_turn(game: engine.Game, interaction_system: InteractionSystem) -> None:
+def after_each_player_turn(game: ecg.Game, interaction_system: InteractionSystem) -> None:
     #
     pass
 
 
 #
-def after_all_players_turn(game: engine.Game, interaction_system: InteractionSystem) -> None:
+def after_all_players_turn(game: ecg.Game, interaction_system: InteractionSystem) -> None:
     #
     pass
     #
@@ -1904,7 +1905,7 @@ def after_all_players_turn(game: engine.Game, interaction_system: InteractionSys
 
 
 #
-ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[engine.Game, InteractionSystem, ecc.Command, str, bool], engine.Game]] = {
+ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[ecg.Game, InteractionSystem, ecc.Command, str, bool], ecg.Game]] = {
     "C_LOOKAROUND": execute_C_LOOKAROUND,   # type: ignore
     "C_RECAP": execute_C_RECAP,             # type: ignore
     "C_BRIEF": execute_C_BRIEF,             # type: ignore

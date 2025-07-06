@@ -241,10 +241,10 @@ def describe_room(game: ecg.Game, room: engine.Room, player_id: str = "") -> dic
 #
 def is_designing_thing(text: str, thing: engine.Thing) -> bool:
     #
-    if text == thing.name:
+    if text in thing.name:
         return True
     #
-    if text == thing.id:
+    if text in thing.id:
         return True
     #
     return False
@@ -258,12 +258,20 @@ def get_designed_thing(game: ecg.Game, text: str, player_id: str) -> Optional[en
     things_in_room: list[engine.Thing] = get_all_thing_of_a_room(game=game, room=current_player_room)
 
     #
+    possible_things: list[engine.Thing] = []
+
+    #
     thing: engine.Thing
     for thing in things_in_room:
         #
         if is_designing_thing(text=text, thing=thing):
-            return thing
+            #
+            possible_things.append( thing )
 
+    #
+    if len(possible_things) == 1:
+        #
+        return possible_things[0]
     #
     return None
 

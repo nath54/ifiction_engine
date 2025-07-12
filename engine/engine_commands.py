@@ -100,6 +100,7 @@ def get_opt_thing(game: ecg.Game, thing_id: str) -> Optional[engine.Thing]:
     #
     return None
 
+
 #
 def get_thing(game: ecg.Game, thing_id: str) -> engine.Thing:
     #
@@ -107,6 +108,7 @@ def get_thing(game: ecg.Game, thing_id: str) -> engine.Thing:
         return game.things[thing_id]
     #
     raise RuntimeError(f"Error: There are no thing with id `{thing_id}` in the current ifiction game: {game.game_name}.")
+
 
 #
 def get_entity(game: ecg.Game, entity_id: str) -> engine.Entity:
@@ -121,6 +123,7 @@ def get_entity(game: ecg.Game, entity_id: str) -> engine.Entity:
     #
     raise RuntimeError(f"Error: There are no thing with id `{entity_id}` in the current ifiction game: {game.game_name}.")
 
+
 #
 def get_opt_room(game: ecg.Game, room_id: str) -> Optional[engine.Room]:
     #
@@ -129,6 +132,7 @@ def get_opt_room(game: ecg.Game, room_id: str) -> Optional[engine.Room]:
     #
     return None
 
+
 #
 def get_room(game: ecg.Game, room_id: str) -> engine.Room:
     #
@@ -136,6 +140,7 @@ def get_room(game: ecg.Game, room_id: str) -> engine.Room:
         return game.rooms[room_id]
     #
     raise RuntimeError(f"Engine error: There are no room with id `{room_id}` in the current ifiction game: {game.game_name}.")
+
 
 #
 def get_room_of_player(game: ecg.Game, player_id: str) -> engine.Room:
@@ -149,6 +154,7 @@ def get_room_of_player(game: ecg.Game, player_id: str) -> engine.Room:
     #
     return get_room(game=game, room_id=player.room)
 
+
 #
 def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res2: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
@@ -157,6 +163,7 @@ def fusion_rec_res_things(res1: dict[engine.Thing, tuple[str, engine.Thing | eng
             res1[k] = res2[k]
     #
     return res1
+
 
 #
 def add_subthing_to_rec_res(game: ecg.Game, subthing_id: str, res: dict[engine.Thing, tuple[str, engine.Thing | engine.Room]], res_tuple_keyword: str, res_tuple_value: engine.Thing | engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
@@ -177,6 +184,7 @@ def add_subthing_to_rec_res(game: ecg.Game, subthing_id: str, res: dict[engine.T
     )
     #
     return res
+
 
 #
 def get_rec_all_things_of_a_thing(game: ecg.Game, thing: engine.Thing) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
@@ -203,6 +211,7 @@ def get_rec_all_things_of_a_thing(game: ecg.Game, thing: engine.Thing) -> dict[e
     #
     return res
 
+
 #
 def get_rec_all_things_of_a_room(game: ecg.Game, room: engine.Room) -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
     #
@@ -215,10 +224,12 @@ def get_rec_all_things_of_a_room(game: ecg.Game, room: engine.Room) -> dict[engi
     #
     return res
 
+
 #
 def get_all_thing_of_a_room(game: ecg.Game, room: engine.Room) -> list[engine.Thing]:
     #
     return [get_thing(game=game, thing_id=thing_id) for thing_id in room.things_inside]
+
 
 #
 def describe_room(game: ecg.Game, room: engine.Room, player_id: str = "") -> dict[engine.Thing, tuple[str, engine.Thing | engine.Room]]:
@@ -237,7 +248,6 @@ def describe_room(game: ecg.Game, room: engine.Room, player_id: str = "") -> dic
     return things_in_room
 
 
-
 #
 def is_designing_thing(text: str, thing: engine.Thing) -> bool:
     #
@@ -248,6 +258,7 @@ def is_designing_thing(text: str, thing: engine.Thing) -> bool:
         return True
     #
     return False
+
 
 #
 def get_designed_thing(game: ecg.Game, text: str, player_id: str) -> Optional[engine.Thing]:
@@ -275,6 +286,7 @@ def get_designed_thing(game: ecg.Game, text: str, player_id: str) -> Optional[en
     #
     return None
 
+
 #
 def remove_thing_from_thing(game: ecg.Game, thing_to_remove_id: str, thing: engine.Thing, quantity: int = 1) -> None:
     #
@@ -300,6 +312,7 @@ def remove_thing_from_thing(game: ecg.Game, thing_to_remove_id: str, thing: engi
         else:
             del thing.inventory[thing_to_remove_id]
 
+
 #
 def add_thing_to_thing(game: ecg.Game, thing_to_add_id: str, thing: engine.Thing, quantity: int = 1) -> None:
     #
@@ -319,11 +332,13 @@ def add_thing_to_thing(game: ecg.Game, thing_to_add_id: str, thing: engine.Thing
         #
         thing.inventory[thing_to_add_id] += quantity
 
+
 #
 def move_thing_from_thing_to_thing(game: ecg.Game, thing_id: str, thing_from: engine.Thing, thing_to: engine.Thing, quantity: int = 1) -> None:
     #
     remove_thing_from_thing(game=game, thing_to_remove_id=thing_id, thing=thing_from, quantity=quantity)
     add_thing_to_thing(game=game, thing_to_add_id=thing_id, thing=thing_to, quantity=quantity)
+
 
 #
 def remove_thing_from_room(game: ecg.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
@@ -337,6 +352,7 @@ def remove_thing_from_room(game: ecg.Game, thing_id: str, room: engine.Room, qua
     else:
         del room.things_inside[thing_id]
 
+
 #
 def add_thing_to_room(game: ecg.Game, thing_id: str, room: engine.Room, quantity: int = 1) -> None:
     #
@@ -345,6 +361,7 @@ def add_thing_to_room(game: ecg.Game, thing_id: str, room: engine.Room, quantity
         return
     #
     room.things_inside[thing_id] += quantity
+
 
 #
 def remove_thing_from_inventory(game: ecg.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
@@ -358,6 +375,7 @@ def remove_thing_from_inventory(game: ecg.Game, thing_id: str, entity: engine.En
     else:
         del entity.inventory[thing_id]
 
+
 #
 def add_thing_to_inventory(game: ecg.Game, thing_id: str, entity: engine.Entity, quantity: int = 1) -> None:
     #
@@ -367,11 +385,13 @@ def add_thing_to_inventory(game: ecg.Game, thing_id: str, entity: engine.Entity,
     #
     entity.inventory[thing_id] += quantity
 
+
 #
 def move_thing_from_room_to_room(game: ecg.Game, thing_id: str, room_from: engine.Room, room_to: engine.Room, quantity: int = 1) -> None:
     #
     remove_thing_from_room(game=game, thing_id=thing_id, room=room_from, quantity=quantity)
     add_thing_to_room(game=game, thing_id=thing_id, room=room_to, quantity=quantity)
+
 
 #
 def get_thing_designed(game: ecg.Game, text: str, list_of_things: list[engine.Thing]) -> Optional[engine.Thing]:

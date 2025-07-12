@@ -15,7 +15,7 @@ class CommandDefinition:
     #
     command_name: str
     keywords: list[str]
-    command_type: Callable
+    command_type: Callable[..., Optional[ecc.Command]]
     kwargs: Optional[dict[str, Any]] = None
 
 
@@ -30,6 +30,7 @@ def traite_txt(txt: str) -> str:
     #
     return txt
 
+
 #
 def test_COMMAND(command_input: str, command_def: CommandDefinition) -> Optional[ecc.Command]:
     #
@@ -40,6 +41,7 @@ def test_COMMAND(command_input: str, command_def: CommandDefinition) -> Optional
             )
     #
     return None
+
 
 #
 def test_COMMAND_SOMETHING(command_input: str, command_def: CommandDefinition) -> Optional[ecc.Command_Elt]:
@@ -58,6 +60,7 @@ def test_COMMAND_SOMETHING(command_input: str, command_def: CommandDefinition) -
             )
     #
     return None
+
 
 #
 def test_COMMAND_OPT_SOMETHING(command_input: str, command_def: CommandDefinition) -> Optional[ecc.Command_OElt]:
@@ -78,6 +81,7 @@ def test_COMMAND_OPT_SOMETHING(command_input: str, command_def: CommandDefinitio
             )
     #
     return None
+
 
 #
 def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_opt: list[str] = ["to"]) -> Optional[ecc.Command_OKw_Elt]:
@@ -101,7 +105,7 @@ def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandD
 
     #
     if match:
-        keyword_a, keyword_b, text_b = match.groups()
+        _keyword_a, keyword_b, text_b = match.groups()
         return ecc.Command_OKw_Elt(
             command_name=command_def.command_name,
             elt=text_b.strip() if text_b else '',
@@ -118,6 +122,7 @@ def test_COMMAND_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandD
             )
         #
         return None
+
 
 #
 def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_opt: list[str] = ["to"]) -> Optional[ecc.Command_OKw_OElt]:
@@ -141,7 +146,7 @@ def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_def: Comm
 
     #
     if match:
-        keyword_a, keyword_b, _, text_b = match.groups()
+        _keyword_a, keyword_b, _, text_b = match.groups()
         return ecc.Command_OKw_OElt(
             command_name=command_def.command_name,
             elt=text_b.strip() if text_b else '',
@@ -168,6 +173,7 @@ def test_COMMAND_OPT_KEYWORD_OPT_SOMETHING(command_input: str, command_def: Comm
             #
             return None
 
+
 #
 def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_connection: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt]:
     #
@@ -186,7 +192,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: Co
 
     #
     if match:
-        keyword_a, text_a, keyword_b, text_b = match.groups()
+        _keyword_a, text_a, keyword_b, text_b = match.groups()
         #
         return ecc.Command_Elt_Kw_Elt(
             command_name=command_def.command_name,
@@ -198,6 +204,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: Co
     return None
 
 
+#
 def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_B: str | list[str], keyword_C: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
     #
     if isinstance(keyword_B, str):
@@ -221,7 +228,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
     #
     if match:
         #
-        keyword_a, text_a, keyword_b, text_b, _, keyword_c, text_c = match.groups()
+        _keyword_a, text_a, keyword_b, text_b, _, keyword_c, text_c = match.groups()
         #
         return ecc.Command_Elt_Kw_Elt_Kw_Elt(
             command_name=command_def.command_name,
@@ -233,6 +240,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: st
         )
     else:
         return None
+
 
 #
 def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_B: str | list[str], keyword_C: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt_OKw_OElt]:
@@ -261,6 +269,7 @@ def test_COMMAND_SOMETHING_KEYWORD_SOMETHING_OPT_KEYWORD_SOMETHING(command_input
     #
     return None
 
+
 #
 def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_opt: str | list[str]) -> Optional[ecc.Command_Elt_OKw_OElt]:
     #
@@ -283,7 +292,7 @@ def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_def
 
     #
     if match:
-        keyword_a, text_a, keyword_b, text_b = match.groups()
+        _keyword_a, text_a, keyword_b, text_b = match.groups()
         #
         return ecc.Command_Elt_OKw_OElt(
             command_name=command_def.command_name,
@@ -303,6 +312,7 @@ def test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING(command_input: str, command_def
             )
         #
         return None
+
 
 #
 def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input: str, command_def: CommandDefinition, keyword_B: str | list[str], keyword_C: str | list[str]) -> Optional[ecc.Command_Elt_Kw_Elt_Kw_Elt]:
@@ -335,7 +345,7 @@ def test_COMMAND_OPT_SOMETHING_KEYWORD_SOMETHING_KEYWORD_SOMETHING(command_input
 
     #
     if match:
-        keyword_a, quantity, keyword_b, item, keyword_c, target = match.groups()
+        _keyword_a, quantity, keyword_b, item, keyword_c, target = match.groups()
         quantity = quantity if quantity else "1"  # Default to 1 if not specified
         #
         return ecc.Command_Elt_Kw_Elt_Kw_Elt(
@@ -1065,6 +1075,11 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
         #
         if res is not None:
             return res
+
+    #
+    # TODO: check for generic ACTION arguments (KEYWORDS arguments)*
+    pass
+
     #
     return None  # Commande vide
 

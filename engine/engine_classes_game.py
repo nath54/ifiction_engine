@@ -16,20 +16,20 @@ from . import lib_utils as lu
 class Game:
     #
     def __init__(
-            self,
-            game_name: str,
-            game_description: str,
-            game_author: str,
-            things: dict[str, Thing],
-            rooms: dict[str, Room],
-            variables: dict[str, Any],
-            scenes: dict[str, scn.Scene],
-            events: dict[str, evt.Event],
-            missions: dict[str, mis.Mission],
-            players: list[str],
-            nb_turns: int = 0,
-            imports: list[str] = []
-        ) -> None:
+        self,
+        game_name: str,
+        game_description: str,
+        game_author: str,
+        things: dict[str, Thing],
+        rooms: dict[str, Room],
+        variables: dict[str, Any],
+        scenes: dict[str, scn.Scene],
+        events: dict[str, evt.Event],
+        missions: dict[str, mis.Mission],
+        players: list[str],
+        nb_turns: int = 0,
+        imports: list[str] = []
+    ) -> None:
         #
         self.game_name: str = game_name
         self.game_description: str = game_description
@@ -48,6 +48,8 @@ class Game:
         self.history: list[er.Result] = []
         #
         self.events_quick_access: dict[str, list[str]] = {}
+        #
+        self.variables_space: dict[str, Any] = {}
 
     #
     def __str__(self) -> str:
@@ -129,3 +131,6 @@ class Game:
                 self.events_quick_access[class_name] = []
             #
             self.events_quick_access[class_name].append( key )
+
+        #
+        print(f"DEBUG | self.events_quick_access = {self.events_quick_access}")

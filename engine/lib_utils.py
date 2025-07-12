@@ -28,7 +28,7 @@ def get_class_name(a: Any) -> str:
     #
     b = str(a.__class__)
     #
-    l = "__."
+    l = "'"
     #
     d = b.find(l) + len(l)
     #

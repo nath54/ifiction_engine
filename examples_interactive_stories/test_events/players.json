@@ -1,0 +1,12 @@
+{
+    "things": {
+        "player1": {
+            "type": "player",
+            "id": "player1",
+            "name": "Player",
+            "room": "room1",
+            "inventory": {},
+            "missions": []
+        }
+    }
+}

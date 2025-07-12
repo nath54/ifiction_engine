@@ -188,7 +188,7 @@ class ActionEndGame(Action):
     def to_dict(self) -> dict[str, Any]:
         #
         return {
-            "action_type": "ActionEndScene",
+            "action_type": "ActionEndGame",
             "final_score": self.final_score
         }
 

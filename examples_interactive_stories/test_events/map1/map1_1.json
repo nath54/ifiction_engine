@@ -1,0 +1,90 @@
+{
+
+    "scenes": {
+
+        "scene_button1": {
+
+            "scene_id": "scene_button1",
+            "scenes_actions": [
+                {
+                    "action_type": "ActionLabel",
+                    "text": "You press the button, you hear a bip !"
+                },
+                {
+                    "action_type": "ActionEndScene"
+                }
+            ]
+
+        }
+
+    },
+
+    "events": {
+
+        "event_button1": {
+            "event_type": "EventActionThing",
+            "scene_id": "scene_button1",
+            "entity_id": "player1",
+            "thing_id": "button1",
+            "action_type": "push"
+        }
+
+    },
+
+
+    "things": {
+
+        "door1": {
+            "type": "object",
+            "id": "door1",
+            "name": "door",
+            "description": "a simple door",
+            "attributes": ["openable"]
+        },
+
+        "button1": {
+            "type": "object",
+            "id": "button1",
+            "name": "button",
+            "description": "A button, you may want to press it, or not. Is it a good idea to press it ?",
+            "attributes": []
+        }
+
+    },
+
+    "rooms": {
+
+        "room1": {
+            "room_name": "Room 1",
+            "description": "a simple empty room",
+            "accesses": [
+                {
+                    "thing_id": "door1",
+                    "direction": "east",
+                    "links_to": "room2"
+                }
+            ],
+            "things_inside": {
+                "door1": 1,
+                "button1": 1
+            }
+        },
+
+        "room2": {
+            "room_name": "Room 2",
+            "description": "a simple empty room",
+            "accesses": [
+                {
+                    "thing_id": "door1",
+                    "direction": "west",
+                    "links_to": "room1"
+                }
+            ],
+            "things_inside": {
+                "door1": 1
+            }
+        }
+
+    }
+
+}

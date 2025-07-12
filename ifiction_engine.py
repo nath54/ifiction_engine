@@ -20,6 +20,8 @@ if __name__ == "__main__":
 
     #
     game: Game = load_interactive_fiction_model_from_file(filepath=sys.argv[1])
+    game.prepare_events_quick_access()
+    #
     interaction_system: BasicTerminalInteractionSystem = BasicTerminalInteractionSystem(game=game)
 
     #

@@ -27,7 +27,7 @@ def verify_keys_in_dict(dictionary: dict[str, Any], keys: list[str], type_: str)
 
 
 #
-def create_default_value(default_value: Any, attr: str, in_dict: dict[str, Any], type_: str) -> Any:
+def create_default_value(default_value: Any, attr: str | int, in_dict: dict[str, Any], type_: str) -> Any:
     #
     if isinstance(default_value, EmptyDict):
         #
@@ -49,7 +49,7 @@ def create_default_value(default_value: Any, attr: str, in_dict: dict[str, Any],
 
 
 #
-def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDependingOnDictValue", in_dict: dict[str, Any], attr: str, type_: str) -> Any:
+def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDependingOnDictValue", in_dict: dict[str, Any], attr: str | int, type_: str) -> Any:
     #
     if attr not in in_dict:
         #
@@ -165,6 +165,17 @@ def create_kwargs(in_dict: dict[str, Any], type_: str) -> dict[str, Any]:
                 #
                 kwargs[attr].append(
                     caadv.clfd.class_name(**create_kwargs(in_dict[attr][i], type_=caadv.clfd.type_))
+                )#
+        elif isinstance(caadv, NoDefaultValueListOfClassLoadFromDictDependingOnDictValue):
+            #
+            kwargs[attr] = []
+            #
+            i: int
+            #
+            for i in range(len(in_dict[attr])):
+                #
+                kwargs[attr].append(
+                    create_classloadfromdictdependingondictvalue(clfddodv=caadv.clfddodv, in_dict=in_dict[attr], attr=i, type_=type_)
                 )
         #
         elif hasattr(caadv, "class_name") and hasattr(caadv, "type_") and (caadv.class_name is not None) and (caadv.type_ is not None):
@@ -261,6 +272,12 @@ class ClassLoadFromDictDependingOnDictValue:
         self.class_names_and_types: dict[str, Tuple[Callable[..., Any], str]] = class_names_and_types
         self.default_value: Any = default_value
 
+#
+class NoDefaultValueListOfClassLoadFromDictDependingOnDictValue:
+    #
+    def __init__(self, clfddodv: ClassLoadFromDictDependingOnDictValue) -> None:
+        #
+        self.clfddodv: ClassLoadFromDictDependingOnDictValue = clfddodv
 
 #
 class DictOfClassLoadFromDictDependingOnDictValue:
@@ -693,9 +710,6 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
         verif_game(game=game)
 
     #
-    game.prepare_events_quick_access()
-
-    #
     return game
 
 
@@ -900,6 +914,11 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
         "missions": missions_dict,
         "players": EmptyList(),
         "imports": EmptyList()
+    },
+
+    "Scene": {
+        "scene_id": "",
+        "scenes_actions": NoDefaultValueListOfClassLoadFromDictDependingOnDictValue(clfddodv=actions_classes)
     },
 
     "ConditionVariable": {

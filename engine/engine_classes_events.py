@@ -2,6 +2,7 @@
 from typing import Any, Optional
 #
 from . import engine_classes_conditions as eccond
+from . import engine_classes_time as ect
 
 #
 ### ABSTRACT MAIN PARENT CLASS EVENT. ###
@@ -317,10 +318,13 @@ class EventAlways(Event):
     def __init__(
         self,
         scene_id: str,
-        event_condition: Optional[eccond.Condition] = None
+        event_condition: Optional[eccond.Condition] = None,
+        time_delay: ect.GameTime = ect.GameTime(minute=1)
     ) -> None:
         #
         super().__init__(scene_id=scene_id, event_condition=event_condition)
+        #
+        self.time_delay: ect.GameTime = time_delay
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -329,6 +333,7 @@ class EventAlways(Event):
 
         #
         res["event_type"] = "EventAlways"
+        res["time_delay"] = self.time_delay.to_dict()
 
         #
         return res

@@ -13,31 +13,7 @@ ALL_ATTRIBUTES: list[str] = [
     "closed",           # Indicates the object is closed, must be openable, if not indicated, it means the object is open
     "locked",           # Indicates the object is locked, must be openable, if not indicated, it means the object is not locked
     "item",             # Indicates the object can be taken by a player
-    "container",        # Indicates the object can contain other objects,
-    "wearable",         # IA GENERATED GROK
-    "consumable",       # IA GENERATED GROK
-    "readable",         # IA GENERATED DEEPSEEK
-    "weapon",           # IA GENERATED DEEPSEEK
-    "lightable",        # IA GENERATED DEEPSEEK
-    "hidden",           # IA GENERATED DEEPSEEK
-    "movable",          # IA GENERATED DEEPSEEK
-    "magically_locked", # IA GENERATED DEEPSEEK
-    "climbable",        # IA GENERATED DEEPSEEK
-    "magical",          # IA GENERATED DEEPSEEK
-    "scenery",          # IA GENERATED GEMINI
-    "inspectable",      # IA GENERATED GEMINI
-    "concealing",       # IA GENERATED GEMINI
-    "blocking",         # IA GENERATED GEMINI
-    "breakable",        # IA GENERATED GEMINI
-    "interactable",     # IA GENERATED GEMINI
-    "hearable",         # IA GENERATED GEMINI
-    "pushable",         # IA GENERAETD GEMINI
-    "fixture",          # IA GENERATED GEMINI
-    "flammable",        # IA GENERATED GEMINI
-    "hostile",          # IA GENERATED GEMINI
-    "light_source",     # IA GENERATED GEMINI
-    "pullable",         # IA GENERATED GEMINI
-    "searchable",       # IA GENERATED GEMINI
+    "container",        # Indicates the object can contain other objects
 ]
 
 #
@@ -280,19 +256,22 @@ class Access:
 
 #
 class Room:
+
     #
     def __init__(
             self,
             room_name: str,
             accesses: list[ Access ],
             description: str = "",
-            things_inside: Optional[dict[str, int]] = None
+            things_inside: Optional[dict[str, int]] = None,
+            global_time_shift: float = 0
         ) -> None:
         #
         self.room_name: str = room_name
         self.accesses: list[ Access ] = accesses
         self.description: str = description
         self.things_inside: dict[str, int] = {} if things_inside is None else things_inside
+        self.global_time_shift: float = 0
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -315,6 +294,4 @@ class Room:
     def __repr__(self) -> str:
         #
         return self.__str__()
-
-
 

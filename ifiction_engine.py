@@ -1,14 +1,16 @@
 #
-from typing import Optional
+from typing import Optional, cast
 #
 import sys
 #
 from engine.interaction_system import BasicTerminalInteractionSystem
-from engine.engine_classes import load_interactive_fiction_model_from_file, Room
+from engine.engine_classes import load_interactive_fiction_model_from_file, Room, Player
 from engine.engine_classes_game import Game
 from engine.command_parsing import parse_command
 import engine.engine_classes_commands as ecc
-from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, after_each_player_turn, after_all_players_turn, execute_C_LOOKAROUND, get_room_of_player
+import engine.engine_classes_time as ect
+import engine.lib_utils as lu
+from engine.engine_commands import ALL_COMMANDS_FUNCTIONS, introduce_game, execute_C_LOOKAROUND, get_room_of_player
 
 
 #
@@ -16,6 +18,7 @@ if __name__ == "__main__":
 
     #
     if len(sys.argv) != 2:
+        #
         raise SyntaxError(f"Error: bad arguments given to this application !\n\nMust be used like that : \n\t`python {sys.argv[0]} path_to_game_or_save_file.json`\n\n")
 
     #
@@ -31,6 +34,7 @@ if __name__ == "__main__":
     #
     game: Game = load_interactive_fiction_model_from_file(filepath=sys.argv[1])
     game.prepare_events_quick_access()
+
     #
     interaction_system: BasicTerminalInteractionSystem = BasicTerminalInteractionSystem(game=game)
 
@@ -39,10 +43,12 @@ if __name__ == "__main__":
 
     #
     if game.nb_players == 0:
+        #
         raise RuntimeError(f"Error: No player for the game : `{game.game_name}` from `{game.game_author}`")
 
     #
     player_id: str
+    #
     for player_id in game.players:
         #
         room: Room = get_room_of_player(game=game, player_id=player_id)
@@ -51,57 +57,75 @@ if __name__ == "__main__":
             room.things_inside[player_id] = 1
 
     #
-    while interaction_system.running:
+    next_entity_event: Optional[lu.PQ_Entity_and_EventsSystem] = None
+    next_time_shift: Optional[ect.GameTime] = None
+
+    #
+    res: Optional[ tuple[lu.PQ_Entity_and_EventsSystem, ect.GameTime] ] = game.next_event_or_entity_action()
+
+    #
+    if res is not None:
         #
-        if game.nb_players > 1:
+        next_entity_event = res[0]
+        next_time_shift = res[1]
+
+    #
+    while next_entity_event is not None and next_time_shift is not None :
+
+        #
+        if next_entity_event.elt_type == "entity":
+
             #
-            interaction_system.write_to_output(txt=f"\n\n### Player: {game.players[game.current_player]}\n\n")
-            #
-            if game.nb_turns == 0:
+            if next_entity_event.elt_id in game.players:
                 #
-                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUND"), player_id=game.players[game.current_player])
-        #
-        elif game.nb_turns == 0:
+                interaction_system.write_to_output(txt=f"\n\n### Player: {game.players[game.current_player]}\n\n")
                 #
-                execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUND"), player_id=game.players[game.current_player])
+                if next_entity_event.elt_id not in game.players_first_description:
+                    #
+                    execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUND"), player_id=game.players[game.current_player])
+                    #
+                    game.players_first_description.add( next_entity_event.elt_id )
 
-        #
-        command_input: str = interaction_system.ask_input()
-
-        #
-        parsed_command: Optional[ecc.Command] = parse_command(command_input=command_input, generic_kws=generic_kws)
-
-        #
-        if parsed_command is None or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:  # type: ignore
-            #
-            interaction_system.write_to_output(txt="Unkown Command\n")
-            continue
-
-        #
-        ALL_COMMANDS_FUNCTIONS[parsed_command.command_name](game, interaction_system, parsed_command, game.players[game.current_player], False)  # type: ignore
-
-        #
-        if parsed_command.command_name == "C_QUIT":
-            break
-
-        #
-        after_each_player_turn(game=game, interaction_system=interaction_system)
-
-        #
-        if game.nb_players > 1:
-            #
-            game.current_player = (game.current_player + 1)
-            #
-            while game.current_player >= game.nb_players:
                 #
-                game.nb_players -= game.nb_players
+                command_input: str = interaction_system.ask_input()
+
                 #
-                after_all_players_turn(game=game, interaction_system=interaction_system)
+                parsed_command: Optional[ecc.Command] = parse_command(command_input=command_input, generic_kws=generic_kws)
+
+                #
+                if parsed_command is None or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:  # type: ignore
+                    #
+                    interaction_system.write_to_output(txt="Unkown Command\n")
+                    continue
+
+                #
+                game.check_and_apply_events_from_command(command=parsed_command, player=cast(Player, game.things[game.players[game.current_player]]))
+
+                #
+                ALL_COMMANDS_FUNCTIONS[parsed_command.command_name](game, interaction_system, parsed_command, game.players[game.current_player], False)  # type: ignore
+
+                #
+                if parsed_command.command_name == "C_QUIT":  # type: ignore
+                    #
+                    break
+
+            #
+            else:
+
+                #
+                # TODO: manage npc entity
+                pass
+
+        #
         else:
-            after_all_players_turn(game=game, interaction_system=interaction_system)
+
+            #
+            # TODO: manage events
+            pass
 
     #
     interaction_system.write_to_output(txt="\nSystem Exit\nGoodbye.")
     #
     if hasattr(interaction_system, "flush_output"):
+        #
         interaction_system.flush_output()  # type: ignore

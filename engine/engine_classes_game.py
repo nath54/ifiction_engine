@@ -1,15 +1,33 @@
 #
-from typing import Any
+from typing import Any, Optional
 #
 import json
 #
-from .engine_classes_things_rooms import Thing, Room
+from .engine_classes_things_rooms import Thing, Room, Player, Entity
 from . import engine_classes_missions as mis
 from . import engine_classes_scenes as scn
 from . import engine_classes_events as evt
 from . import engine_results as er
+from . import engine_classes_commands as ecc
+from . import engine_classes_time as ect
 #
 from . import lib_utils as lu
+
+
+
+#
+class GameSettings:
+
+    #
+    def __init__(
+        self,
+        display_time_at_player_turn: bool = True,
+        time_multiplier: float = 1,
+    ) -> None:
+
+        #
+        self.display_time_at_player_turn: bool = display_time_at_player_turn
+        self.time_multiplier: float = time_multiplier
 
 
 #
@@ -28,7 +46,9 @@ class Game:
         missions: dict[str, mis.Mission],
         players: list[str],
         nb_turns: int = 0,
-        imports: list[str] = []
+        imports: list[str] = [],
+        global_time: ect.GameTime = ect.GameTime(),
+        game_settings: GameSettings = GameSettings()
     ) -> None:
         #
         self.game_name: str = game_name
@@ -47,9 +67,17 @@ class Game:
         self.current_player: int = 0
         self.history: list[er.Result] = []
         #
+        self.global_time: ect.GameTime = global_time
+        #
         self.events_quick_access: dict[str, list[str]] = {}
         #
+        self.priority_queue_events_and_entities: lu.PriorityQueue = lu.PriorityQueue()
+        #
         self.variables_space: dict[str, Any] = {}
+        #
+        self.game_settings: GameSettings = game_settings
+        #
+        self.players_first_description: set[str] = set()
 
     #
     def __str__(self) -> str:
@@ -101,7 +129,6 @@ class Game:
         #
         return res
 
-
     #
     def save_to_filepath(self, filepath: str, game_save_format: str = "JSON") -> None:
         #
@@ -119,18 +146,72 @@ class Game:
     #
     def prepare_events_quick_access(self) -> None:
         #
-        key: str
-        evt: Any
+        event_id: str
+        event: Any
         #
-        for key, evt in self.events.items():
+        for event_id, event in self.events.items():
             #
-            class_name: str = lu.get_class_name( evt )
+            class_name: str = lu.get_class_name( event )
             #
             if class_name not in self.events_quick_access:
                 #
                 self.events_quick_access[class_name] = []
             #
-            self.events_quick_access[class_name].append( key )
+            self.events_quick_access[class_name].append( event_id )
+            #
+            if isinstance(event, evt.EventAlways):
+                #
+                self.priority_queue_events_and_entities.insert_with_priority(
+                    item = lu.PQ_Entity_and_EventsSystem(
+                        elt_id="event",
+                        elt_type=event_id,
+                        current_action=None,
+                        current_action_time=event.time_delay,
+                        can_be_interrupted=False,
+                        repetitive=True
+                    ),
+                    priority=event.time_delay
+                )
 
         #
         print(f"DEBUG | self.events_quick_access = {self.events_quick_access}")
+
+    #
+    def prepare_priority_queue_entities(self) -> None:
+
+        #
+        thing_id: str
+        thing: Thing
+        #
+        for thing_id, thing in self.things.items():
+            #
+            if isinstance(thing, Entity):
+                #
+                self.priority_queue_events_and_entities.insert_with_priority(
+                    item=lu.PQ_Entity_and_EventsSystem(
+                        elt_type="entity",
+                        elt_id=thing_id,
+                        current_action=None,
+                        current_action_time=ect.GameTime(),
+                        can_be_interrupted=True,
+                        repetitive=False
+                    ),
+                    priority=ect.GameTime()  # Time left before able to do something new
+                )
+
+    #
+    def check_and_apply_events_from_command(self, command: ecc.Command, player: Player) -> None:
+        #
+        pass
+
+    #
+    def check_event(self, event: evt.Event) -> None:
+        #
+        pass
+
+    #
+    def next_event_or_entity_action(self) -> Optional[tuple[lu.PQ_Entity_and_EventsSystem, ect.GameTime]]:
+
+        #
+        return self.priority_queue_events_and_entities.pop_top()
+

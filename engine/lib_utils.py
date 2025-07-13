@@ -133,7 +133,7 @@ class PQ_Entity_and_EventsSystem:
         elt_id: str,
         current_action: Optional[Any],
         current_action_time: ect.GameTime,
-        can_be_interrupted: bool,
+        can_be_interrupted: bool = True,
         repetitive: bool = False,
     ) -> None:
 

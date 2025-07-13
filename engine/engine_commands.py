@@ -11,6 +11,8 @@ from . import engine_classes as engine
 from . import engine_classes_game as ecg
 from . import engine_results as er
 from . import engine_classes_commands as ecc
+from . import engine_classes_time as ect
+from . import lib_utils as lu
 from .interaction_system import InteractionSystem
 from .lib_direction import parse_directions
 
@@ -428,6 +430,17 @@ def execute_C_LOOKAROUND(game: ecg.Game, interaction_system: InteractionSystem, 
     )
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime()
+        ),
+        priority=ect.GameTime()
+    )
+
+    #
     return game
 
 
@@ -442,6 +455,17 @@ def execute_C_RECAP(game: ecg.Game, interaction_system: InteractionSystem, comma
 
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime()
+        ),
+        priority=ect.GameTime()
+    )
 
     #
     return game
@@ -464,6 +488,18 @@ def execute_C_BRIEF(game: ecg.Game, interaction_system: InteractionSystem, comma
     else:
         #
         interaction_system.add_result( result=er.ResultErrorThingNotFound( text_designing_thing=command.elt ) )
+
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime()
+        ),
+        priority=ect.GameTime()
+    )
+
     #
     return game
 
@@ -487,6 +523,17 @@ def execute_C_DESCRIBE(game: ecg.Game, interaction_system: InteractionSystem, co
         interaction_system.add_result( result=er.ResultErrorThingNotFound( text_designing_thing=command.elt ) )
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime()
+        ),
+        priority=ect.GameTime()
+    )
+
+    #
     return game
 
 
@@ -507,6 +554,18 @@ def execute_C_EXAMINE(game: ecg.Game, interaction_system: InteractionSystem, com
     else:
         #
         interaction_system.add_result( result=er.ResultErrorThingNotFound( text_designing_thing=command.elt ) )
+
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=5)
+        ),
+        priority=ect.GameTime()
+    )
+
     #
     return game
 
@@ -524,6 +583,16 @@ def execute_C_RUMMAGE(game: ecg.Game, interaction_system: InteractionSystem, com
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime()
+    )
+    #
     return game
 
 
@@ -539,6 +608,16 @@ def execute_C_READ(game: ecg.Game, interaction_system: InteractionSystem, comman
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime()
+    )
     #
     return game
 
@@ -556,6 +635,17 @@ def execute_C_GO(game: ecg.Game, interaction_system: InteractionSystem, command:
     if parsed_direc is None:
         #
         interaction_system.add_result( result=er.ResultErrorDirection(input_txt=command.elt) )
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime()
+            ),
+            priority=ect.GameTime()
+        )
+        #
         return game
 
     #
@@ -589,6 +679,16 @@ def execute_C_GO(game: ecg.Game, interaction_system: InteractionSystem, command:
                     )
                 )
                 #
+                game.priority_queue_events_and_entities.insert_with_priority(
+                    item=lu.PQ_Entity_and_EventsSystem(
+                        elt_type="entity",
+                        elt_id=game.players[game.current_player],
+                        current_action=None,
+                        current_action_time=ect.GameTime()
+                    ),
+                    priority=ect.GameTime()
+                )
+                #
                 return game
             #
             if "openable" in access_thing.attributes and "open" not in access_thing.attributes:
@@ -598,6 +698,16 @@ def execute_C_GO(game: ecg.Game, interaction_system: InteractionSystem, command:
                         direction=choosen_access.direction,
                         access_thing=er.ThingShow(thing=access_thing)
                     )
+                )
+                #
+                game.priority_queue_events_and_entities.insert_with_priority(
+                    item=lu.PQ_Entity_and_EventsSystem(
+                        elt_type="entity",
+                        elt_id=game.players[game.current_player],
+                        current_action=None,
+                        current_action_time=ect.GameTime()
+                    ),
+                    priority=ect.GameTime()
                 )
                 #
                 return game
@@ -621,11 +731,31 @@ def execute_C_GO(game: ecg.Game, interaction_system: InteractionSystem, command:
             )
         )
         #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action="moving",
+                current_action_time=ect.GameTime(minute=5)
+            ),
+            priority=ect.GameTime()
+        )
+        #
         return execute_C_LOOKAROUND(game=game, interaction_system=interaction_system, command=ecc.Command(command_name="C_LOOKAROUDN"), player_id=player_id, copy_game=copy_game)
     #
     else:
         #
         interaction_system.add_result( result=er.ResultErrorCannotGoDirection( direction=parsed_direc ) )
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime()
+        ),
+        priority=ect.GameTime()
+    )
     #
     return game
 
@@ -643,6 +773,16 @@ def execute_C_PUT(game: ecg.Game, interaction_system: InteractionSystem, command
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=5)
+        ),
+        priority=ect.GameTime()
+    )
+    #
     return game
 
 
@@ -659,6 +799,16 @@ def execute_C_ATTACH(game: ecg.Game, interaction_system: InteractionSystem, comm
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=5)
+        ),
+        priority=ect.GameTime()
+    )
+    #
     return game
 
 
@@ -674,6 +824,16 @@ def execute_C_THROW(game: ecg.Game, interaction_system: InteractionSystem, comma
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=5)
+        ),
+        priority=ect.GameTime()
+    )
     #
     return game
 
@@ -711,6 +871,16 @@ def execute_C_DROP(game: ecg.Game, interaction_system: InteractionSystem, comman
     )
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=5)
+        ),
+        priority=ect.GameTime()
+    )
+    #
     return game
 
 
@@ -733,14 +903,38 @@ def execute_C_USE(game: ecg.Game, interaction_system: InteractionSystem, command
 
     #
     if elt1 is None:
+        #
         interaction_system.add_result(result=er.ResultErrorThingNotFound(command.elt1))
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=10)
+            ),
+            priority=ect.GameTime()
+        )
+        #
         return game
 
     #
     possessor: engine.Thing | engine.Room = dict_of_things[elt1][1]
+    #
     if dict_of_things[elt1][0] == "Inventory" and isinstance(possessor, engine.Thing) and possessor != current_player:
         #
         interaction_system.add_result(result=er.ResultErrorAnotherPossessThing(thing=er.ThingShow(elt1), possessor=er.ThingShow(possessor)))
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=10)
+            ),
+            priority=ect.GameTime()
+        )
+        #
         return game
 
     #
@@ -761,6 +955,16 @@ def execute_C_USE(game: ecg.Game, interaction_system: InteractionSystem, command
         interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
         #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=10)
+            ),
+            priority=ect.GameTime()
+        )
+        #
         return game
 
     #
@@ -768,7 +972,19 @@ def execute_C_USE(game: ecg.Game, interaction_system: InteractionSystem, command
 
     #
     if elt2 is None:
+        #
         interaction_system.add_result(result=er.ResultErrorThingNotFound(command.elt2))
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=10)
+            ),
+            priority=ect.GameTime()
+        )
+        #
         return game
 
     #
@@ -776,6 +992,17 @@ def execute_C_USE(game: ecg.Game, interaction_system: InteractionSystem, command
     if dict_of_things[elt2][0] == "Inventory" and isinstance(possessor, engine.Thing) and possessor != current_player:
         #
         interaction_system.add_result(result=er.ResultErrorAnotherPossessThing(thing=er.ThingShow(elt2), possessor=er.ThingShow(possessor)))
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=10)
+            ),
+            priority=ect.GameTime()
+        )
+        #
         return game
 
     #
@@ -785,6 +1012,17 @@ def execute_C_USE(game: ecg.Game, interaction_system: InteractionSystem, command
         if dict_of_things[elt1][0] != "Inventory" or dict_of_things[elt1][1] != current_player:
             #
             interaction_system.add_result(result=er.ResultErrorDoesntPossessThing(er.ThingShow(elt1)))
+            #
+            game.priority_queue_events_and_entities.insert_with_priority(
+                item=lu.PQ_Entity_and_EventsSystem(
+                    elt_type="entity",
+                    elt_id=game.players[game.current_player],
+                    current_action=None,
+                    current_action_time=ect.GameTime(minute=10)
+                ),
+                priority=ect.GameTime()
+            )
+            #
             return game
 
 
@@ -803,12 +1041,32 @@ def execute_C_USE(game: ecg.Game, interaction_system: InteractionSystem, command
                 #
                 interaction_system.add_result( result=er.ResultLock(thing1=er.ThingShow(elt2), thing2=er.ThingShow(elt1)) )
             #
+            game.priority_queue_events_and_entities.insert_with_priority(
+                item=lu.PQ_Entity_and_EventsSystem(
+                    elt_type="entity",
+                    elt_id=game.players[game.current_player],
+                    current_action=None,
+                    current_action_time=ect.GameTime(minute=10)
+                ),
+                priority=ect.GameTime(minute=5)
+            )
+            #
             return game
 
 
     # TODO
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime()
+    )
     #
     return game
 
@@ -825,6 +1083,16 @@ def execute_C_CLIMB(game: ecg.Game, interaction_system: InteractionSystem, comma
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -880,6 +1148,16 @@ def execute_C_OPEN(game: ecg.Game, interaction_system: InteractionSystem, comman
     interaction_system.add_result(result=er.ResultOpen(thing=er.ThingShow(designated_thing)))
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime(minute=5)
+    )
+    #
     return game
 
 
@@ -927,6 +1205,16 @@ def execute_C_CLOSE(game: ecg.Game, interaction_system: InteractionSystem, comma
     designated_thing.attributes.remove("open")
     interaction_system.add_result(result=er.ResultClose(thing=er.ThingShow(designated_thing)))
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime(minute=5)
+    )
     #
     return game
 
@@ -1011,6 +1299,16 @@ def execute_C_LOCK(game: ecg.Game, interaction_system: InteractionSystem, comman
     interaction_system.add_result( result=er.ResultLock(thing1=er.ThingShow(elt_to_lock), thing2=er.ThingShow(elt_that_lock)) )
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime(minute=5)
+    )
+    #
     return game
 
 
@@ -1088,6 +1386,16 @@ def execute_C_UNLOCK(game: ecg.Game, interaction_system: InteractionSystem, comm
     interaction_system.add_result( result=er.ResultUnlock(thing1=er.ThingShow(elt_to_unlock), thing2=er.ThingShow(elt_that_unlock)) )
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=10)
+        ),
+        priority=ect.GameTime(minute=5)
+    )
+    #
     return game
 
 
@@ -1103,6 +1411,16 @@ def execute_C_INSERT(game: ecg.Game, interaction_system: InteractionSystem, comm
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1120,6 +1438,16 @@ def execute_C_REMOVE(game: ecg.Game, interaction_system: InteractionSystem, comm
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1135,6 +1463,16 @@ def execute_C_SET(game: ecg.Game, interaction_system: InteractionSystem, command
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1152,6 +1490,16 @@ def execute_C_EAT(game: ecg.Game, interaction_system: InteractionSystem, command
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1167,6 +1515,16 @@ def execute_C_DRINK(game: ecg.Game, interaction_system: InteractionSystem, comma
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1184,6 +1542,16 @@ def execute_C_AWAKE(game: ecg.Game, interaction_system: InteractionSystem, comma
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1199,6 +1567,16 @@ def execute_C_ATTACK(game: ecg.Game, interaction_system: InteractionSystem, comm
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1216,6 +1594,16 @@ def execute_C_BUY(game: ecg.Game, interaction_system: InteractionSystem, command
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1231,6 +1619,16 @@ def execute_C_SHOW(game: ecg.Game, interaction_system: InteractionSystem, comman
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1248,6 +1646,16 @@ def execute_C_EMBRACE(game: ecg.Game, interaction_system: InteractionSystem, com
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1263,6 +1671,16 @@ def execute_C_FEED(game: ecg.Game, interaction_system: InteractionSystem, comman
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1280,6 +1698,16 @@ def execute_C_GIVE(game: ecg.Game, interaction_system: InteractionSystem, comman
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1295,6 +1723,16 @@ def execute_C_SAY(game: ecg.Game, interaction_system: InteractionSystem, command
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1312,6 +1750,16 @@ def execute_C_ASK(game: ecg.Game, interaction_system: InteractionSystem, command
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1327,6 +1775,16 @@ def execute_C_WRITE(game: ecg.Game, interaction_system: InteractionSystem, comma
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1344,6 +1802,16 @@ def execute_C_ERASE(game: ecg.Game, interaction_system: InteractionSystem, comma
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1360,6 +1828,16 @@ def execute_C_WEAR(game: ecg.Game, interaction_system: InteractionSystem, comman
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1375,6 +1853,16 @@ def execute_C_UNDRESS(game: ecg.Game, interaction_system: InteractionSystem, com
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1398,6 +1886,17 @@ def execute_C_INVENTORY(game: ecg.Game, interaction_system: InteractionSystem, c
 
     #
     interaction_system.add_result( result=er.ResultInventory(inventory=inv_dict) )
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=5)
+        ),
+        priority=ect.GameTime(minute=5)
+    )
+    #
     return game
 
 
@@ -1407,12 +1906,19 @@ def execute_C_WAIT(game: ecg.Game, interaction_system: InteractionSystem, comman
     if copy_game:
         game = deepcopy(game)
 
-    # TODO
-    pass
+    #
+    interaction_system.write_to_output(txt="You wait 30 minutes doing nothing.")
 
     #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action="waiting",
+            current_action_time=ect.GameTime(minute=30)
+        ),
+        priority=ect.GameTime(minute=30)
+    )
     #
     return game
 
@@ -1430,6 +1936,16 @@ def execute_C_SLEEP(game: ecg.Game, interaction_system: InteractionSystem, comma
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1445,6 +1961,16 @@ def execute_C_SIT_DOWN(game: ecg.Game, interaction_system: InteractionSystem, co
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1462,6 +1988,16 @@ def execute_C_LIE_DOWN(game: ecg.Game, interaction_system: InteractionSystem, co
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1478,6 +2014,16 @@ def execute_C_STAND_UP(game: ecg.Game, interaction_system: InteractionSystem, co
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1485,6 +2031,7 @@ def execute_C_STAND_UP(game: ecg.Game, interaction_system: InteractionSystem, co
 def execute_C_TAKE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
+        #
         game = deepcopy(game)
 
     #
@@ -1500,24 +2047,68 @@ def execute_C_TAKE(game: ecg.Game, interaction_system: InteractionSystem, comman
     if designated_thing is None:
         #
         interaction_system.add_result( result=er.ResultErrorThingNotFound(text_designing_thing=command.elt) )
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=0)
+            ),
+            priority=ect.GameTime(minute=0)
+        )
+        #
         return game
 
     #
     if things_in_room[designated_thing][0] == "Inventory":
         #
         interaction_system.add_result( result=er.ResultErrorCannotActionThing(action="take", thing=er.ThingShow(thing=designated_thing), reason=". It is already in an inventory.") )
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=0)
+            ),
+            priority=ect.GameTime(minute=0)
+        )
+        #
         return game
 
     #
     elif things_in_room[designated_thing][0] == "PartOf":
         #
         interaction_system.add_result( result=er.ResultErrorCannotActionThing(action="take", thing=er.ThingShow(thing=designated_thing), reason=f". It is a part of {things_in_room[designated_thing][1]}.") )
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=0)
+            ),
+            priority=ect.GameTime(minute=0)
+        )
+        #
         return game
 
     #
     elif "item" not in designated_thing.attributes:
         #
         interaction_system.add_result( result=er.ResultErrorCannotActionThing(action="take", thing=er.ThingShow(thing=designated_thing), reason=". It is not an item to take.") )
+        #
+        game.priority_queue_events_and_entities.insert_with_priority(
+            item=lu.PQ_Entity_and_EventsSystem(
+                elt_type="entity",
+                elt_id=game.players[game.current_player],
+                current_action=None,
+                current_action_time=ect.GameTime(minute=0)
+            ),
+            priority=ect.GameTime(minute=0)
+        )
+        #
         return game
 
     #
@@ -1533,6 +2124,17 @@ def execute_C_TAKE(game: ecg.Game, interaction_system: InteractionSystem, comman
 
     #
     interaction_system.add_result( result=er.ResultTake(thing=er.ThingShow(thing=designated_thing)) )
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action="taking something",
+            current_action_time=ect.GameTime(minute=5)
+        ),
+        priority=ect.GameTime(minute=5)
+    )
+    #
     return game
 
 
@@ -1541,6 +2143,17 @@ def execute_C_QUIT(game: ecg.Game, interaction_system: InteractionSystem, comman
     #
     if copy_game:
         game = deepcopy(game)
+
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
 
     #
     return game
@@ -1584,6 +2197,16 @@ def execute_C_SAVE(game: ecg.Game, interaction_system: InteractionSystem, comman
     interaction_system.write_to_output(txt=f"File saved to `{savegame_filepath}`")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1599,6 +2222,16 @@ def execute_C_LOAD(game: ecg.Game, interaction_system: InteractionSystem, comman
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1616,6 +2249,16 @@ def execute_C_SCORE(game: ecg.Game, interaction_system: InteractionSystem, comma
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
+    #
     return game
 
 
@@ -1630,6 +2273,16 @@ def execute_C_HELP(game: ecg.Game, interaction_system: InteractionSystem, comman
         #
         interaction_system.write_to_output(txt=f"\nCommand list:\n{f.read()}\n\n")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1646,6 +2299,16 @@ def execute_C_GENERIC_ACTION(game: ecg.Game, interaction_system: InteractionSyst
     #
     interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
+    #
+    game.priority_queue_events_and_entities.insert_with_priority(
+        item=lu.PQ_Entity_and_EventsSystem(
+            elt_type="entity",
+            elt_id=game.players[game.current_player],
+            current_action=None,
+            current_action_time=ect.GameTime(minute=0)
+        ),
+        priority=ect.GameTime(minute=0)
+    )
     #
     return game
 
@@ -1671,20 +2334,6 @@ def introduce_game(game: ecg.Game, interaction_system: InteractionSystem) -> Non
     ############################################################
 
         """)
-
-
-#
-def after_each_player_turn(game: ecg.Game, interaction_system: InteractionSystem) -> None:
-    #
-    pass
-
-
-#
-def after_all_players_turn(game: ecg.Game, interaction_system: InteractionSystem) -> None:
-    #
-    pass
-    #
-    game.nb_turns += 1
 
 
 ###################################################################################

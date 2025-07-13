@@ -34,6 +34,7 @@ if __name__ == "__main__":
     #
     game: Game = load_interactive_fiction_model_from_file(filepath=sys.argv[1])
     game.prepare_events_quick_access()
+    game.prepare_priority_queue_entities()
 
     #
     interaction_system: BasicTerminalInteractionSystem = BasicTerminalInteractionSystem(game=game)

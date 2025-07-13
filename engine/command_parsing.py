@@ -4,9 +4,7 @@ from dataclasses import dataclass
 #
 from . import engine_classes_commands as ecc
 #
-import sys
 import re
-import os
 
 
 #
@@ -17,7 +15,6 @@ class CommandDefinition:
     keywords: list[str]
     command_type: Callable[..., Optional[ecc.Command]]
     kwargs: Optional[dict[str, Any]] = None
-
 
 
 #
@@ -1051,7 +1048,7 @@ commands: list[CommandDefinition] = [
 
 
 #
-def parse_command(command_input: str) -> Optional[ecc.Command]:
+def parse_command(command_input: str, generic_kws: dict[str, str]) -> Optional[ecc.Command]:
 
     #
     command_input = traite_txt(command_input)
@@ -1076,43 +1073,169 @@ def parse_command(command_input: str) -> Optional[ecc.Command]:
         if res is not None:
             return res
 
-    #
-    # TODO: check for generic ACTION arguments (KEYWORDS arguments)*
-    pass
 
     #
-    return None  # Commande vide
-
-
-#
-def main_user_input_test() -> None:
+    ### DONE: check for generic `ACTION_TYPE thing_id_argument (KEYWORDS arguments)*`, arguments can be single words or multi words with spaces, but to allow multi words with space AND allows words of them to be keywords arguments like `old paper with moisture`, arguments must have quotes "" around them, like with bash terminal commands. The allowed keywords are inside the `generic_kws` dictionnary. ###
     #
-    res: Optional[ecc.Command] = None
+    ### Parse generic ACTION_TYPE thing_id_argument (KEYWORDS arguments)* ###
     #
-    while res is None or not (res.command_name == "C_QUIT"):
-        #
-        command_input: str = input("> ")
-        #
-        res = parse_command( command_input )
-        print( res )
+    #
+    thing_id: Optional[str] = None
+    action_type: str = ""
+    additionnal_keywords_arguments: list[tuple[str, str]] = []
+    generic_action_parsed: bool = False
 
+    #
+    ### Parse generic ACTION_TYPE thing_id_argument (KEYWORDS arguments)* ###
+    #
 
-#
-if __name__ == "__main__":
     #
-    if len(sys.argv) > 1:
-        input_test_file: str = sys.argv[1]
-        #
-        if not os.path.exists(input_test_file):
-            raise FileNotFoundError(f"Error : {input_test_file} not found !")
-        #
-        with open(input_test_file, "r", encoding="utf-8") as f:
-            tests: list[str] = f.read().split("\n")
-        #
-        test: str
-        for test_input in tests:
-            print(f"{parse_command(test_input)}")
+    ### Split command into tokens, handling quoted strings. ###
     #
-    else:
+    tokens: list[str] = []
+    current_token: str = ""
+    in_quotes: bool = False
+    i: int = 0
+
+    #
+    while i < len(command_input):
         #
-        main_user_input_test()
+        char = command_input[i]
+
+        #
+        if char == '"' and not in_quotes:
+            #
+            in_quotes = True
+
+        #
+        elif char == '"' and in_quotes:
+            #
+            in_quotes = False
+            #
+            if current_token:
+                #
+                tokens.append(current_token)
+                current_token = ""
+
+        #
+        elif char == ' ' and not in_quotes:
+            #
+            if current_token:
+                #
+                tokens.append(current_token)
+                current_token = ""
+
+        #
+        else:
+            #
+            current_token += char
+
+        #
+        i += 1
+
+    #
+    ### Add the last token if exists. ###
+    #
+    if current_token:
+        #
+        tokens.append(current_token)
+
+    #
+    ### Need at least 1 token: action_type. ###
+    #
+    if len(tokens) >= 1:
+        #
+        potential_action_type = tokens[0]
+
+        #
+        ### Parse thing_id (collect tokens until first keyword or end). ###
+        #
+        thing_id_tokens: list[str] = []
+        remaining_tokens: list[str] = tokens[1:]
+
+        #
+        i = 0
+        #
+        while i < len(remaining_tokens):
+            #
+            if remaining_tokens[i] in generic_kws:
+                #
+                break
+
+            #
+            thing_id_tokens.append(remaining_tokens[i])
+            i += 1
+
+        #
+        ### thing_id is the joined tokens or empty string if no tokens. ###
+        #
+        potential_thing_id = " ".join(thing_id_tokens) if thing_id_tokens else ""
+
+        #
+        ### Parse keyword arguments from remaining tokens. ###
+        #
+        parsed_kwargs: list[tuple[str, str]] = []
+        #
+        ### Skip the thing_id tokens. ###
+        #
+        remaining_tokens = remaining_tokens[i:]
+
+        #
+        i = 0
+        #
+        while i < len(remaining_tokens):
+
+            #
+            token = remaining_tokens[i]
+
+            #
+            ### Check if current token is a valid keyword. ###
+            #
+            if token in generic_kws:
+                #
+                ### Collect all tokens until next keyword or end. ###
+                #
+                value_tokens: list[str] = []
+
+                #
+                ### Skip the keyword itself. ###
+                #
+                i += 1
+
+                #
+                while i < len(remaining_tokens) and remaining_tokens[i] not in generic_kws:
+                    value_tokens.append(remaining_tokens[i])
+                    i += 1
+
+                #
+                ### Join the value tokens. ###
+                #
+                keyword_value = " ".join(value_tokens) if value_tokens else ""
+                parsed_kwargs.append( (token, keyword_value) )
+            else:
+                #
+                ### Not a keyword, skip it (shouldn't happen in well-formed input). ###
+                #
+                i += 1
+
+        #
+        ### Set the parsed values. ###
+        #
+        action_type = potential_action_type
+        thing_id = potential_thing_id
+        additionnal_keywords_arguments = parsed_kwargs
+        generic_action_parsed = True
+
+    #
+    if generic_action_parsed and thing_id is not None:
+        #
+        return ecc.Command_GenericAction(
+            action_type=action_type,
+            thing_id=thing_id,
+            kws=additionnal_keywords_arguments
+        )
+
+    #
+    ### Commande vide. ###
+    #
+    return None

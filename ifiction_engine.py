@@ -19,6 +19,15 @@ if __name__ == "__main__":
         raise SyntaxError(f"Error: bad arguments given to this application !\n\nMust be used like that : \n\t`python {sys.argv[0]} path_to_game_or_save_file.json`\n\n")
 
     #
+    generic_kws: dict[str, str] = {
+        "to": "KW_TO",
+        "in": "KW_IN",
+        "inside": "KW_IN",
+        "on": "KW_ON",
+        "with": "KW_WITH"
+    }
+
+    #
     game: Game = load_interactive_fiction_model_from_file(filepath=sys.argv[1])
     game.prepare_events_quick_access()
     #
@@ -59,7 +68,7 @@ if __name__ == "__main__":
         command_input: str = interaction_system.ask_input()
 
         #
-        parsed_command: Optional[ecc.Command] = parse_command(command_input=command_input)
+        parsed_command: Optional[ecc.Command] = parse_command(command_input=command_input, generic_kws=generic_kws)
 
         #
         if parsed_command is None or parsed_command.command_name not in ALL_COMMANDS_FUNCTIONS:  # type: ignore

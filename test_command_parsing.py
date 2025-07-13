@@ -1,5 +1,5 @@
 #
-from .command_parsing import parse_command
+from engine.command_parsing import parse_command
 #
 import os
 
@@ -14,6 +14,14 @@ test_files: list[tuple[str, str]] = [
 
 #
 if __name__ == "__main__":
+    #
+    generic_kws: dict[str, str] = {
+        "to": "KW_TO",
+        "in": "KW_IN",
+        "inside": "KW_IN",
+        "on": "KW_ON",
+        "with": "KW_WITH"
+    }
     #
     test_file_in: str
     test_file_out: str
@@ -59,7 +67,7 @@ if __name__ == "__main__":
             test_input: str = tests_in[i].strip()
             test_output: str = tests_out[i].strip()
             #
-            res: str = f"{parse_command(test_input)}".strip()
+            res: str = f"{parse_command(command_input=test_input, generic_kws=generic_kws)}".strip()
             #
             if res != test_output:
                 print(f"\033[31mtest {i} FAILED\033[m\n  - Input: \"{test_input}\"\n  - Awaited output : \"{test_output}\"\n  - Received output : \"{res}\"\n")

@@ -28,6 +28,7 @@ if __name__ == "__main__":
         "to": "KW_TO",
         "in": "KW_IN",
         "inside": "KW_IN",
+        "into": "KW_IN",
         "on": "KW_ON",
         "with": "KW_WITH"
     }

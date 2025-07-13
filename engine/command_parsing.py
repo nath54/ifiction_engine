@@ -419,24 +419,6 @@ commands: list[CommandDefinition] = [
         command_type=test_COMMAND_SOMETHING
     ),
 
-    #### COMMAND LISTEN
-    # `(hear/listen) ?{TO} ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
-
-    CommandDefinition(
-        command_name="C_LISTEN",
-        keywords = ["hear", "listen"],
-        command_type=test_COMMAND_OPT_KEYWORD_OPT_SOMETHING
-    ),
-
-    #### COMMAND TOUCH
-    # `(touch/feel) [something/someone]`: Sense the texture, temperature, or state of an object or person. (ex: `feel statue`)
-
-    CommandDefinition(
-        command_name="C_TOUCH",
-        keywords = ["touch", "feel"],
-        command_type=test_COMMAND_SOMETHING
-    ),
-
     #### COMMAND READ
     # `read [something] ?{page [number]}`: Read a written document, optionally specifying a page. (ex: `read journal page 2`)
 
@@ -445,24 +427,6 @@ commands: list[CommandDefinition] = [
         keywords = ["read"],
         command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
         kwargs={"keyword_opt": ["page"]}
-    ),
-
-    #### COMMAND TASTE
-    # `taste [something]`: Try tasting an object. (ex: `taste soup`)
-
-    CommandDefinition(
-        command_name="C_TASTE",
-        keywords = ["taste"],
-        command_type=test_COMMAND_SOMETHING
-    ),
-
-    #### COMMAND SMELL
-    # `(smell/sniff) [something/someone]`: Identify the scent of something or someone. (ex: `sniff flower`)
-
-    CommandDefinition(
-        command_name="C_SMELL",
-        keywords = ["smell", "sniff"],
-        command_type=test_COMMAND_SOMETHING
     ),
 
     ###################################
@@ -494,24 +458,6 @@ commands: list[CommandDefinition] = [
         }
     ),
 
-    #### COMMAND PUSH
-    # `(push/press/apply force on) [something]`: Apply force to an object. (ex: `press button`)
-
-    CommandDefinition(
-        command_name="C_PUSH",
-        keywords = ["push", "press", "apply force on"],
-        command_type=test_COMMAND_SOMETHING
-    ),
-
-    #### COMMAND PULL
-    # `pull [something]`: Pull an object. (ex: `pull lever`)
-
-    CommandDefinition(
-        command_name="C_PULL",
-        keywords = ["pull"],
-        command_type=test_COMMAND_SOMETHING
-    ),
-
     #### COMMAND ATTACH
     # `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: Attach an object to something. (ex: `attach bandit to chair with rope`)
 
@@ -523,15 +469,6 @@ commands: list[CommandDefinition] = [
             "keyword_B": ["to"],
             "keyword_C": ["with"]
         }
-    ),
-
-    #### COMMAND BREAK
-    # `(break/destroy) [something]`: Destroy a destructible object. (ex: `break glass`)
-
-    CommandDefinition(
-        command_name="C_BREAK",
-        keywords = ["break", "destroy"],
-        command_type=test_COMMAND_SOMETHING
     ),
 
     #### COMMAND THROW
@@ -553,15 +490,6 @@ commands: list[CommandDefinition] = [
     CommandDefinition(
         command_name="C_DROP",
         keywords = ["drop", "discard"],
-        command_type=test_COMMAND_SOMETHING
-    ),
-
-    #### COMMAND CLEAN
-    # `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Clean something. (ex: `wash painting`)
-
-    CommandDefinition(
-        command_name="C_CLEAN",
-        keywords = ["clean", "scrub", "sweep", "polish", "shine", "wash", "wipe"],
         command_type=test_COMMAND_SOMETHING
     ),
 
@@ -628,30 +556,6 @@ commands: list[CommandDefinition] = [
         }
     ),
 
-    #### COMMAND FILL
-    # `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
-
-    CommandDefinition(
-        command_name="C_FILL",
-        keywords = ["fill"],
-        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
-        kwargs={
-            "keyword_connection": ["with", "from"]
-        }
-    ),
-
-    #### COMMAND POUR
-    # `(pour) [something] into [something]`: Pour a liquid. (ex: `pour coffee into cup`)
-
-    CommandDefinition(
-        command_name="C_POUR",
-        keywords = ["pour"],
-        command_type=test_COMMAND_SOMETHING_KEYWORD_SOMETHING,
-        kwargs={
-            "keyword_connection": ["into", "in"]
-        }
-    ),
-
     #### COMMAND INSERT
     # `insert [something] into [something]`: Insert an item. (ex: `insert coin into vending machine`)
 
@@ -686,27 +590,6 @@ commands: list[CommandDefinition] = [
         kwargs={
             "keyword_connection": ["to"]
         }
-    ),
-
-    #### COMMAND SPREAD
-    # `spread [something] ?{on [something/someone]}`: Apply something over a surface. (ex: `spread butter on bread`)
-
-    CommandDefinition(
-        command_name="C_SPREAD",
-        keywords = ["spread"],
-        command_type=test_COMMAND_SOMETHING_OPT_KEYWORD_SOMETHING,
-        kwargs={
-            "keyword_opt": ["into", "on", "in"]
-        }
-    ),
-
-    #### COMMAND SQUEEZE
-    # `(squeeze/squash) [something]`: Press or crush an object. (ex: `squeeze lemon`)
-
-    CommandDefinition(
-        command_name="C_SQUEEZE",
-        keywords = ["squeeze", "squash"],
-        command_type=test_COMMAND_SOMETHING
     ),
 
     ##############################################
@@ -954,46 +837,6 @@ commands: list[CommandDefinition] = [
         command_name="C_TAKE",
         keywords = ["take", "carry", "hold", "pick up", "pick"],
         command_type=test_COMMAND_SOMETHING
-    ),
-
-    #############################
-    ###### RANDOM COMMANDS ######
-    #############################
-
-    #### COMMAND DANCE
-    # `dance ?{something}`: Perform a dance. (ex: `dance`)
-
-    CommandDefinition(
-        command_name="C_DANCE",
-        keywords = ["dance"],
-        command_type=test_COMMAND_OPT_SOMETHING
-    ),
-
-    #### COMMAND SING
-    # `(chant/sing) ?{something}`: Sing or chant something. (ex: `sing`)
-
-    CommandDefinition(
-        command_name="C_SING",
-        keywords = ["sing", "chant"],
-        command_type=test_COMMAND_OPT_SOMETHING
-    ),
-
-    #### COMMAND JUMP
-    # `(jump/hop)`: Jump up or forward. (ex: `jump`)
-
-    CommandDefinition(
-        command_name="C_JUMP",
-        keywords = ["jump", "hop"],
-        command_type=test_COMMAND
-    ),
-
-    #### COMMAND THINK
-    # `(think)`: Reflect or contemplate. (ex: `think`)
-
-    CommandDefinition(
-        command_name="C_THINK",
-        keywords = ["think"],
-        command_type=test_COMMAND
     ),
 
     #############################

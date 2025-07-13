@@ -18,6 +18,7 @@ if __name__ == "__main__":
     generic_kws: dict[str, str] = {
         "to": "KW_TO",
         "in": "KW_IN",
+        "into": "KW_IN",
         "inside": "KW_IN",
         "on": "KW_ON",
         "with": "KW_WITH"

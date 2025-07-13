@@ -8,11 +8,7 @@
 - `(watch/describe) [something/someone]`: Give a detailed description of an object or character. (ex: `describe mysterious painting`)
 - `(examine/inspect/check) [something/someone]`: Closely inspect something or someone to reveal details. (ex: `examine old diary`)
 - `(rummage/search) [something]`: Search a container or place for hidden items. (ex: `rummage drawer`)
-- `(hear/listen) ?{TO} ?{[something/someone]}`: Focus on sounds or listen to someone. (ex: `listen music`)
-- `(touch/feel) [something/someone]`: Sense the texture, temperature, or state of an object or person. (ex: `feel statue`)
 - `read [something] ?{page [number]}`: Read a written document, optionally specifying a page. (ex: `read journal page 2`)
-- `taste [something]`: Try tasting an object. (ex: `taste soup`)
-- `(smell/sniff) [something/someone]`: Identify the scent of something or someone. (ex: `sniff flower`)
 
 ## Displacement
 
@@ -46,26 +42,18 @@ Directions:
 
 - `(take/carry/hold/pick up/pick) [something]`: Pick up an object and add it to the inventory. (ex: `take golden key`)
 - `(put/move) [something] (into/in/on) [somewhere/something]`: Place an object somewhere. (ex: `put book on shelf`)
-- `(push/press/apply force on) [something]`: Apply force to an object. (ex: `press button`)
-- `pull [something]`: Pull an object. (ex: `pull lever`)
 - `(attach/tie) [something/someone] to [something/someone] ?{with [something]}`: Attach an object to something. (ex: `attach bandit to chair with rope`)
-- `(break/destroy) [something]`: Destroy a destructible object. (ex: `break glass`)
 - `throw [something] on [something/someone]`: Throw an object at another object. (ex: `throw rock on window`)
 - `(drop/discard) [something]`: Remove an object from inventory. (ex: `drop bag`)
-- `(clean/rub/scrub/sweep/polish/shine/wash/wipe) [something]`: Clean something. (ex: `wash painting`)
 - `use [something] ?{on [something/someone]}`: Use an object, optionally on something or someone. (ex: `use key on door`)
 - `climb [something]`: Climb an object. (ex: `climb tree`)
 - `open [something]`: Open a door, chest, or other container. (ex: `open chest`)
 - `(close) [something]`: Close an object. (ex: `close window`)
 - `lock [something] ?{with [something]}`: Lock an object. (ex: `lock door with golden key`)
 - `unlock [something] ?{with [something]}`: Unlock an object. (ex: `unlock chest with rusty key`)
-- `fill [something] (with/from) [something]`: Fill a container. (ex: `fill bottle with water`)
-- `(pour) [something] (into/in) [something]`: Pour a liquid. (ex: `pour coffee into cup`)
 - `insert [something] (into/in) [something]`: Insert an item. (ex: `insert coin into vending machine`)
 - `remove [something] from [something]`: Take something out of another object. (ex: `remove book from shelf`)
 - `set [something] to [state]`: Adjust an object’s state. (ex: `set lamp to on`)
-- `spread [something] ?{on [something/someone]}`: Apply something over a surface. (ex: `spread butter on bread`)
-- `(squeeze/squash) [something]`: Press or crush an object. (ex: `squeeze lemon`)
 
 ## Interaction with consumables
 
@@ -100,12 +88,11 @@ Directions:
 - `(lie/lie down) on [something]`: Lie down on an object. (ex: `lie down on the bed`)
 - `(stand/stand up)`: Return to a standing position. (ex: `stand up`)
 
-## Random things
+## Generic action commands
 
-- `dance`: Perform a dance. (ex: `dance`)
-- `(chant/sing)`: Sing or chant something. (ex: `sing`)
-- `(jump/hop)`: Jump up. (ex: `jump`)
-- `(think)`: Reflect or contemplate. (ex: `think`)
+Any generic action command with format:
+
+- `action thing_id ?(in/into/inside/on/to/with thing_id)`
 
 ## System commands
 

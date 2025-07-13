@@ -528,71 +528,7 @@ def execute_C_RUMMAGE(game: ecg.Game, interaction_system: InteractionSystem, com
 
 
 #
-def execute_C_LISTEN(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_TOUCH(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
 def execute_C_READ(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_TASTE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_SMELL(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -711,55 +647,7 @@ def execute_C_PUT(game: ecg.Game, interaction_system: InteractionSystem, command
 
 
 #
-def execute_C_PUSH(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_PULL(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
 def execute_C_ATTACH(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_BREAK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -821,22 +709,6 @@ def execute_C_DROP(game: ecg.Game, interaction_system: InteractionSystem, comman
             room=current_room
         )
     )
-
-    #
-    return game
-
-
-#
-def execute_C_CLEAN(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
 
     #
     return game
@@ -1220,38 +1092,6 @@ def execute_C_UNLOCK(game: ecg.Game, interaction_system: InteractionSystem, comm
 
 
 #
-def execute_C_FILL(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_POUR(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
 def execute_C_INSERT(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
@@ -1285,38 +1125,6 @@ def execute_C_REMOVE(game: ecg.Game, interaction_system: InteractionSystem, comm
 
 #
 def execute_C_SET(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_Kw_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_SPREAD(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt_OKw_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_SQUEEZE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_Elt, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
         game = deepcopy(game)
@@ -1729,70 +1537,6 @@ def execute_C_TAKE(game: ecg.Game, interaction_system: InteractionSystem, comman
 
 
 #
-def execute_C_DANCE(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_SING(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_JUMP(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
-def execute_C_THINK(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
-    #
-    if copy_game:
-        game = deepcopy(game)
-
-    # TODO
-    pass
-
-    #
-    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
-
-    #
-    return game
-
-
-#
 def execute_C_QUIT(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command, player_id: str, copy_game: bool = False) -> ecg.Game:
     #
     if copy_game:
@@ -1890,6 +1634,22 @@ def execute_C_HELP(game: ecg.Game, interaction_system: InteractionSystem, comman
     return game
 
 
+#
+def execute_C_GENERIC_ACTION(game: ecg.Game, interaction_system: InteractionSystem, command: ecc.Command_OElt, player_id: str, copy_game: bool = False) -> ecg.Game:
+    #
+    if copy_game:
+        game = deepcopy(game)
+
+    # TODO
+    pass
+
+    #
+    interaction_system.write_to_output(txt="Warning: This command hasn't been implemented yet.")
+
+    #
+    return game
+
+
 ###########################################################################################
 ############################### GAME INTRODUCTION FUNCTIONS ###############################
 ###########################################################################################
@@ -1934,68 +1694,53 @@ def after_all_players_turn(game: ecg.Game, interaction_system: InteractionSystem
 
 #
 ALL_COMMANDS_FUNCTIONS: dict[str, Callable[[ecg.Game, InteractionSystem, ecc.Command, str, bool], ecg.Game]] = {
-    "C_LOOKAROUND": execute_C_LOOKAROUND,   # type: ignore
-    "C_RECAP": execute_C_RECAP,             # type: ignore
-    "C_BRIEF": execute_C_BRIEF,             # type: ignore
-    "C_DESCRIBE": execute_C_DESCRIBE,       # type: ignore
-    "C_EXAMINE": execute_C_EXAMINE,         # type: ignore
-    "C_RUMMAGE": execute_C_RUMMAGE,         # type: ignore
-    "C_LISTEN": execute_C_LISTEN,           # type: ignore
-    "C_TOUCH": execute_C_TOUCH,             # type: ignore
-    "C_READ": execute_C_READ,               # type: ignore
-    "C_TASTE": execute_C_TASTE,             # type: ignore
-    "C_SMELL": execute_C_SMELL,             # type: ignore
-    "C_GO": execute_C_GO,                   # type: ignore
-    "C_PUT": execute_C_PUT,                 # type: ignore
-    "C_PUSH": execute_C_PUSH,               # type: ignore
-    "C_PULL": execute_C_PULL,               # type: ignore
-    "C_ATTACH": execute_C_ATTACH,           # type: ignore
-    "C_BREAK": execute_C_BREAK,             # type: ignore
-    "C_THROW": execute_C_THROW,             # type: ignore
-    "C_DROP": execute_C_DROP,               # type: ignore
-    "C_CLEAN": execute_C_CLEAN,             # type: ignore
-    "C_USE": execute_C_USE,                 # type: ignore
-    "C_CLIMB": execute_C_CLIMB,             # type: ignore
-    "C_OPEN": execute_C_OPEN,               # type: ignore
-    "C_CLOSE": execute_C_CLOSE,             # type: ignore
-    "C_LOCK": execute_C_LOCK,               # type: ignore
-    "C_UNLOCK": execute_C_UNLOCK,           # type: ignore
-    "C_FILL": execute_C_FILL,               # type: ignore
-    "C_POUR": execute_C_POUR,               # type: ignore
-    "C_INSERT": execute_C_INSERT,           # type: ignore
-    "C_REMOVE": execute_C_REMOVE,           # type: ignore
-    "C_SET": execute_C_SET,                 # type: ignore
-    "C_SPREAD": execute_C_SPREAD,           # type: ignore
-    "C_SQUEEZE": execute_C_SQUEEZE,         # type: ignore
-    "C_EAT": execute_C_EAT,                 # type: ignore
-    "C_DRINK": execute_C_DRINK,             # type: ignore
-    "C_AWAKE": execute_C_AWAKE,             # type: ignore
-    "C_ATTACK": execute_C_ATTACK,           # type: ignore
-    "C_BUY": execute_C_BUY,                 # type: ignore
-    "C_SHOW": execute_C_SHOW,               # type: ignore
-    "C_EMBRACE": execute_C_EMBRACE,         # type: ignore
-    "C_FEED": execute_C_FEED,               # type: ignore
-    "C_GIVE": execute_C_GIVE,               # type: ignore
-    "C_SAY": execute_C_SAY,                 # type: ignore
-    "C_ASK": execute_C_ASK,                 # type: ignore
-    "C_WRITE": execute_C_WRITE,             # type: ignore
-    "C_ERASE": execute_C_ERASE,             # type: ignore
-    "C_WEAR": execute_C_WEAR,               # type: ignore
-    "C_UNDRESS": execute_C_UNDRESS,         # type: ignore
-    "C_INVENTORY": execute_C_INVENTORY,     # type: ignore
-    "C_WAIT": execute_C_WAIT,               # type: ignore
-    "C_SLEEP": execute_C_SLEEP,             # type: ignore
-    "C_SIT_DOWN": execute_C_SIT_DOWN,       # type: ignore
-    "C_LIE_DOWN": execute_C_LIE_DOWN,       # type: ignore
-    "C_STAND_UP": execute_C_STAND_UP,       # type: ignore
-    "C_TAKE": execute_C_TAKE,               # type: ignore
-    "C_DANCE": execute_C_DANCE,             # type: ignore
-    "C_SING": execute_C_SING,               # type: ignore
-    "C_JUMP": execute_C_JUMP,               # type: ignore
-    "C_THINK": execute_C_THINK,             # type: ignore
-    "C_QUIT": execute_C_QUIT,               # type: ignore
-    "C_SAVE": execute_C_SAVE,               # type: ignore
-    "C_LOAD": execute_C_LOAD,               # type: ignore
-    "C_SCORE": execute_C_SCORE,             # type: ignore
-    "C_HELP": execute_C_HELP                # type: ignore
+    "C_LOOKAROUND": execute_C_LOOKAROUND,       # type: ignore
+    "C_RECAP": execute_C_RECAP,                 # type: ignore
+    "C_BRIEF": execute_C_BRIEF,                 # type: ignore
+    "C_DESCRIBE": execute_C_DESCRIBE,           # type: ignore
+    "C_EXAMINE": execute_C_EXAMINE,             # type: ignore
+    "C_RUMMAGE": execute_C_RUMMAGE,             # type: ignore
+    "C_READ": execute_C_READ,                   # type: ignore
+    "C_GO": execute_C_GO,                       # type: ignore
+    "C_PUT": execute_C_PUT,                     # type: ignore
+    "C_ATTACH": execute_C_ATTACH,               # type: ignore
+    "C_THROW": execute_C_THROW,                 # type: ignore
+    "C_DROP": execute_C_DROP,                   # type: ignore
+    "C_USE": execute_C_USE,                     # type: ignore
+    "C_CLIMB": execute_C_CLIMB,                 # type: ignore
+    "C_OPEN": execute_C_OPEN,                   # type: ignore
+    "C_CLOSE": execute_C_CLOSE,                 # type: ignore
+    "C_LOCK": execute_C_LOCK,                   # type: ignore
+    "C_UNLOCK": execute_C_UNLOCK,               # type: ignore
+    "C_INSERT": execute_C_INSERT,               # type: ignore
+    "C_REMOVE": execute_C_REMOVE,               # type: ignore
+    "C_SET": execute_C_SET,                     # type: ignore
+    "C_EAT": execute_C_EAT,                     # type: ignore
+    "C_DRINK": execute_C_DRINK,                 # type: ignore
+    "C_AWAKE": execute_C_AWAKE,                 # type: ignore
+    "C_ATTACK": execute_C_ATTACK,               # type: ignore
+    "C_BUY": execute_C_BUY,                     # type: ignore
+    "C_SHOW": execute_C_SHOW,                   # type: ignore
+    "C_EMBRACE": execute_C_EMBRACE,             # type: ignore
+    "C_FEED": execute_C_FEED,                   # type: ignore
+    "C_GIVE": execute_C_GIVE,                   # type: ignore
+    "C_SAY": execute_C_SAY,                     # type: ignore
+    "C_ASK": execute_C_ASK,                     # type: ignore
+    "C_WRITE": execute_C_WRITE,                 # type: ignore
+    "C_ERASE": execute_C_ERASE,                 # type: ignore
+    "C_WEAR": execute_C_WEAR,                   # type: ignore
+    "C_UNDRESS": execute_C_UNDRESS,             # type: ignore
+    "C_INVENTORY": execute_C_INVENTORY,         # type: ignore
+    "C_WAIT": execute_C_WAIT,                   # type: ignore
+    "C_SLEEP": execute_C_SLEEP,                 # type: ignore
+    "C_SIT_DOWN": execute_C_SIT_DOWN,           # type: ignore
+    "C_LIE_DOWN": execute_C_LIE_DOWN,           # type: ignore
+    "C_STAND_UP": execute_C_STAND_UP,           # type: ignore
+    "C_TAKE": execute_C_TAKE,                   # type: ignore
+    "C_QUIT": execute_C_QUIT,                   # type: ignore
+    "C_SAVE": execute_C_SAVE,                   # type: ignore
+    "C_LOAD": execute_C_LOAD,                   # type: ignore
+    "C_SCORE": execute_C_SCORE,                 # type: ignore
+    "C_HELP": execute_C_HELP,                   # type: ignore
+    "generic_action": execute_C_GENERIC_ACTION, # type: ignore
 }

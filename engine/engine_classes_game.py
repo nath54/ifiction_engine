@@ -1,11 +1,11 @@
 #
-from typing import Any, Optional
+from typing import Any, Optional, cast
 #
 import json
 import math
 import copy
 #
-from .engine_classes_things_rooms import Thing, Room, Player, Entity
+from .engine_classes_things_rooms import Thing, Room, Player, Entity, Object
 from . import engine_classes_missions as mis
 from . import engine_classes_scenes as scn
 from . import engine_classes_actions as eca
@@ -1029,7 +1029,15 @@ def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, int
             #
             raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.src_place_id}`, `{game.things[action.src_place_id]}`")
         #
-        pass
+        ent: Entity = cast(Entity, game.things[action.src_place_id] )
+        #
+        if action.thing_id in ent.inventory:
+            #
+            ent.inventory[action.thing_id] -= action.quantity
+            #
+            if ent.inventory[action.thing_id] <= 0:
+                #
+                del ent.inventory[action.thing_id]
     #
     elif action.src_place_type == "container":
         #
@@ -1037,11 +1045,23 @@ def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, int
             #
             raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.src_place_id}`")
         #
+        if not isinstance( game.things[action.src_place_id], Object ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT AN OBJECT in game things : `{action.src_place_id}`, `{game.things[action.src_place_id]}`")
+        #
         if "container" not in game.things[action.src_place_id].attributes:
             #
             raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.src_place_id}`, `{game.things[action.src_place_id]}`")
         #
-        pass
+        obj: Object = cast(Object, game.things[action.src_place_id] )
+        #
+        if action.thing_id in obj.contains:
+            #
+            obj.contains[action.thing_id] -= action.quantity
+            #
+            if obj.contains[action.thing_id] <= 0:
+                #
+                del obj.contains[action.thing_id]
     #
     else:
         #
@@ -1066,7 +1086,13 @@ def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, int
             #
             raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.dst_place_id}`, `{game.things[action.dst_place_id]}`")
         #
-        pass
+        ent: Entity = cast(Entity, game.things[action.dst_place_id] )
+        #
+        if action.thing_id not in ent.inventory:
+            #
+            ent.inventory[action.thing_id] = 0
+        #
+        ent.inventory[action.thing_id] += action.quantity
     #
     elif action.dst_place_type == "container":
         #
@@ -1074,11 +1100,21 @@ def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, int
             #
             raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.dst_place_id}`")
         #
+        if not isinstance( game.things[action.dst_place_id], Object ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT AN OBJECT in game things : `{action.dst_place_id}`, `{game.things[action.dst_place_id]}`")
+        #
         if "container" not in game.things[action.dst_place_id].attributes:
             #
             raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.dst_place_id}`, `{game.things[action.dst_place_id]}`")
         #
-        pass
+        obj: Object = cast(Object, game.things[action.dst_place_id] )
+        #
+        if action.thing_id not in obj.contains:
+            #
+            obj.contains[action.thing_id] = 0
+        #
+        obj.contains[action.thing_id] += action.quantity
     #
     else:
         #
@@ -1112,7 +1148,13 @@ def gamePlayActionThingAddToPlace(game: Game, action: eca.ActionThingAddToPlace,
             #
             raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
         #
-        pass
+        ent: Entity = cast(Entity, game.things[action.place_id] )
+        #
+        if action.thing_id not in ent.inventory:
+            #
+            ent.inventory[action.thing_id] = 0
+        #
+        ent.inventory[action.thing_id] += action.quantity
     #
     elif action.place_type == "container":
         #
@@ -1120,11 +1162,21 @@ def gamePlayActionThingAddToPlace(game: Game, action: eca.ActionThingAddToPlace,
             #
             raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.place_id}`")
         #
+        if not isinstance( game.things[action.place_id], Object ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT AN OBJECT in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
+        #
         if "container" not in game.things[action.place_id].attributes:
             #
             raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
         #
-        pass
+        obj: Object = cast(Object, game.things[action.place_id] )
+        #
+        if action.thing_id not in obj.contains:
+            #
+            obj.contains[action.thing_id] = 0
+        #
+        obj.contains[action.thing_id] += action.quantity
     #
     else:
         #
@@ -1145,7 +1197,13 @@ def gamePlayActionThingRemoveFromPlace(game: Game, action: eca.ActionThingRemove
             #
             raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.place_id}`")
         #
-        pass
+        if action.thing_id in game.rooms[action.place_id].things_inside:
+            #
+            game.rooms[action.place_id].things_inside[action.thing_id] -= action.quantity
+            #
+            if game.rooms[action.place_id].things_inside[action.thing_id] <= 0:
+                #
+                del game.rooms[action.place_id].things_inside[action.thing_id]
     #
     elif action.place_type == "inventory":
         #
@@ -1157,7 +1215,15 @@ def gamePlayActionThingRemoveFromPlace(game: Game, action: eca.ActionThingRemove
             #
             raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
         #
-        pass
+        ent: Entity = cast(Entity, game.things[action.place_id] )
+        #
+        if action.thing_id in ent.inventory:
+            #
+            ent.inventory[action.thing_id] -= action.quantity
+            #
+            if ent.inventory[action.thing_id] <= 0:
+                #
+                del ent.inventory[action.thing_id]
     #
     elif action.place_type == "container":
         #
@@ -1165,11 +1231,23 @@ def gamePlayActionThingRemoveFromPlace(game: Game, action: eca.ActionThingRemove
             #
             raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.place_id}`")
         #
+        if not isinstance( game.things[action.place_id], Object ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT AN OBJECT in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
+        #
         if "container" not in game.things[action.place_id].attributes:
             #
             raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
         #
-        pass
+        obj: Object = cast(Object, game.things[action.place_id] )
+        #
+        if action.thing_id in obj.contains:
+            #
+            obj.contains[action.thing_id] -= action.quantity
+            #
+            if obj.contains[action.thing_id] <= 0:
+                #
+                del obj.contains[action.thing_id]
     #
     else:
         #

@@ -263,114 +263,281 @@ class Game:
         #
         if isinstance(scene_action, eca.ActionText):
             #
-            pass
+            gamePlayActionText(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionLabel):
             #
-            pass
+            gamePlayActionLabel(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionJump):
             #
-            pass
+            gamePlayActionJump(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionConditionalJump):
             #
-            pass
+            gamePlayActionConditionalJump(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionChangeScene):
             #
-            pass
+            gamePlayActionChangeScene(game=self, action=scene_action)
+
+        #
+        elif isinstance(scene_action, eca.ActionConditionalChangeScene):
+            #
+            gamePlayActionConditionalChangeScene(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionEndScene):
             #
-            pass
+            gamePlayActionEndScene(game=self, action=scene_action)
+
+        #
+        elif isinstance(scene_action, eca.ActionConditionalEndScene):
+            #
+            gamePlayActionConditionalEndScene(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionEndGame):
             #
-            pass
+            gamePlayActionEndGame(game=self, action=scene_action)
+
+        #
+        elif isinstance(scene_action, eca.ActionConditionalEndGame):
+            #
+            gamePlayActionConditionalEndGame(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionCreateVar):
             #
-            pass
+            gamePlayActionCreateVar(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionEditVar):
             #
-            pass
+            gamePlayActionEditVar(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionDeleteVar):
             #
-            pass
+            gamePlayActionDeleteVar(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionBinaryOp):
             #
-            pass
+            gamePlayActionBinaryOp(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionUnaryOp):
             #
-            pass
+            gamePlayActionUnaryOp(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionChangeElt):
             #
-            pass
+            gamePlayActionChangeElt(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionEditAttributeOfElt):
             #
-            pass
+            gamePlayActionEditAttributeOfElt(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionAppendToAttributeOfElt):
             #
-            pass
+            gamePlayActionAppendToAttributeOfElt(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionRemoveValueToAttributeOfElt):
             #
-            pass
+            gamePlayActionRemoveValueToAttributeOfElt(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionSetKVAttributeOfElt):
             #
-            pass
+            gamePlayActionSetKVAttributeOfElt(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionThingDuplicate):
             #
-            pass
+            gamePlayActionThingDuplicate(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionThingDisplace):
             #
-            pass
+            gamePlayActionThingDisplace(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionThingAddToPlace):
             #
-            pass
+            gamePlayActionThingAddToPlace(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionThingRemoveFromPlace):
             #
-            pass
+            gamePlayActionThingRemoveFromPlace(game=self, action=scene_action)
 
         #
         elif isinstance(scene_action, eca.ActionPlayerAssignMission):
             #
-            pass
+            gamePlayActionPlayerAssignMission(game=self, action=scene_action)
 
         #
         self.current_scene_cursor += 1
+
+
+
+#
+def gamePlayActionText(game: Game, action: eca.ActionText) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionLabel(game: Game, action: eca.ActionLabel) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionJump(game: Game, action: eca.ActionJump) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionConditionalJump(game: Game, action: eca.ActionConditionalJump) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionChangeScene(game: Game, action: eca.ActionChangeScene) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionConditionalChangeScene(game: Game, action: eca.ActionConditionalChangeScene) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionEndScene(game: Game, action: eca.ActionEndScene) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionConditionalEndScene(game: Game, action: eca.ActionConditionalEndScene) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionEndGame(game: Game, action: eca.ActionEndGame) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionConditionalEndGame(game: Game, action: eca.ActionConditionalEndGame) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionCreateVar(game: Game, action: eca.ActionCreateVar) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionEditVar(game: Game, action: eca.ActionEditVar) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionDeleteVar(game: Game, action: eca.ActionDeleteVar) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionBinaryOp(game: Game, action: eca.ActionBinaryOp) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionUnaryOp(game: Game, action: eca.ActionUnaryOp) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionChangeElt(game: Game, action: eca.ActionChangeElt) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionEditAttributeOfElt(game: Game, action: eca.ActionEditAttributeOfElt) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionAppendToAttributeOfElt(game: Game, action: eca.ActionAppendToAttributeOfElt) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionRemoveValueToAttributeOfElt(game: Game, action: eca.ActionRemoveValueToAttributeOfElt) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionSetKVAttributeOfElt(game: Game, action: eca.ActionSetKVAttributeOfElt) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionThingDuplicate(game: Game, action: eca.ActionThingDuplicate) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionThingAddToPlace(game: Game, action: eca.ActionThingAddToPlace) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionThingRemoveFromPlace(game: Game, action: eca.ActionThingRemoveFromPlace) -> None:
+
+    #
+    pass
+
+#
+def gamePlayActionPlayerAssignMission(game: Game, action: eca.ActionPlayerAssignMission) -> None:
+
+    #
+    pass
 
 

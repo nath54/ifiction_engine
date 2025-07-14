@@ -71,7 +71,7 @@ if __name__ == "__main__":
         next_time_shift = res[1]
 
     #
-    while next_entity_event is not None and next_time_shift is not None :
+    while next_entity_event is not None and next_time_shift is not None and interaction_system.running:
 
         #
         if next_entity_event.elt_type == "entity":
@@ -114,13 +114,13 @@ if __name__ == "__main__":
             else:
 
                 #
-                game.manage_npc_entities(elt=next_entity_event)
+                game.manage_npc_entities(elt=next_entity_event, interaction_system=interaction_system)
 
         #
         else:
 
             #
-            game.manage_event(elt=next_entity_event)
+            game.manage_event(elt=next_entity_event, interaction_system=interaction_system)
 
         #
         game.priority_queue_events_and_entities.shift_all_times(time_shift=next_time_shift)

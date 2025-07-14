@@ -3,6 +3,7 @@ from typing import Any, Optional
 #
 import json
 import math
+import copy
 #
 from .engine_classes_things_rooms import Thing, Room, Player, Entity
 from . import engine_classes_missions as mis
@@ -714,72 +715,80 @@ def gamePlayActionUnaryOp(game: Game, action: eca.ActionUnaryOp, interaction_sys
         #
         raise UserWarning(f"Error: unknown operation : `{action.op}`")
 
+#
+def get_elt_to_edit(game: Game, elt_type: str, elt_id: str, elt_attr_name: str | list[str]) -> Optional[Any]:
+
+    #
+    UNEDITABLE_ATTRS: list[str] = []
+
+    #
+    elt_to_edit: Optional[Any] = None
+
+    #
+    if elt_type == "thing":
+        #
+        if elt_id not in game.things:
+            #
+            raise UserWarning(f"Error: Unknown thing id : `{elt_id}` !")
+        #
+        elt_to_edit = game.things[elt_id]
+    #
+    elif elt_type == "room":
+        #
+        if elt_id not in game.rooms:
+            #
+            raise UserWarning(f"Error: Unknown room id : `{elt_id}` !")
+        #
+        elt_to_edit = game.rooms[elt_id]
+    #
+    elif elt_type == "scene":
+        #
+        if elt_id not in game.scenes:
+            #
+            raise UserWarning(f"Error: Unknown scene id : `{elt_id}` !")
+        #
+        elt_to_edit = game.scenes[elt_id]
+    #
+    elif elt_type == "event":
+        #
+        if elt_id not in game.events:
+            #
+            raise UserWarning(f"Error: Unknown event id : `{elt_id}` !")
+        #
+        elt_to_edit = game.events[elt_id]
+    #
+    elif elt_type == "mission":
+        #
+        if elt_id not in game.missions:
+            #
+            raise UserWarning(f"Error: Unknown mission id : `{elt_id}` !")
+        #
+        elt_to_edit = game.missions[elt_id]
+
+    #
+    if isinstance(elt_attr_name, str):
+        #
+        if elt_attr_name in UNEDITABLE_ATTRS:
+            #
+            raise UserWarning(f"Error: cannot modify thing attribute `{elt_attr_name}` !")
+    #
+    elif isinstance(elt_attr_name, list):  # type: ignore
+        #
+        elt_attr_name_: str
+        #
+        for i, elt_attr_name_ in enumerate(elt_attr_name):
+            #
+            if elt_attr_name_[i] in UNEDITABLE_ATTRS:
+                #
+                raise UserWarning(f"Error: cannot modify thing attribute `{elt_attr_name_[i]}` !")
+    #
+    return elt_to_edit
 
 #
 def gamePlayActionEditAttributeOfElt(game: Game, action: eca.ActionEditAttributeOfElt, interaction_system: Any) -> None:
 
     #
-    UNEDITABLE_ATTRS: list[str] = []
-    #
-    elt_to_edit: Optional[Any] = None
-
-    #
-    if action.elt_type == "thing":
-        #
-        if action.elt_id not in game.things:
-            #
-            raise UserWarning(f"Error: Unknown thing id : `{action.elt_id}` !")
-        #
-        elt_to_edit = game.things[action.elt_id]
-    #
-    elif action.elt_type == "room":
-        #
-        if action.elt_id not in game.rooms:
-            #
-            raise UserWarning(f"Error: Unknown room id : `{action.elt_id}` !")
-        #
-        if action.elt_attr_name in []:
-            #
-            raise UserWarning(f"Error: cannot modify room attribute `{action.elt_attr_name}` !")
-        #
-        elt_to_edit = game.rooms[action.elt_id]
-    #
-    elif action.elt_type == "scene":
-        #
-        if action.elt_id not in game.scenes:
-            #
-            raise UserWarning(f"Error: Unknown scene id : `{action.elt_id}` !")
-        #
-        if action.elt_attr_name in []:
-            #
-            raise UserWarning(f"Error: cannot modify scene attribute `{action.elt_attr_name}` !")
-        #
-        elt_to_edit = game.scenes[action.elt_id]
-    #
-    elif action.elt_type == "event":
-        #
-        if action.elt_id not in game.events:
-            #
-            raise UserWarning(f"Error: Unknown event id : `{action.elt_id}` !")
-        #
-        if action.elt_attr_name in []:
-            #
-            raise UserWarning(f"Error: cannot modify event attribute `{action.elt_attr_name}` !")
-        #
-        elt_to_edit = game.events[action.elt_id]
-    #
-    elif action.elt_type == "mission":
-        #
-        if action.elt_id not in game.missions:
-            #
-            raise UserWarning(f"Error: Unknown mission id : `{action.elt_id}` !")
-        #
-        if action.elt_attr_name in []:
-            #
-            raise UserWarning(f"Error: cannot modify mission attribute `{action.elt_attr_name}` !")
-        #
-        elt_to_edit = game.missions[action.elt_id]
-
+    elt_to_edit: Optional[Any] = get_elt_to_edit(game=game, elt_type=action.elt_type, elt_id=action.elt_id, elt_attr_name=action.elt_attr_name)
     #
     if elt_to_edit is None:
         #
@@ -790,10 +799,6 @@ def gamePlayActionEditAttributeOfElt(game: Game, action: eca.ActionEditAttribute
     #
     if isinstance(action.elt_attr_name, str):
         #
-        if action.elt_attr_name in UNEDITABLE_ATTRS:
-            #
-            raise UserWarning(f"Error: cannot modify thing attribute `{action.elt_attr_name}` !")
-        #
         setattr(elt_to_edit, action.elt_attr_name, action.elt_attr_new_value)
     #
     elif isinstance(action.elt_attr_name, list):  # type: ignore
@@ -801,10 +806,6 @@ def gamePlayActionEditAttributeOfElt(game: Game, action: eca.ActionEditAttribute
         elt_attr_name: str
         #
         for i, elt_attr_name in enumerate(action.elt_attr_name):
-            #
-            if action.elt_attr_name[i] in UNEDITABLE_ATTRS:
-                #
-                raise UserWarning(f"Error: cannot modify thing attribute `{elt_attr_name}` !")
             #
             if isinstance(action.elt_attr_new_value, list):  # type: ignore
                 #
@@ -822,43 +823,357 @@ def gamePlayActionEditAttributeOfElt(game: Game, action: eca.ActionEditAttribute
 def gamePlayActionAppendToAttributeOfElt(game: Game, action: eca.ActionAppendToAttributeOfElt, interaction_system: Any) -> None:
 
     #
-    pass
+    elt_to_edit: Optional[Any] = get_elt_to_edit(game=game, elt_type=action.elt_type, elt_id=action.elt_id, elt_attr_name=action.elt_attr_name)
+
+    #
+    if elt_to_edit is None:
+        #
+        print(f"Error action elt attr name edit elt is None : `{action}`")
+        #
+        return
+
+    #
+    if isinstance(action.elt_attr_name, str):
+        #
+        if hasattr(elt_to_edit, action.elt_attr_name):
+            #
+            lst: list[Any] = getattr(elt_to_edit, action.elt_attr_name)
+            #
+            lst.append(action.elt_attr_new_value_to_append)
+    #
+    elif isinstance(action.elt_attr_name, list):  # type: ignore
+        #
+        _elt_attr_name: str
+        #
+        for i, _elt_attr_name in enumerate(action.elt_attr_name):
+            #
+            if isinstance(action.elt_attr_new_value_to_append, list) and len(action.elt_attr_new_value_to_append) == len(action.elt_attr_name):  # type: ignore
+                #
+                if hasattr(elt_to_edit, action.elt_attr_name[i]):
+                    #
+                    lst: list[Any] = getattr(elt_to_edit, action.elt_attr_name[i])
+                    #
+                    lst.append(action.elt_attr_new_value_to_append[i])  # type: ignore
+            #
+            else:
+                #
+                if hasattr(elt_to_edit, action.elt_attr_name[i]):
+                    #
+                    lst: list[Any] = getattr(elt_to_edit, action.elt_attr_name[i])
+                    #
+                    lst.append(action.elt_attr_new_value_to_append)  # type: ignore
+    #
+    else:
+        #
+        print(f"Error action elt attr name : `{action.elt_attr_name}`")
 
 #
 def gamePlayActionRemoveValueToAttributeOfElt(game: Game, action: eca.ActionRemoveValueToAttributeOfElt, interaction_system: Any) -> None:
 
     #
-    pass
+    elt_to_edit: Optional[Any] = get_elt_to_edit(game=game, elt_type=action.elt_type, elt_id=action.elt_id, elt_attr_name=action.elt_attr_name)
+
+    #
+    if elt_to_edit is None:
+        #
+        print(f"Error action elt attr name edit elt is None : `{action}`")
+        #
+        return
+
+    #
+    if isinstance(action.elt_attr_name, str):
+        #
+        if hasattr(elt_to_edit, action.elt_attr_name):
+            #
+            lst: list[Any] = getattr(elt_to_edit, action.elt_attr_name)
+            #
+            lst.remove(action.elt_attr_value_to_remove)
+    #
+    elif isinstance(action.elt_attr_name, list):  # type: ignore
+        #
+        _elt_attr_name: str
+        #
+        for i, _elt_attr_name in enumerate(action.elt_attr_name):
+            #
+            if isinstance(action.elt_attr_value_to_remove, list) and len(action.elt_attr_value_to_remove) == len(action.elt_attr_name):  # type: ignore
+                #
+                if hasattr(elt_to_edit, action.elt_attr_name[i]):
+                    #
+                    lst: list[Any] = getattr(elt_to_edit, action.elt_attr_name[i])
+                    #
+                    lst.remove(action.elt_attr_value_to_remove[i])  # type: ignore
+            #
+            else:
+                #
+                if hasattr(elt_to_edit, action.elt_attr_name[i]):
+                    #
+                    lst: list[Any] = getattr(elt_to_edit, action.elt_attr_name[i])
+                    #
+                    lst.remove(action.elt_attr_value_to_remove)  # type: ignore
+    #
+    else:
+        #
+        print(f"Error action elt attr name : `{action.elt_attr_name}`")
 
 #
 def gamePlayActionSetKVAttributeOfElt(game: Game, action: eca.ActionSetKVAttributeOfElt, interaction_system: Any) -> None:
 
     #
-    pass
+    elt_to_edit: Optional[Any] = get_elt_to_edit(game=game, elt_type=action.elt_type, elt_id=action.elt_id, elt_attr_name=action.elt_attr_name)
+
+    #
+    if elt_to_edit is None:
+        #
+        print(f"Error action elt attr name edit elt is None : `{action}`")
+        #
+        return
+
+    #
+    if isinstance(action.elt_attr_name, str):
+        #
+        if hasattr(elt_to_edit, action.elt_attr_name):
+            #
+            dicti: dict[Any, Any] = getattr(elt_to_edit, action.elt_attr_name)
+            #
+            if action.elt_attr_value == "@DELETE":
+                #
+                del dicti[action.elt_attr_key]
+            #
+            else:
+                #
+                dicti[action.elt_attr_key] = action.elt_attr_value
+    #
+    elif isinstance(action.elt_attr_name, list):  # type: ignore
+        #
+        _elt_attr_name: str
+        #
+        for i, _elt_attr_name in enumerate(action.elt_attr_name):
+            #
+            if isinstance(action.elt_attr_key, list) and len(action.elt_attr_key) == len(action.elt_attr_name) and isinstance(action.elt_attr_value, list) and len(action.elt_attr_value) == len(action.elt_attr_name):  # type: ignore
+                #
+                if hasattr(elt_to_edit, action.elt_attr_name[i]):
+                    #
+                    dicti: dict[Any, Any] = getattr(elt_to_edit, action.elt_attr_name[i])
+                    #
+                    if action.elt_attr_value[i] == "@DELETE":  # type: ignore
+                        #
+                        del dicti[action.elt_attr_key[i]]
+                    #
+                    else:
+                        #
+                        dicti[action.elt_attr_key[i]] = action.elt_attr_value[i]  # type: ignore
+            #
+            else:
+                #
+                if hasattr(elt_to_edit, action.elt_attr_name[i]):
+                    #
+                    dicti: dict[Any, Any] = getattr(elt_to_edit, action.elt_attr_name[i])
+                    #
+                    if action.elt_attr_value == "@DELETE":  # type: ignore
+                        #
+                        del dicti[action.elt_attr_key]
+                    #
+                    else:
+                        #
+                        dicti[action.elt_attr_key] = action.elt_attr_value  # type: ignore
+    #
+    else:
+        #
+        print(f"Error action elt attr name : `{action.elt_attr_name}`")
 
 #
 def gamePlayActionThingDuplicate(game: Game, action: eca.ActionThingDuplicate, interaction_system: Any) -> None:
 
     #
-    pass
+    if action.src_elt_id not in game.things:
+        #
+        raise UserWarning(f"Error: thing id NOT FOUND in game things : ``{action.src_elt_id} !")
+
+    #
+    if action.dst_elt_id not in game.things:
+        #
+        raise UserWarning(f"Error: thing id ALREADY FOUND in game things : ``{action.dst_elt_id} !\nSO CANNOT DUPLICATE !")
+
+    #
+    new_thing: Thing = copy.deepcopy( game.things[action.src_elt_id] )
+
+    #
+    new_thing.id = action.dst_elt_id
+    #
+    game.things[new_thing.id] = new_thing
 
 #
 def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, interaction_system: Any) -> None:
 
     #
-    pass
+    if action.thing_id not in game.things:
+        #
+        raise UserWarning(f"Error: thing id NOT FOUND in game things : `{action.thing_id}` !")
+
+    #
+    if action.src_place_type == "room":
+        #
+        if action.src_place_id not in game.rooms:
+            #
+            raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.src_place_id}`")
+        #
+        pass
+    #
+    elif action.src_place_type == "inventory":
+        #
+        if action.src_place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.src_place_id}`")
+        #
+        if not isinstance( game.things[action.src_place_id], Entity ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.src_place_id}`, `{game.things[action.src_place_id]}`")
+        #
+        pass
+    #
+    elif action.src_place_type == "container":
+        #
+        if action.src_place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.src_place_id}`")
+        #
+        if "container" not in game.things[action.src_place_id].attributes:
+            #
+            raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.src_place_id}`, `{game.things[action.src_place_id]}`")
+        #
+        pass
+    #
+    else:
+        #
+        raise UserWarning(f"Error: Unknown place type : `{action.src_place_type}` !")
+
+    #
+    if action.dst_place_type == "room":
+        #
+        if action.dst_place_id not in game.rooms:
+            #
+            raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.dst_place_id}`")
+        #
+        pass
+    #
+    elif action.dst_place_type == "inventory":
+        #
+        if action.dst_place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.dst_place_id}`")
+        #
+        if not isinstance( game.things[action.dst_place_id], Entity ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.dst_place_id}`, `{game.things[action.dst_place_id]}`")
+        #
+        pass
+    #
+    elif action.dst_place_type == "container":
+        #
+        if action.dst_place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.dst_place_id}`")
+        #
+        if "container" not in game.things[action.dst_place_id].attributes:
+            #
+            raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.dst_place_id}`, `{game.things[action.dst_place_id]}`")
+        #
+        pass
+    #
+    else:
+        #
+        raise UserWarning(f"Error: Unknown place type : `{action.dst_place_type}` !")
+
 
 #
 def gamePlayActionThingAddToPlace(game: Game, action: eca.ActionThingAddToPlace, interaction_system: Any) -> None:
 
     #
-    pass
+    if action.thing_id not in game.things:
+        #
+        raise UserWarning(f"Error: thing id NOT FOUND in game things : `{action.thing_id}` !")
+
+    #
+    if action.place_type == "room":
+        #
+        if action.place_id not in game.rooms:
+            #
+            raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.place_id}`")
+        #
+        pass
+    #
+    elif action.place_type == "inventory":
+        #
+        if action.place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.place_id}`")
+        #
+        if not isinstance( game.things[action.place_id], Entity ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
+        #
+        pass
+    #
+    elif action.place_type == "container":
+        #
+        if action.place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.place_id}`")
+        #
+        if "container" not in game.things[action.place_id].attributes:
+            #
+            raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
+        #
+        pass
+    #
+    else:
+        #
+        raise UserWarning(f"Error: Unknown place type : `{action.place_type}` !")
 
 #
 def gamePlayActionThingRemoveFromPlace(game: Game, action: eca.ActionThingRemoveFromPlace, interaction_system: Any) -> None:
 
     #
-    pass
+    if action.thing_id not in game.things:
+        #
+        raise UserWarning(f"Error: thing id NOT FOUND in game things : `{action.thing_id}` !")
+
+    #
+    if action.place_type == "room":
+        #
+        if action.place_id not in game.rooms:
+            #
+            raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.place_id}`")
+        #
+        pass
+    #
+    elif action.place_type == "inventory":
+        #
+        if action.place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.place_id}`")
+        #
+        if not isinstance( game.things[action.place_id], Entity ):
+            #
+            raise UserWarning(f"Error: Thing id IS NOT ENTITY in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
+        #
+        pass
+    #
+    elif action.place_type == "container":
+        #
+        if action.place_id not in game.things:
+            #
+            raise UserWarning(f"Error: Thing id NOT FOUND in game things : `{action.place_id}`")
+        #
+        if "container" not in game.things[action.place_id].attributes:
+            #
+            raise UserWarning(f"Error: Thing id IS NOT CONTAINER in game things : `{action.place_id}`, `{game.things[action.place_id]}`")
+        #
+        pass
+    #
+    else:
+        #
+        raise UserWarning(f"Error: Unknown place type : `{action.place_type}` !")
 
 #
 def gamePlayActionPlayerAssignMission(game: Game, action: eca.ActionPlayerAssignMission, interaction_system: Any) -> None:

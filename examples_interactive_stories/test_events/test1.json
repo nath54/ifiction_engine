@@ -3,6 +3,27 @@
         "map1/map1.json",
         "players.json"
     ],
+    "scenes": {
+        "scene_horloge": {
+            "scene_id": "scene_horloge",
+            "scenes_actions": [
+                {
+                    "action_type": "ActionText",
+                    "text": "The current time is : @GLOBAL_TIME."
+                },
+                {
+                    "action_type": "ActionEndScene"
+                }
+            ]
+        }
+    },
+    "events": {
+        "event_horloge": {
+            "event_type": "EventAlways",
+            "time_delay": { "minute": 1 },
+            "scene_id": "scene_horloge"
+        }
+    },
     "game_name": "Test with imports 1",
     "game_description": "Simple test",
     "game_author": "Nathan Cerisara (aka github.com/nath54)",

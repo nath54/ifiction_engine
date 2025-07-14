@@ -82,6 +82,14 @@ class Game:
         #
         self.current_scene_id: str = ""
         self.current_scene_cursor: int = 0
+        #
+        self.variables_space["GLOBAL_TIME"] = self.get_global_time
+
+    #
+    @property
+    def get_global_time(self) -> ect.GameTime:
+        #
+        return self.global_time
 
     #
     def __str__(self) -> str:
@@ -167,18 +175,18 @@ class Game:
                 #
                 self.priority_queue_events_and_entities.insert_with_priority(
                     item = lu.PQ_Entity_and_EventsSystem(
-                        elt_id="event",
-                        elt_type=event_id,
+                        elt_type="event",
+                        elt_id=event_id,
                         current_action=None,
-                        current_action_time=event.time_delay,
+                        current_action_time=copy.deepcopy(event.time_delay),
                         can_be_interrupted=False,
                         repetitive=True
                     ),
-                    priority=event.time_delay
+                    priority=copy.deepcopy(event.time_delay)
                 )
 
         #
-        print(f"DEBUG | self.events_quick_access = {self.events_quick_access}")
+        # print(f"DEBUG | self.events_quick_access = {self.events_quick_access}")
 
     #
     def prepare_priority_queue_entities(self) -> None:
@@ -224,6 +232,9 @@ class Game:
     def manage_event(self, elt: lu.PQ_Entity_and_EventsSystem, interaction_system: Any) -> None:
 
         #
+        # print(f"DEBUG | manage_event : {elt} | elt.elt_id = `{elt.elt_id}`")
+
+        #
         event: evt.Event = self.events[elt.elt_id]
         #
         if isinstance(event, evt.EventAlways):
@@ -238,12 +249,15 @@ class Game:
         if elt.repetitive:
             #
             self.priority_queue_events_and_entities.insert_with_priority(
-                item=elt,
+                item=copy.deepcopy(elt),
                 priority=elt.current_action_time
             )
 
     #
     def play_scene(self, scene_id: str, interaction_system: Any) -> None:
+
+        #
+        # print(f"DEBUG | Play Scene: {scene_id}")
 
         #
         self.current_scene_id = scene_id
@@ -256,6 +270,7 @@ class Game:
 
         #
         self.current_scene_id = ""
+        self.current_scene_cursor = 0
 
     #
     def play_scene_action(self, scene_action: eca.Action, interaction_system: Any) -> None:
@@ -1017,7 +1032,11 @@ def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, int
             #
             raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.src_place_id}`")
         #
-        pass
+        if action.thing_id not in game.rooms[action.src_place_id].things_inside:
+            #
+            game.rooms[action.src_place_id].things_inside[action.thing_id] = 0
+        #
+        game.rooms[action.src_place_id].things_inside[action.thing_id] += action.quantity
     #
     elif action.src_place_type == "inventory":
         #
@@ -1074,7 +1093,11 @@ def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, int
             #
             raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.dst_place_id}`")
         #
-        pass
+        if action.thing_id not in game.rooms[action.dst_place_id].things_inside:
+            #
+            game.rooms[action.dst_place_id].things_inside[action.thing_id] = 0
+        #
+        game.rooms[action.dst_place_id].things_inside[action.thing_id] += action.quantity
     #
     elif action.dst_place_type == "inventory":
         #
@@ -1120,7 +1143,6 @@ def gamePlayActionThingDisplace(game: Game, action: eca.ActionThingDisplace, int
         #
         raise UserWarning(f"Error: Unknown place type : `{action.dst_place_type}` !")
 
-
 #
 def gamePlayActionThingAddToPlace(game: Game, action: eca.ActionThingAddToPlace, interaction_system: Any) -> None:
 
@@ -1136,7 +1158,15 @@ def gamePlayActionThingAddToPlace(game: Game, action: eca.ActionThingAddToPlace,
             #
             raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.place_id}`")
         #
-        pass
+        if action.place_id not in game.rooms:
+            #
+            raise UserWarning(f"Error: Room id NOT FOUDN in game rooms : `{action.place_id}`")
+        #
+        if action.thing_id not in game.rooms[action.place_id].things_inside:
+            #
+            game.rooms[action.place_id].things_inside[action.thing_id] = 0
+        #
+        game.rooms[action.place_id].things_inside[action.thing_id] += action.quantity
     #
     elif action.place_type == "inventory":
         #

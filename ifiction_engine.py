@@ -2,6 +2,7 @@
 from typing import Optional, cast
 #
 import sys
+import copy
 #
 from engine.interaction_system import BasicTerminalInteractionSystem
 from engine.engine_classes import load_interactive_fiction_model_from_file, Room, Player
@@ -37,6 +38,9 @@ if __name__ == "__main__":
     game.prepare_priority_queue_entities()
 
     #
+    print(f"DEBUG | priority_queue_events_and_entities = {game.priority_queue_events_and_entities._queue}")  # type: ignore
+
+    #
     interaction_system: BasicTerminalInteractionSystem = BasicTerminalInteractionSystem(game=game)
 
     #
@@ -68,10 +72,13 @@ if __name__ == "__main__":
     if res is not None:
         #
         next_entity_event = res[0]
-        next_time_shift = res[1]
+        next_time_shift = copy.deepcopy(res[1])
 
     #
     while next_entity_event is not None and next_time_shift is not None and interaction_system.running:
+
+        #
+        # print(f"DEBUG | next_entity_event.elt_type = {next_entity_event.elt_type}")
 
         #
         if next_entity_event.elt_type == "entity":
@@ -122,8 +129,37 @@ if __name__ == "__main__":
             #
             game.manage_event(elt=next_entity_event, interaction_system=interaction_system)
 
+
+        #
+        # print(f"DEBUG 1 | priority_queue_events_and_entities = {game.priority_queue_events_and_entities._queue}")  # type: ignore
+
         #
         game.priority_queue_events_and_entities.shift_all_times(time_shift=next_time_shift)
+
+        #
+        # print(f"DEBUG 2 | priority_queue_events_and_entities = {game.priority_queue_events_and_entities._queue}")  # type: ignore
+
+        #
+        res = game.next_event_or_entity_action()
+
+        #
+        if res is not None:
+            #
+            next_entity_event = res[0]
+            next_time_shift = copy.deepcopy(res[1])
+        #
+        else:
+            #
+            next_entity_event = None
+            next_time_shift = None
+        #
+        if hasattr(interaction_system, "flush_output"):
+            #
+            interaction_system.flush_output()  # type: ignore
+
+        #
+        # print(f"DEBUG 3 | priority_queue_events_and_entities = {game.priority_queue_events_and_entities._queue}")  # type: ignore
+
 
     #
     interaction_system.write_to_output(txt="\nSystem Exit\nGoodbye.")

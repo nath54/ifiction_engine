@@ -92,7 +92,8 @@ class PriorityQueue:
         _count: int
         item: Any
         #
-        priority, _count, item = heapq.heappop(self._queue)
+        # priority, _count, item = heapq.heappop(self._queue)
+        priority, _count, item = self._queue.pop(0)
 
         #
         ### Return the value. ###
@@ -145,3 +146,24 @@ class PQ_Entity_and_EventsSystem:
         self.can_be_interrupted: bool = can_be_interrupted
         self.repetitive: bool = repetitive
 
+    #
+    def __str__(self) -> str:
+        #
+        res: str = f"PQElt(`{self.elt_type}`, id=`{self.elt_id}`, current_action_time={self.current_action_time}"
+        #
+        if self.repetitive:
+            #
+            res += ", repetitive"
+        #
+        if not self.can_be_interrupted:
+            #
+            res += f", no interruptions"
+        #
+        res += ")"
+        #
+        return res
+
+    #
+    def __repr__(self) -> str:
+        #
+        return self.__str__()

@@ -114,15 +114,16 @@ if __name__ == "__main__":
             else:
 
                 #
-                # TODO: manage npc entity
-                pass
+                game.manage_npc_entities(elt=next_entity_event)
 
         #
         else:
 
             #
-            # TODO: manage events
-            pass
+            game.manage_event(elt=next_entity_event)
+
+        #
+        game.priority_queue_events_and_entities.shift_all_times(time_shift=next_time_shift)
 
     #
     interaction_system.write_to_output(txt="\nSystem Exit\nGoodbye.")

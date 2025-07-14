@@ -152,6 +152,33 @@ class ActionChangeScene(Action):
 
 
 #
+### Action that change the current scene and jump to the first action of the new scene. ###
+#
+class ActionConditionalChangeScene(Action):
+    #
+    def __init__(
+            self,
+            scene_id: str,
+            condition: eccond.Condition
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.scene_id: str = scene_id
+        #
+        self.condition: eccond.Condition = condition
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionConditionalChangeScene",
+            "scene_id": self.scene_id,
+            "condition": self.condition.to_dict()
+        }
+
+
+#
 ### Action that ends the scene and get back to the game. ###
 #
 class ActionEndScene(Action):
@@ -167,6 +194,29 @@ class ActionEndScene(Action):
         #
         return {
             "action_type": "ActionEndScene"
+        }
+
+
+#
+### Action that change the current scene and jump to the first action of the new scene. ###
+#
+class ActionConditionalEndScene(Action):
+    #
+    def __init__(
+            self,
+            condition: eccond.Condition
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.condition: eccond.Condition = condition
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionConditionalEndScene",
+            "condition": self.condition.to_dict()
         }
 
 
@@ -190,6 +240,32 @@ class ActionEndGame(Action):
         return {
             "action_type": "ActionEndGame",
             "final_score": self.final_score
+        }
+
+
+#
+### Action that change the current scene and jump to the first action of the new scene. ###
+#
+class ActionConditionalEndGame(Action):
+    #
+    def __init__(
+            self,
+            condition: eccond.Condition
+        ) -> None:
+        #
+        super().__init__()
+        #
+        self.condition: eccond.Condition = condition
+        #
+        self.final_score: int = 0
+
+    #
+    def to_dict(self) -> dict[str, Any]:
+        #
+        return {
+            "action_type": "ActionConditionalEndGame",
+            "final_score": self.final_score,
+            "condition": self.condition.to_dict()
         }
 
 

@@ -743,8 +743,11 @@ actions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDepend
         "ActionJump": (act.ActionJump, "ActionJump"),
         "ActionConditionalJump": (act.ActionConditionalJump, "ActionConditionalJump"),
         "ActionChangeScene": (act.ActionChangeScene, "ActionChangeScene"),
+        "ActionConditionalChangeScene": (act.ActionConditionalChangeScene, "ActionConditionalChangeScene"),
         "ActionEndScene": (act.ActionEndScene, "ActionEndScene"),
+        "ActionConditionalEndScene": (act.ActionConditionalEndScene, "ActionConditionalEndScene"),
         "ActionEndGame": (act.ActionEndGame, "ActionEndGame"),
+        "ActionConditionalEndGame": (act.ActionConditionalEndGame, "ActionConditionalEndGame"),
         "ActionCreateVar": (act.ActionCreateVar, "ActionCreateVar"),
         "ActionEditVar": (act.ActionEditVar, "ActionEditVar"),
         "ActionDeleteVar": (act.ActionDeleteVar, "ActionDeleteVar"),
@@ -996,9 +999,20 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
     "ActionChangeScene": {
         "scene_id": NoDefaultValues()
     },
+    "ActionConditionalChangeScene": {
+        "scene_id": NoDefaultValues(),
+        "condition": condition_classes
+    },
     "ActionEndScene": {},
+    "ActionConditionalEndScene": {
+        "condition": condition_classes
+    },
     "ActionEndGame": {
-        "final_score": NoDefaultValues()
+        "final_score": 0
+    },
+    "ActionConditionalEndGame": {
+        "final_score": NoDefaultValues(),
+        "condition": condition_classes
     },
     "ActionCreateVar": {
         "var_name": NoDefaultValues(),

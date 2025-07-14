@@ -6,6 +6,7 @@ import json
 from .engine_classes_things_rooms import Thing, Room, Player, Entity
 from . import engine_classes_missions as mis
 from . import engine_classes_scenes as scn
+from . import engine_classes_actions as eca
 from . import engine_classes_events as evt
 from . import engine_results as er
 from . import engine_classes_commands as ecc
@@ -78,6 +79,9 @@ class Game:
         self.game_settings: GameSettings = game_settings
         #
         self.players_first_description: set[str] = set()
+        #
+        self.current_scene_id: str = ""
+        self.current_scene_cursor: int = 0
 
     #
     def __str__(self) -> str:
@@ -205,13 +209,168 @@ class Game:
         pass
 
     #
-    def check_event(self, event: evt.Event) -> None:
-        #
-        pass
-
-    #
     def next_event_or_entity_action(self) -> Optional[tuple[lu.PQ_Entity_and_EventsSystem, ect.GameTime]]:
 
         #
         return self.priority_queue_events_and_entities.pop_top()
+
+    #
+    def manage_npc_entities(self, elt: lu.PQ_Entity_and_EventsSystem) -> None:
+
+        # TODO
+        pass
+
+    #
+    def manage_event(self, elt: lu.PQ_Entity_and_EventsSystem) -> None:
+
+        #
+        event: evt.Event = self.events[elt.elt_id]
+        #
+        if isinstance(event, evt.EventAlways):
+
+            #
+            if event.event_condition is None or event.event_condition.verify(variables_space=self.variables_space):
+
+                #
+                self.play_scene( scene_id = event.scene_id )
+
+        #
+        if elt.repetitive:
+            #
+            self.priority_queue_events_and_entities.insert_with_priority(
+                item=elt,
+                priority=elt.current_action_time
+            )
+
+    #
+    def play_scene(self, scene_id: str) -> None:
+
+        #
+        self.current_scene_id = scene_id
+        self.current_scene_cursor = 0
+        #
+        while self.current_scene_id in self.scenes and self.current_scene_cursor >= 0 and self.current_scene_cursor < len(self.scenes[self.current_scene_id].scenes_actions):
+
+            #
+            self.play_scene_action( scene_action = self.scenes[self.current_scene_id].scenes_actions[self.current_scene_cursor] )
+
+        #
+        self.current_scene_id = ""
+
+    #
+    def play_scene_action(self, scene_action: eca.Action) -> None:
+
+        #
+        if isinstance(scene_action, eca.ActionText):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionLabel):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionJump):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionConditionalJump):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionChangeScene):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionEndScene):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionEndGame):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionCreateVar):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionEditVar):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionDeleteVar):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionBinaryOp):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionUnaryOp):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionChangeElt):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionEditAttributeOfElt):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionAppendToAttributeOfElt):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionRemoveValueToAttributeOfElt):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionSetKVAttributeOfElt):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionThingDuplicate):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionThingDisplace):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionThingAddToPlace):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionThingRemoveFromPlace):
+            #
+            pass
+
+        #
+        elif isinstance(scene_action, eca.ActionPlayerAssignMission):
+            #
+            pass
+
+        #
+        self.current_scene_cursor += 1
+
 

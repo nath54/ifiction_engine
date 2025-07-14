@@ -135,6 +135,7 @@ if __name__ == "__main__":
 
         #
         game.priority_queue_events_and_entities.shift_all_times(time_shift=next_time_shift)
+        game.global_time += next_time_shift
 
         #
         # print(f"DEBUG 2 | priority_queue_events_and_entities = {game.priority_queue_events_and_entities._queue}")  # type: ignore

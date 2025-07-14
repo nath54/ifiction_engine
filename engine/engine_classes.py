@@ -1,5 +1,5 @@
 #
-from typing import Any, Optional, Callable, Tuple
+from typing import Any, Optional, Callable
 #
 import os
 import json
@@ -27,7 +27,7 @@ def verify_keys_in_dict(dictionary: dict[str, Any], keys: list[str], type_: str)
 
 
 #
-def create_default_value(default_value: Any, attr: str | int, in_dict: dict[str, Any], type_: str) -> Any:
+def create_default_value(default_value: Any, attr: str | int, in_dict: dict[str | int, Any], type_: str) -> Any:
     #
     if isinstance(default_value, EmptyDict):
         #
@@ -49,9 +49,9 @@ def create_default_value(default_value: Any, attr: str | int, in_dict: dict[str,
 
 
 #
-def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDependingOnDictValue", in_dict: dict[str, Any], attr: str | int, type_: str) -> Any:
+def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDependingOnDictValue", in_dict: dict[str | int, Any], attr: str | int, type_: str) -> Any:
     #
-    if attr not in in_dict:
+    if not ((isinstance(in_dict, dict) and attr in in_dict) or (isinstance(in_dict, list) and isinstance(attr,int) and attr >= 0 and attr < len(in_dict))):  # type: ignore
         #
         if isinstance(clfddodv.default_value, NoDefaultValues):
             #
@@ -74,7 +74,7 @@ def create_classloadfromdictdependingondictvalue(clfddodv: "ClassLoadFromDictDep
     )
 
 #
-def create_kwargs(in_dict: dict[str, Any], type_: str) -> dict[str, Any]:
+def create_kwargs(in_dict: dict[str | int, Any], type_: str) -> dict[str, Any]:
     #
     kwargs: dict[str, Any] = {}
     #
@@ -196,7 +196,7 @@ def create_kwargs(in_dict: dict[str, Any], type_: str) -> dict[str, Any]:
 #
 def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict[str, Any], type_: str) -> None:
     #
-    kwargs: dict[str, Any] = create_kwargs(in_dict=in_dict, type_=type_)
+    kwargs: dict[str, Any] = create_kwargs(in_dict=in_dict, type_=type_)  # type: ignore
     #
     attr: str
     #
@@ -205,7 +205,7 @@ def set_attributes_or_default_values_from_dict(obj: Any, in_dict: dict[str, Any]
 
 
 #
-def create_class_with_attributes_or_default_values_from_dict(class_name: Callable[..., Any], in_dict: Optional[dict[str, Any]], type_: str) -> Any:
+def create_class_with_attributes_or_default_values_from_dict(class_name: Callable[..., Any], in_dict: Optional[dict[str | int, Any]], type_: str) -> Any:
     #
     if in_dict is None:
         in_dict = {}
@@ -266,10 +266,10 @@ class NoDefaultValueListOfClassLoadFromDict:
 #
 class ClassLoadFromDictDependingOnDictValue:
     #
-    def __init__(self, dict_key_value: str, class_names_and_types: dict[str, Tuple[Callable[..., Any], str]], default_value: Any) -> None:
+    def __init__(self, dict_key_value: str, class_names_and_types: dict[str, tuple[Callable[..., Any], str]], default_value: Any) -> None:
         #
         self.dict_key_value: str = dict_key_value
-        self.class_names_and_types: dict[str, Tuple[Callable[..., Any], str]] = class_names_and_types
+        self.class_names_and_types: dict[str, tuple[Callable[..., Any], str]] = class_names_and_types
         self.default_value: Any = default_value
 
 #
@@ -668,7 +668,7 @@ def load_interactive_fiction_model_from_file(filepath: str, game_save_format: st
     #
     game: ecg.Game = create_class_with_attributes_or_default_values_from_dict(
         class_name=ecg.Game,
-        in_dict=dict_,
+        in_dict=dict_,  # type: ignore
         type_="ecg.Game"
     )
 
@@ -737,7 +737,6 @@ things_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependi
 actions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDependingOnDictValue(
     dict_key_value="action_type",
     class_names_and_types={
-        "Action": (act.Action, "Action"),
         "ActionText": (act.ActionText, "ActionText"),
         "ActionLabel": (act.ActionLabel, "ActionLabel"),
         "ActionJump": (act.ActionJump, "ActionJump"),
@@ -764,7 +763,7 @@ actions_classes: ClassLoadFromDictDependingOnDictValue = ClassLoadFromDictDepend
         "ActionThingRemoveFromPlace": (act.ActionThingRemoveFromPlace, "ActionThingRemoveFromPlace"),
         "ActionPlayerAssignMission": (act.ActionPlayerAssignMission, "ActionPlayerAssignMission")
     },
-    default_value=None
+    default_value=NoDefaultValues()
 )
 
 #

@@ -185,9 +185,6 @@ class Game:
                     priority=copy.deepcopy(event.time_delay)
                 )
 
-        #
-        # print(f"DEBUG | self.events_quick_access = {self.events_quick_access}")
-
     #
     def prepare_priority_queue_entities(self) -> None:
 
@@ -232,9 +229,6 @@ class Game:
     def manage_event(self, elt: lu.PQ_Entity_and_EventsSystem, interaction_system: Any) -> None:
 
         #
-        # print(f"DEBUG | manage_event : {elt} | elt.elt_id = `{elt.elt_id}`")
-
-        #
         event: evt.Event = self.events[elt.elt_id]
         #
         if isinstance(event, evt.EventAlways):
@@ -255,9 +249,6 @@ class Game:
 
     #
     def play_scene(self, scene_id: str, interaction_system: Any) -> None:
-
-        #
-        # print(f"DEBUG | Play Scene: {scene_id}")
 
         #
         self.current_scene_id = scene_id
@@ -414,18 +405,20 @@ def gamePlayActionText(game: Game, action: eca.ActionText, interaction_system: A
         #
         if jj != -1:
             #
-            var_name: str = final_text_to_display[j+1:jj]
+            jj = len(final_text_to_display)
+        #
+        var_name: str = final_text_to_display[j+1:jj]
+        #
+        if var_name in game.variables_space:
             #
-            if var_name in game.variables_space:
-                #
-                final_text_to_display.replace(f"@{var_name}", str(game.variables_space[var_name]))
+            final_text_to_display = final_text_to_display.replace(f"@{var_name}", str(game.variables_space[var_name]))
         #
         i = (j + 1) if jj == -1 else (jj + 1)
         #
         j = final_text_to_display.find("@", i)
 
     #
-    if hasattr(interaction_system, "write"):
+    if hasattr(interaction_system, "write_to_output"):
         #
         interaction_system.write_to_output(final_text_to_display)
 

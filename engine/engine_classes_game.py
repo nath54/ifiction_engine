@@ -156,6 +156,22 @@ class Game:
             raise UserWarning(f"ERROR: Unkown IFICTION game save format : `{game_save_format}`")
 
     #
+    def prepare_access_names(self) -> None:
+
+        #
+        for _, room_data in self.rooms.items():
+
+            #
+            for access in room_data.accesses:
+
+                #
+                access.thing_name = self.things[access.thing_id].name
+                access.link_name = self.rooms[access.links_to].room_name
+                #
+                print(f"DEBUG | access.thing_name = {access.thing_name}")
+
+
+    #
     def prepare_events_quick_access(self) -> None:
         #
         event_id: str

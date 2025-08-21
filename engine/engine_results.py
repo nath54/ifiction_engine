@@ -115,7 +115,7 @@ You are in {self.room.room_name}.
         #
         access: engine.Access
         for access in self.room.accesses:
-            text += f"  - To {access.links_to} in the {access.direction} by {access.thing_id}\n"
+            text += f"  - To {access.link_name} in the {access.direction} by {access.thing_name}\n"
         #
         return text
 

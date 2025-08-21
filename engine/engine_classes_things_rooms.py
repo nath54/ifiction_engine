@@ -233,6 +233,9 @@ class Access:
         self.thing_id: str = thing_id
         self.direction: str = direction
         self.links_to: str = links_to
+        #
+        self.thing_name: str = self.thing_id
+        self.link_name: str = self.links_to
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -246,7 +249,7 @@ class Access:
     #
     def __str__(self) -> str:
         #
-        return f"You can go to {self.links_to} by {self.thing_id} [{self.direction}]"
+        return f"You can go to {self.link_name} by {self.thing_name} [{self.direction}]"
 
     #
     def __repr__(self) -> str:

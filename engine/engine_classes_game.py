@@ -167,8 +167,6 @@ class Game:
                 #
                 access.thing_name = self.things[access.thing_id].name
                 access.link_name = self.rooms[access.links_to].room_name
-                #
-                print(f"DEBUG | access.thing_name = {access.thing_name}")
 
 
     #

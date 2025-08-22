@@ -12,12 +12,15 @@ class Event:
     def __init__(
             self,
             scene_id: str,
-            event_condition: Optional[eccond.Condition] = None
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
         self.scene_id: str = scene_id
         #
         self.event_condition: Optional[eccond.Condition] = event_condition
+        #
+        self.event_effects_count: Optional[int] = event_effects_count
         #
         # ABSTRACT GENERIC CLASS
 
@@ -34,6 +37,11 @@ class Event:
             res["event_condition"] = self.event_condition.to_dict()
 
         #
+        if self.event_effects_count is not None:
+            #
+            res["event_effects_count"] = self.event_effects_count
+
+        #
         return res
 
 #
@@ -45,12 +53,16 @@ class EventMission(Event):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            player_id: Optional[str | list[str]] = None,
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, event_condition=event_condition, event_effects_count=event_effects_count)
         #
         self.mission_id: str | list[str] = mission_id
+        #
+        self.player_id: Optional[str | list[str]] = player_id
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -60,6 +72,11 @@ class EventMission(Event):
         #
         res["event_type"] = "EventMission"
         res["mission_id"] = self.mission_id
+
+        #
+        if self.player_id is not None:
+            #
+            res["player_id"] = self.player_id
 
         #
         return res
@@ -74,10 +91,12 @@ class EventMissionGot(EventMission):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            player_id: Optional[str | list[str]] = None,
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, mission_id=mission_id, player_id=player_id, event_condition=event_condition, event_effects_count=event_effects_count)
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -100,10 +119,12 @@ class EventMissionInProgress(EventMission):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            player_id: Optional[str | list[str]] = None,
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, mission_id=mission_id, player_id=player_id, event_condition=event_condition, event_effects_count=event_effects_count)
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -126,10 +147,12 @@ class EventMissionDone(EventMission):
             self,
             scene_id: str,
             mission_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            player_id: Optional[str | list[str]] = None,
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, mission_id=mission_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, mission_id=mission_id, player_id=player_id, event_condition=event_condition, event_effects_count=event_effects_count)
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -152,10 +175,11 @@ class EventRoom(Event):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, event_condition=event_condition, event_effects_count=event_effects_count)
         #
         self.room_id: str | list[str] = room_id
 
@@ -181,10 +205,11 @@ class EventEnterRoom(EventRoom):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition, event_effects_count=event_effects_count)
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -207,10 +232,11 @@ class EventLeaveRoom(EventRoom):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition, event_effects_count=event_effects_count)
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -233,10 +259,11 @@ class EventInsideRoom(EventRoom):
             self,
             scene_id: str,
             room_id: str | list[str],
-            event_condition: Optional[eccond.Condition] = None
+            event_condition: Optional[eccond.Condition] = None,
+            event_effects_count: Optional[int] = None,
         ) -> None:
         #
-        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, room_id=room_id, event_condition=event_condition, event_effects_count=event_effects_count)
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -258,10 +285,11 @@ class EventVariableCondition(Event):
     def __init__(
         self,
         scene_id: str,
-        event_condition: Optional[eccond.Condition] = None
+        event_condition: Optional[eccond.Condition] = None,
+        event_effects_count: Optional[int] = None,
     ) -> None:
         #
-        super().__init__(scene_id=scene_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, event_condition=event_condition, event_effects_count=event_effects_count)
 
     #
     def to_dict(self) -> dict[str, Any]:
@@ -286,10 +314,11 @@ class EventActionThing(Event):
         thing_id: str | list[str],
         action_type: str | list[str],
         entity_id: str | list[str],
-        event_condition: Optional[eccond.Condition] = None
+        event_condition: Optional[eccond.Condition] = None,
+        event_effects_count: Optional[int] = None,
     ) -> None:
         #
-        super().__init__(scene_id=scene_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, event_condition=event_condition, event_effects_count=event_effects_count)
         #
         self.thing_id: str | list[str] = thing_id
         self.action_type: str | list[str] = action_type
@@ -319,10 +348,11 @@ class EventAlways(Event):
         self,
         scene_id: str,
         event_condition: Optional[eccond.Condition] = None,
-        time_delay: ect.GameTime = ect.GameTime(minute=1)
+        event_effects_count: Optional[int] = None,
+        time_delay: ect.GameTime = ect.GameTime(minute=1),
     ) -> None:
         #
-        super().__init__(scene_id=scene_id, event_condition=event_condition)
+        super().__init__(scene_id=scene_id, event_condition=event_condition, event_effects_count=event_effects_count)
         #
         self.time_delay: ect.GameTime = time_delay
 

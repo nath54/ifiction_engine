@@ -51,7 +51,8 @@ class Game:
         nb_turns: int = 0,
         imports: list[str] = [],
         global_time: ect.GameTime = ect.GameTime(),
-        game_settings: GameSettings = GameSettings()
+        game_settings: GameSettings = GameSettings(),
+        disabled_events: list[str] = [],
     ) -> None:
         #
         self.game_name: str = game_name
@@ -69,6 +70,8 @@ class Game:
         self.imports: list[str] = imports
         self.current_player: int = 0
         self.history: list[er.Result] = []
+        #
+        self.disabled_events: set[str] = set(disabled_events)
         #
         self.global_time: ect.GameTime = global_time
         #
@@ -116,9 +119,8 @@ class Game:
             "players": self.players,
             "current_player": self.current_player,
             "nb_turns": self.nb_turns,
-            "history": [
-                r.to_dict() for r in self.history
-            ]
+            "history": [ r.to_dict() for r in self.history ],
+            "disabled_events": list(self.disabled_events),
         }
 
         #
@@ -167,7 +169,6 @@ class Game:
                 #
                 access.thing_name = self.things[access.thing_id].name
                 access.link_name = self.rooms[access.links_to].room_name
-
 
     #
     def prepare_events_quick_access(self) -> None:
@@ -223,7 +224,55 @@ class Game:
                 )
 
     #
+    def play_event(self, event_id: str, event_params: dict[str, Any], interaction_system: Any) -> None:
+
+        #
+        event: evt.Event = self.events[event_id]
+
+        #
+        if event.event_condition is None or event.event_condition.verify(variables_space=self.variables_space):
+
+            #
+            self.play_scene( scene_id = event.scene_id, interaction_system=interaction_system )
+
+    #
+    def check_event_mission_got(self, player_id: str, mission_id: str, interaction_system: Any) -> None:
+
+        #
+        if "EventMissionGot" not in self.events_quick_access:
+            #
+            return
+
+        #
+        for event_id in self.events_quick_access["EventMissionGot"]:
+
+            #
+            if event_id in self.disabled_events:
+                #
+                continue
+
+            #
+            event: evt.EventMissionGot = cast(evt.EventMissionGot, self.events[event_id])
+            #
+            if event.mission_id != mission_id:
+                #
+                continue
+            #
+            if event.player_id is not None:
+                #
+                if isinstance(event.player_id, list) and player_id not in event.player_id:
+                    #
+                    continue
+                #
+                elif event.player_id != player_id:
+                    #
+                    continue
+            #
+            self.play_event(event_id=event_id, event_params={}, interaction_system=interaction_system)
+
+    #
     def check_and_apply_events_from_command(self, command: ecc.Command, player: Player) -> None:
+
         #
         pass
 
@@ -248,10 +297,7 @@ class Game:
         if isinstance(event, evt.EventAlways):
 
             #
-            if event.event_condition is None or event.event_condition.verify(variables_space=self.variables_space):
-
-                #
-                self.play_scene( scene_id = event.scene_id, interaction_system=interaction_system )
+            self.play_event(event_id=elt.elt_id, event_params={}, interaction_system=interaction_system)
 
         #
         if elt.repetitive:

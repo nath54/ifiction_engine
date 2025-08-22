@@ -37,6 +37,10 @@ def create_default_value(default_value: Any, attr: str | int, in_dict: dict[str 
         #
         return []
     #
+    elif isinstance(default_value, EmptySet):
+        #
+        return set()  # type: ignore
+    #
     elif isinstance(default_value, ClassLoadFromDict) and attr in in_dict:
         #
         return create_class_with_attributes_or_default_values_from_dict(
@@ -241,6 +245,13 @@ class EmptyDict:
 
 #
 class EmptyList:
+    #
+    def __init__(self) -> None:
+        pass
+
+
+#
+class EmptySet:
     #
     def __init__(self) -> None:
         pass
@@ -915,7 +926,8 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
         "events": events_dict,
         "missions": missions_dict,
         "players": EmptyList(),
-        "imports": EmptyList()
+        "imports": EmptyList(),
+        "disabled_events": EmptyList()
     },
 
     "Scene": {
@@ -939,47 +951,59 @@ CLASS_ATTRIBUTES_AND_DEFAULT_VALUES: dict[str, Any] = {
     "EventMissionGot": {
         "scene_id": NoDefaultValues(),
         "event_condition": condition_classes,
-        "mission_id": NoDefaultValues()
+        "event_effects_count": None,
+        "mission_id": NoDefaultValues(),
+        "player_id": None
     },
     "EventMissionInProgress": {
         "scene_id": NoDefaultValues(),
         "event_condition": condition_classes,
-        "mission_id": NoDefaultValues()
+        "event_effects_count": None,
+        "mission_id": NoDefaultValues(),
+        "player_id": None
     },
     "EventMissionDone": {
         "scene_id": NoDefaultValues(),
         "event_condition": condition_classes,
-        "mission_id": NoDefaultValues()
+        "event_effects_count": None,
+        "mission_id": NoDefaultValues(),
+        "player_id": None
     },
     "EventEnterRoom": {
         "scene_id": NoDefaultValues(),
         "event_condition": condition_classes,
+        "event_effects_count": None,
         "room_id": NoDefaultValues()
     },
     "EventLeaveRoom": {
         "scene_id": NoDefaultValues(),
         "event_condition": condition_classes,
+        "event_effects_count": None,
         "room_id": NoDefaultValues()
     },
     "EventInsideRoom": {
         "scene_id": NoDefaultValues(),
         "event_condition": condition_classes,
+        "event_effects_count": None,
         "room_id": NoDefaultValues()
     },
     "EventInsideRoom": {
         "scene_id": NoDefaultValues(),
-        "event_condition": condition_classes
+        "event_condition": condition_classes,
+        "event_effects_count": None
     },
     "EventActionThing": {
         "scene_id": NoDefaultValues(),
         "event_condition": condition_classes,
+        "event_effects_count": None,
         "thing_id": NoDefaultValues(),
         "action_type": NoDefaultValues(),
         "entity_id": NoDefaultValues()
     },
     "EventAlways": {
         "scene_id": NoDefaultValues(),
-        "event_condition": condition_classes
+        "event_condition": condition_classes,
+        "event_effects_count": None
     },
 
     "ActionText": {

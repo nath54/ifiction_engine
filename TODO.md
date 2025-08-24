@@ -3,523 +3,180 @@
 
 ---
 
-## Commands
+## Events
 
----
-
-### Command Lookaround
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Recap
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Brief
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Describe
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Examine
-
-<b style="color: green">
-Base implementation done.
-</b>
-
-<b style="color: red">
-!TO FIX
-</b>
-
----
-
-### Command Rummage
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Listen
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Touch
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Read
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Taste
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Smell
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Go
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Put
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Push
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Pull
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Attach
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Break
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Throw
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Drop
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Clean
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
+### EventMissionGot
 
-### Command Use
+#### Description of EventMissionGot
 
-The use case for openable access and unlock / lock are done.
+TODO
 
-The rest must be done.
+#### State if EventMissionGot
 
----
-
-### Command Climb
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Open
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Close
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Lock
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Unlock
-
-<b style="color: green">
-Base implementation done.
-</b>
-
----
-
-### Command Fill
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Pour
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Insert
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Remove
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Set
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
-### Command Spread
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Squeeze
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Eat
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Drink
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Awake
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Attack
-
-<b style="color: orange">
-Nothing done.
-</b>
-
----
-
-### Command Buy
-
-<b style="color: orange">
-Nothing done.
-</b>
-
 ---
 
-### Command Show
+### EventMissionInProgress
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of EventMissionInProgress
 
----
+TODO
 
-### Command Embrace
+#### State of EventMissionInProgress
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
 
-### Command Feed
+### EventMissionDone
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of EventMissionDone
 
----
+TODO
 
-### Command Give
+#### State of EventMissionDone
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
 
-### Command Say
+### EventEnterRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of EventEnterRoom
 
----
+TODO
 
-### Command Ask
+#### State of EventEnterRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
 
-### Command Write
+### EventLeaveRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of EventLeaveRoom
 
----
+TODO
 
-### Command Erase
+#### State of EventLeaveRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
 
-### Command Wear
+### EventInsideRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of EventInsideRoom
 
----
+TODO
 
-### Command Undress
+#### State of EventInsideRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
 
-### Command Inventory
+### EventVariableCondition
 
-<b style="color: green">
-Base implementation done.
-</b>
+#### Description of EventVariableCondition
 
----
+TODO
 
-### Command Wait
+#### State of EventVariableCondition
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
 
-### Command Sleep
+### EventActionThing
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of EventActionThing
 
----
+TODO
 
-### Command Sit_down
+#### State of EventActionThing
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
 
-### Command Lie_down
+### EventAlways
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of EventAlways
 
----
+TODO
 
-### Command Stand_up
+#### State of EventAlways
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Event Detection Implemented (TODO)
 
 ---
-
-### Command Take
 
-<b style="color: green">
-Base implementation done.
-</b>
-
 ---
 
-### Command Dance
+## Missions
 
-<b style="color: orange">
-Nothing done.
-</b>
-
 ---
 
-### Command Sing
+### MissionEnterRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of MissionEnterRoom
 
----
+TODO
 
-### Command Jump
+#### State of MissionEnterRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Mission Success Detection Implemented (TODO)
 
 ---
 
-### Command Think
+### MissionLeaveRoom
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of MissionLeaveRoom
 
----
+TODO
 
-### Command Quit
+#### State of MissionLeaveRoom
 
-<b style="color: green">
-Base implementation done.
-</b>
+[x] Class Design
+[ ] Mission Success Detection Implemented (TODO)
 
 ---
 
-### Command Save
+### MissionVariableCondition
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of MissionVariableCondition
 
----
+TODO
 
-### Command Load
+#### State of MissionVariableCondition
 
-<b style="color: orange">
-Nothing done.
-</b>
+[x] Class Design
+[ ] Mission Success Detection Implemented (TODO)
 
 ---
 
-### Command Score
+### MissionActionThing
 
-<b style="color: orange">
-Nothing done.
-</b>
+#### Description of MissionActionThing
 
----
+TODO
 
-### Command Help
+#### State of MissionActionThing
 
-<b style="color: orange">
-Nothing done.
-</b>
+[ ] Class Design (TODO)
+[ ] Mission Success Detection Implemented (TODO)
 
 ---
 
@@ -527,17 +184,44 @@ Nothing done.
 
 ### Functionnalities to add
 
-- [ ] Animations (trains, bus, vehicles, moving people, ...)
+- [x] **Animations** (trains, bus, vehicles, moving people, ...)
+  - [x] Solvable with an EventAlways with the good events condition, time delays, and the good scene elements.
 - [ ] A lot of currently unimplemented commands can be represented by `action`, `action on something`, `action something on something` or something like that. So I think it will be better to parse directly this structure and get the action, and for objects or entities, have a dictionaries of events in reactions of actions if supported, and to have just a list of basic default responses and error messages.
-- [ ] events / reactions
-- [ ] missions / objectives
-- [ ] dialogues
+  - [ ] Base class design of `action something`, or `action something keyword_1 arguments_1 ...  keyword_n arguments_n`
+  - [ ] Implementation for all possible actions
+- [ ] **Events**
+  - [x] Base class Design
+  - [x] Events play a scene when detected
+  - [ ] Implementation of all the events detection
+- [ ] **Missions**
+  - [x] Base class design
+  - [ ] Mission
+  - [ ] Implementation of all the mission detections
+- [ ] **Scene / Actions**
+  - [x] Base class design
+  - [ ] Implementation of all the actions
+  - [ ] Implementation of the main scene execution function
+- [ ] **Dialogues**
   - [ ] base choice based dialog system with support from variables
-  - [ ] merchant / shop / negociation dialog
-  - [ ] free typing text dialog (sentence analysis / semantic model / agent llm with function calling), **not the priority here**
-- [ ] relation system / sentiment / habits system for NPC
-- [ ] Command state ( game command / inside dialog /  )
-- [x] import data from other json files
+    - [ ] Add dialog choice option for actions and this method will be possible
+  - [ ] Merchant / Shop / Negociation dialog
+    - [ ] Add action for *Open Store Menu*.
+  - [ ] free typing text dialog (sentence analysis / semantic model / agent llm with function calling)
+- [ ] **Smart NPCs**
+  - [ ] Entity Appearance
+  - [ ] Entity Statistics
+    - [ ] Design Humans Stats
+  - [ ] Personality Design
+  - [ ] NPC Likings / Not Likings
+  - [ ] Relation system / Sentiments system for NPC
+- [ ] **Grid System for Rooms:** Each Room now have a Grid System for Elements positions, inside Room movements, Elements interactions
+  - [ ] Add option to limit the maximum number of elements per grid case (default=1 element maximum per case, if value is -1, don't check the limit (+infinity elements authorized per grid case))
+  - [ ] If entity want to move into the new room, check if there is a free grid cell next to the door, if not, indicate there is no place in the other side of the door.
+  - [ ] Room parameter for Automatic walls surrounding the grid room, and adapting to windows and grid.
+  - [ ] Add a system to see what you can see through an opened door or windows in the other room.
+  - [ ] Add position for each elements and decors in a room.
+  - [ ] Add actions ranges for in between element interactions
+- [x] Import data from other json files
 - [ ] a tool to compress a lot of differents various json files into one large one to export after
   - [ ] Command line tool to directly do that
   - [x] You can kinda do that by loading a game and saving it, but it is less direct and less practical
@@ -558,7 +242,7 @@ There are a lot of commands that has no utilities in here.
 ### Command Parsing Tests
 
 <b style="color:red">
-Need to be fix since the change of getting classes out of command parser instead of list of string.
+Need to be fixed since the change of getting classes out of command parser instead of list of string.
 </b>
 
 ---
